@@ -18,6 +18,7 @@
 </table>
 
 
+============================================
 ** 🎮 DESCRIPTION **
 ============================================
 **It's Just An Adventure** est un jeu de rôle textuel (JDR) basé sur la thématique de la ** folie **.  
