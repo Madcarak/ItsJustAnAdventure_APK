@@ -4,11 +4,17 @@
 
 ## 💡 Aperçu visuel
 
-### 🖥️ Version PC
-![Aperçu de la version PC](www/gif/GIF_pc.gif)
+<div style="display: flex; justify-content: space-around; align-items: center;">
+    <div style="text-align: center;">
+        <h4>🖥️ Version PC</h4>
+        <img src="www/gif/GIF_pc.gif" alt="Aperçu de la version PC" style="width: 45%; border: 1px solid #ddd; border-radius: 8px;">
+    </div>
+    <div style="text-align: center;">
+        <h4>📱 Version Mobile</h4>
+        <img src="www/gif/GIF_mobile.gif" alt="Aperçu de la version Mobile" style="width: 45%; border: 1px solid #ddd; border-radius: 8px;">
+    </div>
+</div>
 
-### 📱 Version Mobile
-![Aperçu de la version Mobile](www/gif/GIF_mobile.gif)
 
 
 ** 🎮 DESCRIPTION **
