@@ -1,0 +1,320 @@
+***---------------------------------------***
+        BUILD APK DANS POWERSHELL
+***---------------------------------------***
+
+npx cap sync android
+cd C:\dev\ItsJustAnAdventure\android
+.\gradlew.bat --stop
+.\gradlew.bat clean
+.\gradlew.bat :app:packageDebug
+
+
+***---------------------------------------***
+              DANS ECRAN.JS
+***---------------------------------------***
+
+
+---------------------------------------
+OBJETS DESCRIPTION :
+---------------------------------------
+const itemDescriptions = {
+
+---------------------------------------
+LIEN FICHIER OBJET :
+---------------------------------------
+const itemIcons = {
+
+---------------------------------------
+AJOUT POUR MENU INTERACTION OBJET :
+---------------------------------------
+function inspectItem(item) {
+
+---------------------------------------
+AJOUT D'ECRAN DONNANT +1 EN FOLIE :
+---------------------------------------
+const foliePlusUn = [
+
+---------------------------------------
+AJOUT D'ECRAN DONNANT -1 EN FOLIE :
+---------------------------------------
+const folieMoinsUn = [
+
+
+
+
+
+***---------------------------------------***
+          DANS VISITHISTORY.JS
+***---------------------------------------***
+
+---------------------------------------
+AJOUT D'ECRAN POUR NAVIGATION :
+---------------------------------------
+const VISIT_HISTORY_ALLOWED_SCREENS = [
+
+
+
+
+
+***---------------------------------------***
+              DANS ECRAN.JS
+***---------------------------------------***
+
+---------------------------------------
+Aide pour gérer les écrans de la folie :
+---------------------------------------
+
+"Ecran0023": {
+    titre: "Le tumulus",
+    texte: "L’entrée est sombre et humide.",
+    image: "...",
+    choix: [...]
+},
+
+"Ecran0023_f5": {
+    titre: "Le tumulus",
+    texte: "Une silhouette bouge furtivement à l’intérieur...",
+    image: "...",
+    choix: [...]
+},
+
+"Ecran0023_f10": {
+    titre: "Le tumulus",
+    texte: "Les murs semblent respirer lentement.",
+    image: "...",
+    choix: [...]
+},
+
+"Ecran0023_f12": {
+    titre: "Le tumulus",
+    texte: "Quelqu’un pleure. C’est votre voix.",
+    image: "...",
+    choix: [...]
+},
+
+---------------------------------------
+FLAG OBJET DECOUVERT :
+---------------------------------------
+
+ATTENTION : Mettre 
+
+"Ecran0008": {
+  titre: "Fouille du cimetière",
+  texte: "Vous fouillez autour des tombes et trouvez une bague qui semble dégager une grande énergie !",
+  image: "Lieux/Foret/008. Foret.jpg",
+
+  onceFlag: "bague_cimetiere_recuperee",
+  alternateGotoIfOwned: "Ecran0008A",
+
+  choix: [
+    { texte: "Mettre la bague", goto: "Ecran0017" },
+    { texte: "Ne pas la ramasser et se recueillir", goto: "Ecran0018" },
+    { texte: "Continuer à travers bois", goto: "Ecran0004" },
+  ]
+},
+
+"Ecran0008A": {
+  titre: "Fouille du cimetière",
+  texte: "Plus rien à fouiller par ici..",
+  image: "Lieux/Foret/003. Foret.jpg",
+  choix: [
+    { texte: "Se recueillir", goto: "Ecran0018" },
+    { texte: "Continuer à travers bois", goto: "Ecran0004" },
+  ]
+},
+
+"Ecran0017": {
+  titre: "Malédiction",
+  texte: "Une fois la bague mise vous sentez une douleur qui vous prend jusqu'au bras !",
+  image: "Lieux/Foret/018. Foret.jpg",
+
+  giveItem: "Bague Maudite",
+  onceFlag: "bague_cimetiere_recuperee",
+
+  choix: [
+    { texte: "Essayer d'enlever la bague", goto: "Ecran0036" },
+    { texte: "Continuer à travers bois", goto: "Ecran0005" },
+  ]
+},
+
+---------------------------------------------------------
+REQUIREALL - IL FAUT PLUSIEURS OBJET POUR CONTINUER :
+---------------------------------------------------------
+
+"Ecran0093": {
+  titre: "Le pacte",
+  texte: "« J’allumerai ta torche… mais j’ai besoin soit d'un parchemin elfique soit d'une glande lumineuse et d'un bout de bois bien sûr ! »",
+  image: "Lieux/Foret/036. Foret.png",
+
+  choix: [
+    { texte: "Un parchemin elfique !", goto: "Ecran0093A" },
+    { texte: "Une glande lumineuse", goto: "Ecran0093B" },
+    { texte: "Je n'ai pas ces objets", goto: "Ecran0094" }
+  ]
+},
+"Ecran0093A": {
+  titre: "Allumer la torche à l'aide du parchemin",
+  image: "Lieux/Foret/036. Foret.png",
+  
+
+  requireAll: [
+    { type: "item", value: "Parchemin Elfique" },
+    { type: "item", value: "Torche" }
+  ],
+  elseGoto: "Ecran0099",
+
+  goto: "Ecran0096"
+  
+  
+},
+
+
+
+
+
+----------------------------------------------------
+REQUIREANY OBJET POUR CONTINUER :
+----------------------------------------------------
+
+"Ecran0093A": {
+  titre: "Allumer la torche à l'aide du parchemin",
+  image: "Lieux/Foret/036. Foret.png",
+  
+
+  requireAny: [
+    { type: "item", value: "Parchemin Elfique" }
+  ],
+  elseGoto: "Ecran0099",
+
+  goto: "Ecran0096"
+  
+  
+},
+"Ecran0093B": {
+  titre: "Allumer la torche à l'aide due la glande lumineuse",
+  image: "Lieux/Foret/036. Foret.png",
+
+  requireAny: [
+    { type: "item", value: "Glande Lumineuse" }
+  ],
+  elseGoto: "Ecran0100",
+
+  goto: "Ecran0097"
+},
+
+----------------------------------------------------
+RETIRER UN OBJET SEULEMENT :
+----------------------------------------------------
+action: () => {
+
+    if (!hasItem("Glande Lumineuse")) {
+        return;
+    }
+
+    removeItem("Glande Lumineuse");
+}
+
+
+
+----------------------------------------------------
+RETIRER UN OBJET + AJOUT D'OBJET :
+----------------------------------------------------
+
+"Ecran0096": {
+  titre: "Flamme elfique",
+  texte: "La sorcière brûle le parchemin et enflamme ta torche.",
+  image: "Lieux/Foret/036. Foret.png",
+
+action: () => {
+    if (!hasItem("Parchemin Elfique")) {
+        return;
+    }
+    removeItem("Parchemin Elfique");
+    removeItem("Torche");
+    addItem("Torche Allumée");
+},
+
+  choix: [
+    { texte: "Et la lumière fut !", goto: "Ecran0098" },
+    { texte: "Sorcière", goto: "Ecran0095" }
+  ]
+},
+
+
+
+
+
+
+----------------------------------------------------
+REQUIREANY - STATISTIQUE OU RACE :
+----------------------------------------------------
+
+"Ecran0034": {
+  titre: "Déchiffrage du parchemin",
+  texte: "Vous tentez de déchiffrer les symboles...",
+  image: "Lieux/Foret/005. Parchemin.png",
+  
+  
+  requireAny: [
+    { type: "race", value: "Elfe" },
+    { type: "statMin", stat: "intelligence", value: 10 }
+  ],
+  elseGoto: "Ecran0035",
+  
+  
+  choix: [
+    { texte: "Continuer", goto: "Ecran0033" }
+  ]
+},
+
+
+
+
+
+----------------------------------------------------
+GRÂCE ALEATOIRE :
+----------------------------------------------------
+
+"Ecran0009": {
+  titre: "Recueillement",
+  texte: "Vous vous recueillez un moment auprès des tombes et vous vous sentez bien ! (Grâce aléatoire)",
+  image: "Lieux/Foret/009. Foret.jpg",
+  
+  
+  graceAleatoire: true,
+  alternateGotoAfterGrace: "Ecran0009A",
+  
+  
+  choix: [
+    { texte: "Continuer à travers bois", goto: "Ecran0004" },
+  ]
+},
+"Ecran0009A": {
+  titre: "Recueillement",
+  texte: "Vous vous recueillez un moment auprès des tombes..",
+  image: "Lieux/Foret/009. Foret.jpg",
+  choix: [
+    { texte: "Continuer à travers bois", goto: "Ecran0004" },
+  ]
+},
+
+
+
+
+
+----------------------------------------------------
+RENCONTRE PERSONNAGE + REDIRECTION ECRAN :
+----------------------------------------------------
+
+"Ecran0115": {
+  titre: "La statue qui vous regarde",
+  texte: "« Magnifique. Morbélios vous observe déjà intensément. Félicitations. Vous êtes désormais un peu moins libre. »",
+  image: "Lieux/Montagne/014. Montagne.png",
+  meetCharacter: "Statue démoniaque",
+  redirectIfMet: "Ecran0118",
+  choix: [
+    { texte: "Toucher la statue", goto: "Ecran0118" },
+    { texte: "Allez devant la porte d'entrée", goto: "Ecran0103" },
+    { texte: "Faire le tour du temple", goto: "Ecran0104" },
+  ]
+},

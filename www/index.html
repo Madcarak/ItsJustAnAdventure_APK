@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>It's Just An Adventure</title>
+  <meta name="viewport"
+        content="width=device-width, height=device-height,
+        initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<!-- ================================
+     OVERLAY DE CONFIRMATION / ALERTES
+================================ -->
+<div id="overlay-confirm" class="overlay hidden">
+    <div class="confirm-window">
+        <p id="confirm-text"></p>
+
+        <div class="confirm-buttons">
+            <button id="btn-yes">Oui</button>
+            <button id="btn-no">Non</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================================
+     MENU INVENTAIRE
+================================ -->
+<div id="context-menu" class="context-menu hidden">
+    <div id="ctx-desc">📜 Description</div>
+    <div id="ctx-inspect">🔍 Interaction</div>
+	<div id="ctx-image">🖼️ Voir l'objet</div>
+</div>
+
+<!-- Fenêtre pour afficher l'objet en grand -->
+<div id="inspect-modal" class="hidden">
+    <div class="inspect-box">
+        <button id="close-inspect">✕</button>
+        <img id="inspect-image">
+    </div>
+</div>
+
+
+
+<!-- ================================
+     FENÊTRE DE CRÉATION / MENU INITIAL
+================================= -->
+<div id="char-creation-overlay" class="overlay visible">
+
+    <div class="overlay-window">
+
+        <!-- ÉTAPE : MENU PRINCIPAL -->
+        <div class="menu-initial step active" id="step-menu">
+
+            <img src="Logo/It_s_Just_an_Adventure-removebg-preview.png"
+                 alt="Logo du jeu"
+                 class="menu-logo">
+
+            <h2>Bienvenue Aventurier !</h2>
+
+            <button id="btn-load-game">Charger une partie</button>
+            <button id="btn-new-game">Créer un personnage</button>
+        </div>
+
+
+        <!-- ÉTAPE : CONFIRMATION ÉCRASER SAUVEGARDE -->
+        <div class="step" id="step-overwrite">
+            <p>Une partie précédente existe.<br>Voulez-vous l'écraser ?</p>
+            <div class="overlay-buttons">
+                <button id="overwrite-yes">Oui</button>
+                <button id="overwrite-no">Non</button>
+            </div>
+        </div>
+
+        <!-- ÉTAPE : NOM -->
+        <div class="step" id="step-name">
+            <h3>Entrez votre nom</h3>
+
+            <input type="text" id="char-name" placeholder="Votre nom...">
+            <button class="next-btn" data-next="step-race">Suivant</button>
+
+            <!-- Boîte de dialogue fantasy (erreur nom) -->
+            <div id="name-alert" class="hidden alert-box">
+                <p id="name-alert-text"></p>
+                <button id="name-alert-ok">Ok</button>
+            </div>
+        </div>
+
+        <!-- ÉTAPE : RACE -->
+        <div class="step" id="step-race">
+            <h3>Choisissez votre race</h3>
+
+            <select id="char-race">
+                <option value="humain">Humain</option>
+                <option value="elfe">Elfe</option>
+                <option value="nain">Nain</option>
+            </select>
+
+            <div class="race-bonus">
+                <p class="bonus-for"></p>
+                <p class="bonus-int"></p>
+                <p class="bonus-agi"></p>
+                <p class="bonus-con"></p>
+            </div>
+
+            <!-- Dialogue fantasy race -->
+            <p id="race-dialog" class="fantasy-dialog"></p>
+
+            <button class="next-btn" data-next="step-sex">Suivant</button>
+        </div>
+
+        <!-- ÉTAPE : SEXE -->
+        <div class="step" id="step-sex">
+            <h3>Choisissez votre sexe</h3>
+
+            <select id="char-sex">
+                <option value="homme">Homme</option>
+                <option value="femme">Femme</option>
+            </select>
+
+            <!-- Dialogue fantasy sexe -->
+            <p id="sex-dialog" class="fantasy-dialog"></p>
+
+            <button class="next-btn" data-next="step-roll">Suivant</button>
+        </div>
+
+        <!-- ÉTAPE : TIRAGE DES CARACTÉRISTIQUES -->
+        <div class="step" id="step-roll">
+            <h3>Tirage des caractéristiques</h3>
+
+            <div id="stats-roll-container">
+                <p>FOR : <span id="roll-for">-</span></p>
+                <p>INT : <span id="roll-int">-</span></p>
+                <p>AGI : <span id="roll-agi">-</span></p>
+                <p>CON : <span id="roll-con">-</span></p>
+            </div>
+
+            <!-- Dialogue fantasy tirage -->
+            <p id="roll-dialog" class="fantasy-dialog"></p>
+
+            <button id="btn-roll-dice">Relancer les dés</button>
+            <button id="btn-validate-roll">Valider le tirage</button>
+        </div>
+
+        <!-- ÉTAPE : FICHE FINALE -->
+        <div class="step" id="step-summary">
+            <h3>Votre personnage</h3>
+
+            <img id="summary-image" src="" alt="Portrait">
+
+            <p><strong>Nom :</strong> <span id="sum-name"></span></p>
+            <p><strong>Race :</strong> <span id="sum-race"></span></p>
+            <p><strong>Sexe :</strong> <span id="sum-sex"></span></p>
+
+            <p><strong>FOR :</strong> <span id="sum-for"></span></p>
+            <p><strong>INT :</strong> <span id="sum-int"></span></p>
+            <p><strong>AGI :</strong> <span id="sum-agi"></span></p>
+            <p><strong>CON :</strong> <span id="sum-con"></span></p>
+			<p><strong>FOL :</strong> <span id="sum-folie"></span></p>
+
+            <!-- Dialogue fantasy final -->
+            <p id="summary-dialog" class="fantasy-dialog"></p>
+
+            <button id="btn-start-game">Commencer l'aventure</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- ================================
+     HEADER HUD GLOBAL (PC)
+================================= -->
+<header id="game-hud" class="pc-only">
+
+    <div class="hud-section">
+        <span class="hud-label">Nom :</span>
+        <span id="hud-name">—</span>
+    </div>
+
+    <div class="hud-section">
+        <span class="hud-label">Race :</span>
+        <span id="hud-race">—</span>
+    </div>
+
+    <div class="hud-section hud-folie">
+        <span class="hud-label">Folie :</span>
+        <div class="folie-bar-container">
+            <div id="folie-bar"></div>
+        </div>
+        <span id="hud-folie-val">0 / 15</span>
+    </div>
+
+    <div class="hud-section">
+        <span class="hud-label">Or :</span>
+        <span id="hud-gold">0</span> 🪙
+    </div>
+	
+	<div class="visit-history-section">
+        
+    </div>
+	
+	<div class="choices">
+                <button id="btn-save">Sauvegarder</button>
+                <button id="btn-load">Charger</button>
+                <button id="btn-reset">Reset</button>
+                <button id="btn-help">Aide</button>
+				<button id="visit-history-btn" class="visit-history-btn">Navigation</button>
+            </div>
+
+    <!-- Bouton Paramètres (déplacé ici) -->
+    <button class="settings-btn pc-only" id="btn-settings">⚙️</button>
+
+</header>
+
+<!-- ================================
+     TON INTERFACE ACTUELLE
+================================= -->
+
+<div class="mobile-header">
+    <div class="mobile-menu-button">☰ Personnage et Menu</div>
+    <img class="mobile-logo" src="Logo/It_s_Just_an_Adventure-removebg-preview.png" alt="logo">
+</div>
+
+<!-- PANNEAU LATERAL MOBILE -->
+<div id="menu-overlay"></div>
+<div class="side-menu">
+
+    <div class="side-close">✕</div>
+
+<!-- NOM -->
+<div class="mobile-name">
+    <h2 id="char-name-mobile"></h2>
+    <div id="char-name-mobile2"></div>
+</div>
+
+<!-- BARRE FOLIE -->
+<div class="mobile-folie">
+    <span class="folie-label">Folie</span>
+    <div class="folie-bar-container small">
+        <div id="folie-bar-mobile"></div>
+    </div>
+    <span id="folie-value-mobile">0/15</span>
+</div>
+
+<!-- PORTRAIT + STATS -->
+<div class="mobile-character-row">
+
+    <div class="mobile-portrait">
+        <img id="portrait-mobile" alt="Portrait personnage">
+    </div>
+
+    <div class="mobile-stats">
+        <p><strong>Race :</strong> <span id="char-race-mobile"></span></p>
+        <p><strong>Sexe :</strong> <span id="char-sexe-mobile"></span></p>
+        <p>FOR : <span id="char-for-mobile"></span></p>
+        <p>INT : <span id="char-int-mobile"></span></p>
+        <p>AGI : <span id="char-agi-mobile"></span></p>
+        <p>CON : <span id="char-con-mobile"></span></p>
+		<p hidden>FOLIE : <span id="char-folie-mobile">0</span></p>
+        <p class="mobile-gold">20 🪙 <span id="hud-gold-mobile">0</span></p>
+    </div>
+
+</div>
+
+<!-- INVENTAIRE -->
+<div class="panel inventory mobile-inventory">
+    <h2>Inventaire</h2>
+    <div class="inventory-grid" id="inventory-list"></div>
+</div>
+
+<!-- NAVIGATION -->
+<div class="panel mobile-navigation">
+    <h2>Navigation</h2>
+    <button class="visit-history-btn-mobile">
+        Historique
+    </button>
+</div>
+
+<!-- MENU SYSTEME -->
+<div class="panel mobile-system-buttons">
+    <h2>Menu</h2>
+    <button id="btn-save-mobile">Sauvegarder</button>
+    <button id="btn-load-mobile">Charger</button>
+    <button id="btn-reset-mobile">Reset</button>
+    <button id="btn-help-mobile">Aide</button>
+    <button id="btn-settings-mobile">Paramètres</button>
+</div>
+
+</div>
+
+<!-- =========================================================
+     FENETRE DESCRIPTION OBJET MOBILE
+========================================================= -->
+<div id="item-popover" class="hidden"></div>
+
+<!-- =========================================================
+     ZONE DE JEU — LARGEUR MAÎTRISÉE
+========================================================= -->
+
+
+
+
+<div class="game-width">
+
+    <!-- =====================================================
+         HEADER DU LIEU (TITRE + DESCRIPTION)
+    ====================================================== -->
+    <header class="header-lieu">
+        <div id="screen-title2">
+            <h3 id="screen-title">Forêt de Sangbois</h3>
+            <p id="screen-text">Une brume rougeâtre s’accroche aux racines…</p>
+        </div>
+    </header>
+
+    <!-- =====================================================
+         LAYOUT PRINCIPAL
+    ====================================================== -->
+    <div class="layout">
+
+        <!-- ================= COLONNE GAUCHE ================= -->
+        <section class="left-panel">
+
+            <!-- Image du lieu -->
+            <img
+                id="screen-image"
+                src="Lieux/Foret/001. Foret.jpg"
+                alt="Illustration du lieu"
+            >
+
+            <!-- Choix dynamiques -->
+            <div class="panel-choix" id="choices-container"></div>
+
+            <!-- Boutons système -->
+            
+
+        </section>
+
+        <!-- ============ PANNEAU PERSONNAGE (PC) ============= -->
+        <section class="middle-panel pc-only">
+
+            <!-- Nom -->
+            <div class="panel nom">
+                <p style="font-size: 1.3rem; font-weight: 700;">
+                    Nom : <span id="char-name-pc"></span>
+                </p>
+                <div id="char-name-pc2"></div>
+            </div>
+
+            <!-- Portrait -->
+            <div class="panel-portrait">
+                <img id="portrait-pc" alt="Portrait personnage">
+            </div>
+
+            <!-- Statistiques -->
+            <div class="panel character">
+                <h2>Personnage</h2>
+                <p>Race 		: <span id="char-race-pc"></span></p>
+                <p>Sexe 		: <span id="char-sexe-pc"></span></p>
+                <p>Force 		: <span id="char-for-pc"></span></p>
+                <p>Intelligence : <span id="char-int-pc"></span></p>
+                <p>Agilité 		: <span id="char-agi-pc"></span></p>
+                <p>Constitution : <span id="char-con-pc"></span></p>
+                <p>Folie 		: <span id="char-folie-pc">0</span></p>
+            </div>
+
+        </section>
+
+        <!-- ================= COLONNE DROITE ================= -->
+        <section class="right-panel">
+
+            <!-- Inventaire (PC) -->
+            <div class="panel inventory inventory-main pc-only">
+                <h2>Inventaire</h2>
+                <div class="inventory-grid" id="inventory-list-pc"></div>
+            </div>
+
+            <!-- Journal -->
+            <div class="panel log">
+                <h2>Journal</h2>
+                <div class="log-list" id="log-list"></div>
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+<!-- AIDE -->
+<div id="help-box" class="help-box overlay hidden">
+    <div class="help-window">
+        <h3>Contrôles Clavier</h3>
+        <p>1 à 4 : Sélection des choix</p>
+        <p>5 : Mute / Unmute</p>
+        <p>S : Sauvegarder</p>
+        <p>C : Charger</p>
+        <p>R : Reset</p>
+        <p>O : Validation Menu - Oui</p>
+        <p>N : Validation Menu - Non</p>
+        <p>Espace : Accélération de l'affichage du texte</p>
+        <p>Clic droit sur un objet de l'inventaire - Menu de l'objet</p>
+
+        <div class="help-buttons">
+            <button id="help-close">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<!-- POPUP NOM -->
+<div id="name-alert" class="popup hidden">
+    <div class="popup-box">
+        <p>Il te faut un nom aventurier...</p>
+        <button id="name-alert-ok">OK</button>
+    </div>
+</div>
+
+<!-- OVERLAY PARAMETRES -->
+<div class="overlay" id="settings-overlay">
+    <div class="overlay-window">
+        <h2>Options</h2>
+
+        <h3>Choisir un thème</h3>
+
+        <select id="theme-selector">
+            <option value="theme-sepia">Sépia Parchemin</option>
+            <option value="theme-dark">Orange RPG</option>
+            <option value="theme-glacial">Froid Glacial</option>
+            <option value="theme-maudit">Rouge Maudit</option>
+            <option value="theme-foret">Vert Forêt</option>
+            <option value="theme-nuit">Nuit Profonde</option>
+            <option value="theme-celeste">Lumière sacrée</option>
+            <option value="theme-infernal">Infernal Pink</option>
+            <option value="theme-neon">Cyber Fantasy</option>
+            <option value="theme-antique">Antique & Clair</option>
+        </select>
+
+        <button id="settings-close">Fermer</button>
+    </div>
+</div>
+
+  <script src="./debug.js"></script>
+  <script src="./audio.js"></script>
+  <script src="./themes.js"></script>
+  <script src="./saveLoad.js"></script>
+  <script src="./ecrans.js"></script>
+  <script src="./visitHistory.js"></script>
+  <script src="./game.js"></script>
+  <script src="./clavier.js"></script>
+  <script src="./anim.js"></script>
+  <script src="./main.js"></script>
+
+</body>
+</html>

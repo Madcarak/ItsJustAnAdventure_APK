@@ -1,0 +1,1760 @@
+/* =========================================================
+   GLOBAL
+========================================================= */
+body {
+	background: #444;
+}
+
+body {
+    position: relative;
+    overflow-x: hidden;
+}
+
+
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+    font-family: Georgia, serif;
+    color: white;
+    cursor: url("Logo/curseur_gant.png") 8 8, auto;
+}
+
+/* Fond flou animé */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: black; /* Ajout */
+	    left: -5%;
+    right: -5%;
+    top: -5%;
+    bottom: -5%;
+}
+
+/* Puis image en seconde couche */
+body::before {
+    background-image: var(--bg-image);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.85) blur(4px);
+    opacity: 0.9;
+    transform: scale(1.05);
+    pointer-events: none;
+    animation:
+        bgZoom 30s ease-in-out infinite alternate,
+        bgMove 18s ease-in-out infinite alternate;
+    z-index: -1;
+
+    /* IMPORTANT : */
+    mix-blend-mode: normal !important;
+}
+
+@media (max-width: 900px) {
+
+    body::before {
+        transform: scale(1);
+        animation: none;
+    }
+
+}
+
+@keyframes bgZoom {
+    0%   { transform: scale(1.05); }
+    100% { transform: scale(1.12); }
+}
+
+@keyframes bgMove {
+    0%   { background-position: center; }
+    100% { background-position: 52% 48%; }
+}
+
+/* Grain cinématographique */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: url("data:image/svg+xml;utf8,
+        <svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'>
+            <filter id='n' x='0' y='0'>
+                <feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/>
+            </filter>
+            <rect width='100%' height='100%' filter='url(%23n)' opacity='0.08'/>
+        </svg>"
+    ) repeat;
+    opacity: 0.07;
+    z-index: -1;
+}
+
+/* Curseur gant médiéval pour tout ce qui est cliquable */
+button,
+a,
+[onclick],
+.clickable,
+input[type="button"],
+input[type="submit"],
+.inventory-item,
+.settings-btn,
+.settings-btn-mobile,
+.mobile-menu-button,
+.side-close,
+select {
+    cursor: url("Logo/curseur_epee.png") 10 5, pointer;
+}
+
+/* Curseur plume de scribe quand le joueur écrit */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+textarea {
+    cursor: url("Logo/curseur_plume.png") 6 20, text;
+}
+
+
+img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
+.inventory p { margin: 3px 0; }
+
+/* =========================================================
+   HEADER MOBILE
+========================================================= */
+
+.mobile-header {
+    display: none;
+    position: fixed;
+    top: 0;
+	    left: 0;               /* IMPORTANT : ancre à gauche */
+    right: 0;              /* IMPORTANT : ancre à droite */
+    width: 100%;
+    height: 60px;
+    background: rgba(0,0,0,0.75);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    align-items: center;
+    justify-content: space-between;
+    z-index: 999;
+}
+
+.screen-title2 {
+	height: auto !important;
+	}
+
+.mobile-menu-button,
+.mobile-logo {
+    display: none;
+}
+
+.mobile-logo {
+    width: 120px;
+    padding-top: 10px;
+	padding-right: 10px;
+}
+
+/* =========================================================
+   MENU LATÉRAL MOBILE
+========================================================= */
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -420px;
+    width: 380px;
+    height: 100%;
+    padding: 20px;
+    background: rgba(0,0,0,0.95);
+    box-shadow: 4px 0 20px rgba(0,0,0,0.6);
+    overflow-y: auto;
+    transition: left 0.3s ease;
+    z-index: 999;
+}
+
+#menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 998;
+    display: none;
+}
+
+.side-menu.open { left: 0; }
+
+.side-close {
+    font-size: 22px;
+    text-align: right;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+
+.mobile-name {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.mobile-name h2 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.mobile-folie {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.folie-label {
+    font-weight: bold;
+    min-width: 45px;
+}
+
+#folie-value-mobile {
+    min-width: 45px;
+    text-align: right;
+}
+
+.mobile-character-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+}
+
+.mobile-portrait {
+    width: 150px;
+    height: 150px;
+    border: 2px solid white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.mobile-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mobile-stats {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.mobile-stats p {
+    margin: 4px 0;
+}
+
+.mobile-gold {
+    margin-top: 8px;
+    font-weight: bold;
+}
+
+.mobile-inventory .inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 64px);
+    grid-template-rows: repeat(5, 64px);
+    gap: 10px;
+
+    justify-content: center;   /* ✅ centre horizontalement */
+    margin: 0 auto;            /* ✅ sécurité */
+}
+
+.mobile-inventory {
+    margin-bottom: 20px;
+	text-align: center;
+}
+
+.mobile-navigation {
+    margin-bottom: 20px;
+	text-align: center;
+}
+
+
+/* =========================================================
+   LAYOUT PC (CORRIGÉ)
+========================================================= */
+
+/* ✔ Un SEUL layout, version propre */
+.layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 0px;
+	background: transparent !important;
+}
+
+.left-panel,
+.middle-panel,
+.right-panel {
+    align-self: flex-start;
+}
+
+/* Portrait + Image */
+.left-panel {
+    width: 100%;
+    max-width: 935px;   /* limite maximale */
+    margin: 0 auto;      /* centre automatiquement */
+}
+
+.left-panel img {
+    width: 100%;         /* suit la largeur + zoom */
+    height: auto;        /* garde le ratio */
+    border: 2px solid white;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+
+    .left-panel {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .left-panel img {
+        width: 100%;
+        max-width: 100%;
+        display: block;      /* évite les micro-espaces inline */
+        box-sizing: border-box;
+    }
+
+}
+
+.panel {
+    background: rgba(0,0,0,0.25);
+    border: 2px solid white;
+    border-radius: 8px;
+    padding: 8px;
+
+    position: relative;        /* 🔥 crée un contexte */
+    overflow: visible;         /* 🔥 autorise le menu */
+    z-index: 1;                /* sécurité */
+}
+
+.panel.character {
+    position: relative;        /* 🔥 obligatoire */
+    overflow: visible;         /* 🔥 sinon menu coupé */
+    z-index: 200;              /* au-dessus des autres panels */
+}
+
+
+.panel h2 {
+    margin: 0 0 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid white;
+}
+
+.panel p,
+.panel li {
+    margin: 2px 0;
+    line-height: 1.1;
+}
+
+/* Portrait dédié */
+.panel-portrait {
+    width: 306px ;
+    height: 306px ;
+    border: 2px solid white;
+    background: rgba(0,0,0,0.25);
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.panel-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+	border-radius: 8px;
+}
+
+/* =========================================================
+   CHOIX / BOUTONS
+========================================================= */
+
+.panel-choix {
+    background: rgba(0,0,0,0.25);
+    border: 2px solid white;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 0 auto;
+	margin-bottom: 10px;
+}
+
+.choix-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    transition: 0.2s;
+}
+
+.choix-item:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+.choices {
+    display: flex;
+    gap: 10px;
+}
+
+.choices button {
+    flex: 1 1 30%;
+    padding: 8px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid white;
+    border-radius: 6px;
+    color: white;
+}
+
+
+
+/* =========================================================
+   JOURNAL — VERSION FINALE RESPONSIVE
+========================================================= */
+
+/* PANEL DU JOURNAL (fixe, limité en hauteur) */
+.right-panel .panel.log {
+    display: flex;
+    flex-direction: column;
+    height: 400px;                 /* 👉 Hauteur fixe, modifiable */
+    max-height: calc(90vh - 120px);/* 👉 Sécurité responsive */
+    padding: 10px;
+    background: rgba(0,0,0,0.25);
+    border: 2px solid white;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+/* CONTENU QUI SCROLLE */
+.log-list {
+    flex: 1;                       /* prend tout l’espace restant */
+    overflow-y: auto;              /* 👉 scroll vertical interne */
+    padding-right: 6px;            /* petit espace pour la scrollbar */
+}
+
+
+/* Entrées du journal */
+.panel.log p:not(:first-child) {
+    border-top: 0.5px solid rgba(255,255,255,0.25);
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+/* Style des lignes */
+.log-entry {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 8px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.log-arrow { 
+    color: #d35400;
+    font-weight: bold;
+}
+
+.log-time { 
+    margin-left: auto;
+    font-size: 0.85rem;
+    color: #bbb;
+}
+
+.log-tag {
+    color: #d35400;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+
+/* =========================================================
+   PC — BOUTONS LIGNE
+========================================================= */
+
+@media (min-width: 901px) {
+    .choices { flex-wrap: nowrap; }
+    .choices button { width: 100%; }
+}
+
+
+
+/* =========================================================
+   VERSION MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+	
+	#game-hud {
+        display: none !important;
+    }
+
+    .mobile-header       { display: flex; }
+    .mobile-menu-button {
+    display: block;
+    font-size: 1.2rem;   /* plus grand */
+    font-weight: 700;    /* texte en gras */
+    padding: 8px 12px;   /* espace intérieur confortable */
+    cursor: pointer;
+    user-select: none;
+}
+    .mobile-logo         { display: block; }
+
+    .layout {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .pc-only { display: none; }
+
+    .panel,
+    .right-panel .panel.log {
+        max-height: calc(100vh - 90px);
+        padding: 8px;
+    }
+
+    .choices button {
+        flex: 1 1 45%;
+    }
+    .choices button:last-child {
+        margin: 0 auto;
+    }
+
+    /* ✔ mettre le header-lieu SOUS la barre mobile */
+    .header-lieu {
+        margin-top: 70px; /* hauteur de la barre + marge */
+        text-align: left;
+		
+    }
+}
+
+/* =========================================================
+   CONFIRM BOX - HELP BOX
+========================================================= */
+
+.confirm-box {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 4000;
+}
+
+.confirm-box.hidden { display: none; }
+
+.confirm-window {
+    background: #222;
+    border: 2px solid white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.confirm-buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 15px;
+    justify-content: center;
+}
+
+.confirm-buttons button {
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#help-box {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 4000;
+}
+
+#help-box.hidden { display: none; }
+
+.help-window {
+    background: #222;
+    border: 2px solid white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.help-buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 15px;
+    justify-content: center;
+}
+
+.help-buttons button {
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* =========================================================
+   TRANSITION IMAGE
+========================================================= */
+
+#screen-image {
+    width: 100%;
+    display: block;
+    position: relative;
+    transition: opacity 0.4s ease;
+}
+
+#screen-image.fade-out { opacity: 0; }
+#screen-image.fade-in  { opacity: 1; }
+
+/* =========================================================
+   CREATION DE PERSONNAGE
+========================================================= */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(4px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+.overlay.visible { display: flex; }
+
+.overlay-window {
+    width: 420px;
+    padding: 25px;
+    border-radius: 10px;
+    background: rgba(30,30,30,0.9);
+    border: 2px solid white;
+    text-align: center;
+}
+
+.overlay-window h2,
+.overlay-window h3 {
+    margin-bottom: 15px;
+}
+
+.overlay-window button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    background: black;
+    border: 1px solid white;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#overlay-confirm:not(.hidden) {
+    display: flex !important;
+}
+
+.step { display: none; }
+.step.active { display: block; }
+
+.overlay-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.overlay-buttons button { width: 120px; }
+
+input[type="text"], select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid white;
+    background: rgba(0,0,0,0.4);
+    color: white;
+}
+
+#overlay-confirm {
+    z-index: 10001; /* au-dessus des autres overlays */
+}
+
+#overlay-confirm .overlay-buttons,
+#overlay-confirm .confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+#confirm-box {
+    position: relative;
+    z-index: 10001;
+
+    display: inline-flex;         /* Boîte compacte */
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+
+    background: rgba(20,20,20,0.95);
+    padding: 25px;
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    color: var(--text-color);
+    text-align: center;
+
+    width: auto;                  /* Compacte */
+    max-width: 90%;               /* Sécurité */
+    min-width: 300px;             /* Taille mini */
+}
+
+#confirm-text {
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#stats-roll-container {
+    margin: 15px 0;
+}
+
+#stats-roll-container p {
+    margin: 4px 0;
+    font-size: 1.1em;
+}
+
+/* Résumé final */
+.summary-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+#summary-image {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border: 2px solid white;
+    border-radius: 6px;
+}
+
+.summary-text {
+    text-align: left;
+    font-size: 1.1em;
+}
+
+.summary-text p { margin: 6px 0; }
+
+.race-bonus p {
+    margin: 0;
+    padding: 2px 0;
+    font-size: 0.9em;
+}
+
+.popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.popup.hidden { display: none; }
+
+.popup-box {
+    background: #222;
+    padding: 20px 30px;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    border: 2px solid #888;
+}
+
+.popup-box button {
+    margin-top: 15px;
+    padding: 8px 18px;
+    border: none;
+    background: #a579ff;
+    color: white;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+
+
+/* =========================================================
+   HEADER / ALIGNEMENT
+========================================================= */
+
+.header-lieu {
+    margin-bottom: 15px;
+    padding-left: 10px;
+}
+
+.menu-logo {
+    width: 300px;
+    margin: 0 auto 15px;
+    display: block;
+}
+
+/* =========================================================
+   BOUTON PARAMETRE PC
+========================================================= */
+
+/* Compact (PC only) : plus petit et un peu remonté */
+.settings-btn.pc-only {
+    position: fixed;
+    top: 6px;               /* remontée plus prononcée */
+    right: 12px;
+    font-size: 20px;        /* texte réduit */
+    background: rgba(0,0,0,0.6);
+    border: 1px solid var(--border-color, #fff);
+    padding: 8px 8px;       /* padding réduit pour diminuer la hauteur */
+    line-height: 1;         /* assure la compacité verticale */
+    color: white;
+    cursor: pointer;
+    border-radius: 6px;
+    z-index: 2000;
+}
+
+
+.settings-btn-mobile {
+    width: 100%;
+    padding: 10px;
+    background: black;
+    border: 1px solid var(--border-color, #fff);
+    color: white;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 18px;
+}
+
+/* =========================================================
+   THEMES — Gestion par classes sur <body>
+========================================================= */
+
+/* Thème sombre (défaut → orange RPG) */
+body.theme-dark {
+    --border-color: #d35400;
+    --text-color: #ffffff;
+
+    --btn-bg: #ffce99;      /* orange clair */
+    --btn-text: #4a1f00;    /* brun foncé */
+}
+
+
+/* Thème sépia parchemin */
+body.theme-sepia {
+    --border-color: #e7aa17;
+    --text-color: #fafed3;
+
+    --btn-bg: #f3d182;     /* beige clair */
+    --btn-text: #4e3618;    /* marron foncé */
+}
+
+
+/* Thème glacial */
+body.theme-glacial {
+    --border-color: #6ab8ff;
+    --text-color: #dff4ff;
+
+    --btn-bg: #d9efff;      /* bleu très clair */
+    --btn-text: #0b2940;    /* bleu nuit */
+}
+
+
+/* Thème maudit (rouge / noir) */
+body.theme-maudit {
+    --border-color: #b80000;
+    --text-color: #ffdddd;
+
+    --btn-bg: #ffb5b5;      /* rose clair */
+    --btn-text: #400000;    /* rouge très sombre */
+}
+
+
+/* Thème foret (vert / noir) */
+body.theme-foret {
+    --border-color: #12960f;
+    --text-color: #b5f8bb;
+
+    --btn-bg: #c8ffce;      /* vert pastel */
+    --btn-text: #073208;    /* vert très sombre */
+}
+
+body.theme-nuit {
+    --border-color: #6288b9;
+    --text-color: #e3ecff;
+
+    --btn-bg: #d4e2ff;
+    --btn-text: #0b1d33;
+}
+
+body.theme-celeste {
+    --border-color: #eeebb9;
+    --text-color: #faf9eb;
+
+    --btn-bg: #eee680;
+    --btn-text: #5c5b00;
+}
+
+body.theme-infernal {
+    --border-color: #d3706b;
+    --text-color: #f3b9b8;
+
+    --btn-bg: #fc75b4;
+    --btn-text: #ab0351;
+}
+
+body.theme-neon {
+    --border-color: #00ffaa;
+    --text-color: #dffff5;
+
+    --btn-bg: #c7ffe9;
+    --btn-text: #004d35;
+}
+
+body.theme-antique {
+    --border-color: #fefbc8;
+    --text-color: #ffeec3;
+
+    --btn-bg: #ffe3a1;
+    --btn-text: #4b3200;
+}
+
+
+/* Application des variables */
+body {
+    color: var(--text-color);
+}
+
+.panel,
+.panel-choix,
+.overlay-window,
+input,
+select,
+button,
+#summary-image {
+    border: 2px solid var(--border-color) !important;
+}
+
+/* Icône roue crantée */
+.settings-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 26px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+/* =========================================================
+   APPLICATION DES THÈMES – TEXTE & STRUCTURE
+========================================================= */
+
+body {
+    color: var(--text-color);
+}
+
+/* Texte principal */
+.panel,
+.panel-choix,
+.panel.log,
+.popup-box,
+.confirm-window,
+.help-window,
+.overlay-window,
+.visit-history-menu,
+.visit-history-card,
+.mobile-name,
+.mobile-stats,
+.mobile-navigation,
+.mobile-system-buttons {
+    color: var(--text-color);
+}
+
+/* Texte secondaire */
+.panel p,
+.panel li,
+.log-entry,
+.visit-history-card p,
+.mobile-stats p {
+    color: var(--text-muted);
+}
+
+/* Titres */
+.panel h2,
+.visit-history-card h3,
+.mobile-name h2 {
+    color: var(--text-title);
+}
+
+
+/* =========================================================
+   BORDURES – LIÉES AU THÈME
+========================================================= */
+
+.panel,
+.panel-choix,
+.panel.log,
+.left-panel img,
+.panel-portrait,
+.mobile-portrait,
+.folie-bar-container,
+.folie-bar-container.small,
+.confirm-window,
+.help-window,
+.overlay-window,
+.header-lieu,
+input[type="text"],
+select,
+#summary-image,
+.popup-box {
+    border: 2px solid var(--border-color);
+}
+
+/* Boutons */
+button,
+.choices button,
+.overlay-window button,
+.confirm-buttons button,
+.help-buttons button,
+.mobile-system-buttons button,
+.mobile-navigation button,
+.popup-box button {
+    border: 2px solid var(--border-color);
+}
+
+/* Bordures internes */
+.panel h2,
+.panel.log p:not(:first-child),
+.log-entry {
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Header mobile */
+.mobile-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Icônes */
+.log-arrow,
+.log-tag {
+    color: var(--border-color);
+}
+
+
+/* =========================================================
+   BOUTONS — Thèmes + Animations
+========================================================= */
+
+button,
+.choices button,
+.overlay-window button,
+.confirm-buttons button,
+.help-buttons button,
+.mobile-system-buttons button,
+.mobile-navigation button,
+.popup-box button {
+
+    background: var(--btn-bg);
+    color: var(--btn-text);
+
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+
+    /* Effet 3D subtil */
+    box-shadow: 0 2px 0 var(--border-color);
+    transition: 0.15s ease;
+}
+
+/* Hover */
+button:hover,
+.choices button:hover,
+.overlay-window button:hover,
+.confirm-buttons button:hover,
+.help-buttons button:hover,
+.mobile-system-buttons button:hover,
+.mobile-navigation button:hover,
+.popup-box button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 var(--border-color);
+    filter: brightness(0.95);
+}
+
+/* Active */
+button:active,
+.choices button:active,
+.overlay-window button:active,
+.confirm-buttons button:active,
+.help-buttons button:active,
+.mobile-system-buttons button:active,
+.mobile-navigation button:active,
+.popup-box button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 var(--border-color);
+    filter: brightness(0.8);
+}
+
+
+/* =========================================================
+   CURSEURS PERSONNALISÉS
+========================================================= */
+
+button,
+a,
+[onclick],
+.clickable,
+select {
+    cursor: url("./Logo/curseur_epee.png") 8 8, pointer !important;
+}
+
+input,
+textarea {
+    cursor: url("./Logo/curseur_plume.png") 4 20, text !important;
+}
+
+
+/* =========================================================
+   CREATION DIALOGUES
+========================================================= */
+
+.fantasy-dialog {
+    font-style: italic;
+    margin-top: 10px;
+    color: #c9b37c;
+    text-shadow: 0 0 4px #000;
+}
+
+.alert-box {
+    background: rgba(0,0,0,0.85);
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #aa7733;
+    margin-top: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* =========================================================
+   HEADER PRINCIPAL
+========================================================= */
+#game-hud {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1a1a1a;
+    border-bottom: 2px solid #6b0000;
+    padding: 5px 20px;
+    color: #e3d6b9;
+    font-family: "Cinzel", serif;
+}
+
+.hud-section {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hud-label {
+    font-weight: bold;
+	font-size: 1.25rem;
+}
+
+/* Barre de folie */
+.folie-bar-container {
+    width: 150px;
+    height: 20px;
+    border: 1px solid #600;
+    background: #300;
+    position: relative;
+}
+
+.folie-bar-container.small {
+    width: 100px;
+	border-radius: 5px;
+}
+
+.mobile-hud-section.mobile-only {
+	border-radius: 10px;
+}	
+
+#folie-bar,
+#folie-bar-mobile {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #8b0000, #ff0000);
+    transition: width 0.3s ease-out;
+}
+
+/* Mobile */
+.mobile-hud-section {
+    margin: 15px 0;
+    padding: 10px;
+    background: #1a1a1a;
+    border: 1px solid #6b0000;
+}
+
+/* Par défaut : caché sur PC */
+.mobile-only {
+    display: none;
+}
+
+/* Visible en mobile */
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block;
+    }
+
+    .pc-only {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .folie-bar-container {
+        height: 10px;
+    }
+
+    .folie-bar-container.small {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   INVENTAIRE VISUEL – VERSION PC (Responsive)
+========================================================= */
+#inventory-list-pc.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+    gap: 6px;
+    padding: 5px;
+
+    min-width: calc(64px * 4 + 6px * 3); /* empêche de descendre en dessous de 4 colonnes */
+}
+
+/* =========================================================
+   INVENTAIRE VISUEL – VERSION MOBILE (Grille fixe)
+========================================================= */
+@media (max-width: 900px) {
+    .inventory-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 64px);
+        grid-template-rows: repeat(5, 64px);
+        gap: 6px;
+        padding: 5px;
+    }
+}
+
+/* Masquer l'inventaire principal sur mobile */
+@media (max-width: 900px) {
+    .inventory-main {
+        display: none !important;
+    }
+}
+
+/* =========================================================
+   CASES D’INVENTAIRE
+========================================================= */
+.inventory-slot {
+    width: 64px;
+    height: 64px;
+    border: 2px solid #444;
+    background: rgba(0, 0, 0, 0.2);
+    position: relative;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.inventory-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+/* =========================================================
+   MENU CLIC DROIT
+========================================================= */
+.context-menu {
+    position: absolute;
+    background: #1a1a1a;
+    border: 1px solid #555;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    z-index: 999999;
+}
+
+.context-menu div {
+    padding: 6px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.context-menu div:hover {
+    background: #333;
+}
+
+.hidden {
+    display: none;
+}
+/* =========================================================
+/* Scrollbar NOIRE dans le side-menu 
+========================================================= */
+.side-menu {
+    background-color: #000;           /* fond opaque derrière la scrollbar */
+    scrollbar-gutter: stable both-edges; /* empêche un bord transparent */
+}
+
+/* Pour Chrome / Edge / Safari */
+.side-menu::-webkit-scrollbar {
+    width: 10px; /* un peu plus large pour compenser */
+}
+
+.side-menu::-webkit-scrollbar-track {
+    background: #000;  /* supprime toute transparence résiduelle */
+}
+
+.side-menu::-webkit-scrollbar-thumb {
+    background: #222;
+    border-radius: 4px;
+}
+
+
+.side-menu::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
+
+/* Désactive totalement le side-menu au-dessus de 900px */
+@media (min-width: 901px) {
+    .side-menu {
+        left: -9999px !important;   /* l'empêche d’apparaître */
+        pointer-events: none;       /* impossible de cliquer dedans */
+        visibility: hidden;         /* invisible */
+    }
+
+    .side-menu.open {
+        left: -9999px !important;   /* ignore l'ouverture */
+    }
+
+    .mobile-menu-button {
+        display: none !important;   /* cache le bouton aussi */
+    }
+}
+
+html, body {
+    scrollbar-width: thin;
+    scrollbar-color: #000 #000;
+    scrollbar-gutter: stable both-edges;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 10px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+    background: #000;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+    background: #222;
+    border-radius: 4px;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10002;
+}
+
+.modal-content {
+    position: relative;
+    background: #222;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+#inspect-image {
+    max-width: 80vw;
+    max-height: 80vh;
+    border-radius: 8px;
+}
+
+.close-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: black;
+    padding: 5px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+/* -----------------------------------------------------
+   Navigation Historique
+------------------------------------------------------ */
+
+/* ✅ CONTENEUR DU BOUTON (RÉFÉRENCE ABSOLUTE) */
+.visit-history-section {
+    position: relative;
+    z-index: 2000;
+}
+
+/* -----------------------------------------------------
+   Bouton d'ouverture
+------------------------------------------------------ */
+
+.visit-history-btn {
+    background-color: var(--btn-bg, #333);
+    color: var(--btn-text, #fff);
+    border: 2px solid var(--border-color, #666);
+
+    padding: 8px 12px;
+    width: 300px;
+
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+
+    border-radius: 6px;
+    cursor: pointer;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.visit-history-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.visit-history-btn-mobile {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+/* -----------------------------------------------------
+   MENU DÉROULANT (SOUS LE BOUTON)
+------------------------------------------------------ */
+
+.visit-history-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+
+    background-color: rgba(0,0,0,0.95);
+    border: 1px solid var(--border-color, #666);
+    border-radius: 8px;
+
+    max-height: 500px;
+    overflow-y: auto;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    color: var(--text-color);
+
+    display: none;
+    opacity: 0;
+    transform: translateY(10px);
+
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 10010;
+}
+
+/* ✅ ÉTAT OUVERT */
+.visit-history-menu.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+    .visit-history-menu {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        margin-top: 10px;
+        z-index: 9999;
+    }
+}
+
+
+/* -----------------------------------------------------
+   CONTENEUR DES CARTES
+------------------------------------------------------ */
+
+.visit-history-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+/* -----------------------------------------------------
+   CARTE INDIVIDUELLE
+------------------------------------------------------ */
+
+.visit-history-card {
+    background-color: #222;
+    border: 1px solid #333;
+    border-radius: 8px;
+
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.visit-history-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.45);
+}
+
+/* -----------------------------------------------------
+   CONTENU DES CARTES
+------------------------------------------------------ */
+
+.visit-history-card h3 {
+    margin: 0;
+    font-size: 14px;
+    color: #ffcc00;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.visit-history-card p {
+    margin: 0;
+    font-size: 11px;
+    font-family: monospace;
+    color: #aaa;
+}
+
+.visit-history-card img {
+    width: 100%;
+    height: 80px;
+
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #444;
+}
+
+/* =========================================================
+   HEADER LIEU — ALIGNÉ SUR LE JOURNAL
+========================================================= */
+
+.header-lieu {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    padding-right: 0; /* ❌ inutile ici */
+    padding: 0;
+
+    border-radius: 10px;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    box-shadow:
+        inset 2px 0 4px rgba(0, 0, 0, 0.6);
+
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+/* ✅ largeur calquée sur la colonne droite */
+.header-lieu #screen-title2 {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+
+    background: none;
+    box-shadow: none;
+    border-radius: inherit;
+
+    padding: 8px 12px; /* si tu veux un padding interne */
+}
+
+.game-width {
+    max-width: 98%;   /* à ajuster selon ton jeu */
+	max-height: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+	padding-left: -5px;
+}
+
+/* =========================================================
+   HEADER LIEU — AJUSTEMENT MOBILE
+========================================================= */
+@media (max-width: 768px) {
+
+    .header-lieu {
+        margin-top: 70px;
+		margin-bottom: 10px;
+    }
+
+}
+
+
+/* =========================================================
+   FENETRE DESCRIPTION OBJET
+========================================================= */
+#item-popover {
+    position: fixed;
+    max-width: 260px;
+    background: rgba(5, 5, 5, 0.96);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    z-index: 9999;
+
+    box-shadow:
+        inset 2px 0 4px rgba(255,255,255,0.08),
+        0 0 14px rgba(0,0,0,0.7);
+}
+
+#item-popover .tag {
+    color: #d7b46a;
+    font-weight: bold;
+}
+
+#item-popover.hidden {
+    display: none;
+}
+
+#inspect-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 30000;
+}
+
+.inspect-box {
+    position: relative;
+}
+
+#inspect-image {
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+#close-inspect {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    line-height: 1;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+.mobile-system-buttons {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* ✅ 2 colonnes */
+    gap: 10px;
+    text-align: center;
+}
+
+/* Le titre prend toute la largeur */
+.mobile-system-buttons h2 {
+    grid-column: 1 / -1;
+}
+
+/* Le bouton Paramètres prend toute la largeur */
+#btn-settings-mobile {
+    grid-column: 1 / -1;
+}
+
+/* Style boutons */
+.mobile-system-buttons button {
+    padding: 10px;
+}
+
+.loot-fly {
+    position: fixed;
+    width: 64px;
+    height: 64px;
+    pointer-events: none;
+    transition: transform 0.7s ease, opacity 0.7s ease;
+    z-index: 99999;
+}
+
+body {
+    overflow: visible !important;
+}
+

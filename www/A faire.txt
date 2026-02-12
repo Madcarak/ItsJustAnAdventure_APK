@@ -1,0 +1,15 @@
+A coder : 
+- Probleme de bague
+- introductio dicdactiielle : Utilisaion des objets (desc, interac, visu) paamtre thematique
+- bug pachemin.. lorsque l'on a uilisé le parceminon peu le reup de nouau (tout objets dans la meme situation)
+- Ajouter un bouton couper le son
+- Ajouter un bouton couper la musique
+- dissocier dans le code Son et Musique
+- 
+
+
+Idées :
+- navigation a travers les écrans utilisable apres obtenu une carte ou un anneau de déplacemnt (trouvable uniquement dans la zone montagne dans le puit
+
+Histoire a faire ou idées : 
+- Une fois les deux pierres assembler Ecan d'assemblage qui fait perdre la raison et qui ramne le joueur à l'écran 1
