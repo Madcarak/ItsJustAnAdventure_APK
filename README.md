@@ -8,11 +8,11 @@
   <tr>
     <td align="center">
       <h4>🖥️ Version PC</h4>
-      <img src="www/gif/GIF_pc.gif" alt="Aperçu de la version PC" width="700">
+      <img src="www/gif/GIF_pc.gif" alt="Aperçu de la version PC" width="600">
     </td>
     <td align="center">
       <h4>📱 Version Mobile</h4>
-      <img src="www/gif/GIF_mobile.gif" alt="Aperçu de la version Mobile" width="225">
+      <img src="www/gif/GIF_mobile.gif" alt="Aperçu de la version Mobile" width="175">
     </td>
   </tr>
 </table>
