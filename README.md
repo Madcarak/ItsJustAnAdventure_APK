@@ -99,3 +99,75 @@ Auteur : Madcarak (Laurent Aubouy)
 Contact : aubouy.laurent@gmail.com  
 GitHub : Madcarak
 =====================================
+
+## 💡 Galerie des visuels (PC et Mobile)
+
+<p style="text-align: center; font-style: italic;">
+  Cliquez sur une image pour l'agrandir 👇
+</p>
+
+<div style="display: flex; justify-content: space-around; align-items: flex-start; gap: 20px;">
+
+  <!-- Colonne PC -->
+  <div style="flex: 1; text-align: center;">
+    <h4>🖥️ Visuels PC</h4>
+    <a href="www/images/pc__visuel (1).png" target="_blank">
+      <img src="www/images/pc__visuel (1).png" alt="Visuel PC 1" style="width: 600px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/pc__visuel (2).png" target="_blank">
+      <img src="www/images/pc__visuel (2).png" alt="Visuel PC 2" style="width: 600px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/pc__visuel (3).png" target="_blank">
+      <img src="www/images/pc__visuel (3).png" alt="Visuel PC 3" style="width: 600px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/pc__visuel (4).png" target="_blank">
+      <img src="www/images/pc__visuel (4).png" alt="Visuel PC 4" style="width: 600px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/pc__visuel (5).png" target="_blank">
+      <img src="www/images/pc__visuel (5).png" alt="Visuel PC 5" style="width: 600px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/pc__visuel (6).png" target="_blank">
+      <img src="www/images/pc__visuel (6).png" alt="Visuel PC 6" style="width: 600px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/pc__visuel (7).png" target="_blank">
+      <img src="www/images/pc__visuel (7).png" alt="Visuel PC 7" style="width: 600px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/pc__visuel (8).png" target="_blank">
+      <img src="www/images/pc__visuel (8).png" alt="Visuel PC 8" style="width: 600px; margin-bottom: 10px;">
+    </a>
+  </div>
+
+  <!-- Colonne Mobile -->
+  <div style="flex: 1; text-align: center;">
+    <h4>📱 Visuels Mobile</h4>
+    <a href="www/images/mobile_visuel (1).png" target="_blank">
+      <img src="www/images/mobile_visuel (1).png" alt="Visuel Mobile 1" style="width: 175px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/mobile_visuel (2).png" target="_blank">
+      <img src="www/images/mobile_visuel (2).png" alt="Visuel Mobile 2" style="width: 175px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/mobile_visuel (3).png" target="_blank">
+      <img src="www/images/mobile_visuel (3).png" alt="Visuel Mobile 3" style="width: 175px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/mobile_visuel (4).png" target="_blank">
+      <img src="www/images/mobile_visuel (4).png" alt="Visuel Mobile 4" style="width: 175px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/mobile_visuel (5).png" target="_blank">
+      <img src="www/images/mobile_visuel (5).png" alt="Visuel Mobile 5" style="width: 175px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/mobile_visuel (6).png" target="_blank">
+      <img src="www/images/mobile_visuel (6).png" alt="Visuel Mobile 6" style="width: 175px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/mobile_visuel (7).png" target="_blank">
+      <img src="www/images/mobile_visuel (7).png" alt="Visuel Mobile 7" style="width: 175px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/mobile_visuel (8).png" target="_blank">
+      <img src="www/images/mobile_visuel (8).png" alt="Visuel Mobile 8" style="width: 175px; margin-bottom: 10px;">
+    </a>
+    <a href="www/images/mobile_visuel (9).png" target="_blank">
+      <img src="www/images/mobile_visuel (9).png" alt="Visuel Mobile 9" style="width: 175px; margin-bottom: 10px;">
+    </a>
+  </div>
+
+</div>
+
