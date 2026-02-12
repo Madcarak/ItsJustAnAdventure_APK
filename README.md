@@ -1,4 +1,4 @@
-=====================================
+==========================================
                 🕵️‍♂️ It's Just An Adventure (Version Beta 0.2) par MADCARAK
 =====================================
 
@@ -14,7 +14,7 @@
     </td>
     <td align="center">
       <h4>📱 Version Mobile</h4>
-      <img src="www/gif/GIF_mobile.gif" alt="Aperçu de la version Mobile" width="230">
+      <img src="www/gif/GIF_mobile.gif" alt="Aperçu de la version Mobile" width="225">
     </td>
   </tr>
 </table>
