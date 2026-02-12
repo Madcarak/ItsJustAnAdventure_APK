@@ -14,7 +14,7 @@
     </td>
     <td align="center">
       <h4>📱 Version Mobile</h4>
-      <img src="www/gif/GIF_mobile.gif" alt="Aperçu de la version Mobile" width="300">
+      <img src="www/gif/GIF_mobile.gif" alt="Aperçu de la version Mobile" width="200">
     </td>
   </tr>
 </table>
