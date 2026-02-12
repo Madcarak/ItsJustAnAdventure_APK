@@ -5,10 +5,10 @@
 ## 💡 Aperçu visuel
 
 ### 🖥️ Version PC
-![Aperçu de la version PC](gif/GIF_pc.gif)
+![Aperçu de la version PC](www/gif/GIF_pc.gif)
 
 ### 📱 Version Mobile
-![Aperçu de la version Mobile](gif/GIF_mobile.gif)
+![Aperçu de la version Mobile](www/gif/GIF_mobile.gif)
 
 
 ** 🎮 DESCRIPTION **
