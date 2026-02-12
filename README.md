@@ -53,18 +53,17 @@ l'aide de ChatGPT 5.2 sur mammouth.ai et les images sont réalisées à partir d
 ============================================
 ** ⚙️ INSTALLATION **
 ============================================
-**Prérequis :**
+** Prérequis : **
 - Un navigateur Web récent (Chrome, Firefox ou Edge recommandés).
 - APK : Téléphone mobile sous Android 13
 
-**Lancer le jeu :**
-- Accédez à la version en ligne du jeu à l'adresse suivante :  
-   🕸️ ** [Github : https://github.com/Madcarak/ItsJustAnAdventure_APK) ** 
+** Lancer le jeu : **
+- Accédez au repository de Github :  
+   🕸️ ** [   Github : https://github.com/Madcarak/ItsJustAnAdventure_APK   ] ** 
  
-- Clonez le projet et exécutez le localement à partir de cmd.exe ou powershell sous Windows :
+- Clonez le projet et exécutez le localement à partir de ** cmd.exe ** ou ** powershell ** sous Windows :
 
-Rendez-vous dans le dossier de votre choix pour l'installation et copiez-collez les 4 commandes 
-ci-dessous :
+Rendez-vous dans le dossier de votre choix pour l'installation et copiez-collez les 4 commandes ci-dessous :
 -----------------------------------------------------------------------------------------------------
 
 git clone git@github.com:Madcarak/ItsJustAnAdventure_APK.git
@@ -77,7 +76,7 @@ start index.html
 
 
 -----------------------------------------------------------------------------------------------------
-APK android disponible en version debug à cette emplacement en local 
+** APK android ** disponible en version debug à cette emplacement en local :
 -----------------------------------------------------------------------------------------------------
 
 ~\ItsJustAnAdventure_APK\android\app\build\outputs\apk\debug\app-debug.apk
