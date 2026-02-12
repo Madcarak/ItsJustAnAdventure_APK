@@ -2,6 +2,15 @@
                 🕵️‍♂️ It's Just An Adventure (Version Beta 0.2) par MADCARAK
 =====================================
 
+## 💡 Aperçu visuel
+
+### 🖥️ Version PC
+![Aperçu de la version PC](gif/GIF_pc.gif)
+
+### 📱 Version Mobile
+![Aperçu de la version Mobile](gif/GIF_mobile.gif)
+
+
 ** 🎮 DESCRIPTION **
 =====================================
 **It's Just An Adventure** est un jeu de rôle textuel (JDR) basé sur la thématique de la ** folie **.  
