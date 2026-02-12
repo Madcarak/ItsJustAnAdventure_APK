@@ -4,17 +4,20 @@
 
 ## 💡 Aperçu visuel
 
-<div style="display: flex; justify-content: space-around; align-items: center;">
-    <div style="text-align: center;">
-        <h4>🖥️ Version PC</h4>
-        <img src="www/gif/GIF_pc.gif" alt="Aperçu de la version PC" style="width: 45%; border: 1px solid #ddd; border-radius: 8px;">
-    </div>
-    <div style="text-align: center;">
-        <h4>📱 Version Mobile</h4>
-        <img src="www/gif/GIF_mobile.gif" alt="Aperçu de la version Mobile" style="width: 45%; border: 1px solid #ddd; border-radius: 8px;">
-    </div>
-</div>
+## 💡 Aperçu visuel
 
+<table>
+  <tr>
+    <td align="center">
+      <h4>🖥️ Version PC</h4>
+      <img src="www/gif/GIF_pc.gif" alt="Aperçu de la version PC" width="600">
+    </td>
+    <td align="center">
+      <h4>📱 Version Mobile</h4>
+      <img src="www/gif/GIF_mobile.gif" alt="Aperçu de la version Mobile" width="300">
+    </td>
+  </tr>
+</table>
 
 
 ** 🎮 DESCRIPTION **
