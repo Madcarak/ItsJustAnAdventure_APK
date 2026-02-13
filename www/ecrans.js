@@ -485,21 +485,24 @@ addVisitHistoryButton();
         "Ecran0119"
     ];
 
-    if (foliePlusUn.includes(id)) {
+if (foliePlusUn.includes(id)) {
 
-        player.folie = Math.min(15, (player.folie || 0) + 1);
+    player.folie = Math.min(15, (player.folie || 0) + 1);
 
-        addLogEntry(`
-            <p>
-                <span class="log-tag">[Caractéristique]</span>
-                Folie : +1
-            </p>
-        `);
+    addLogEntry(`
+        <p>
+            <span class="log-tag">[Caractéristique]</span>
+            Folie : +1
+        </p>
+    `);
 
-        updateFolieBar(player.folie);
-        updateFolieBarMobile(player.folie);
-        savePlayer();
-    }
+    triggerFolieEffect("up");
+
+    updateFolieBar(player.folie);
+    updateFolieBarMobile(player.folie);
+    savePlayer();
+}
+
 
     /* -----------------------------------------------------
          EFFETS SPÉCIAUX : -1 FOLIE
@@ -516,6 +519,8 @@ addVisitHistoryButton();
                 Folie : -1
             </p>
         `);
+		
+		triggerFolieEffect("down");
 
         updateFolieBar(player.folie);
         updateFolieBarMobile(player.folie);
@@ -1224,7 +1229,6 @@ const screens = {
   
   giveItem: "Pelle",
   onceFlag: "pelle_trouve",
-  alternateGotoIfOwned: "Ecran0029",
 
   choix: [
     { texte: "Faire le tour du lac", goto: "Ecran0040" },

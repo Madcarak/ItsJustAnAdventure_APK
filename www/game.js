@@ -327,6 +327,7 @@ const stepOverwrite = document.getElementById("step-overwrite");
 const stepName     = document.getElementById("step-name");
 const stepRace     = document.getElementById("step-race");
 const stepSex      = document.getElementById("step-sex");
+const stepPortrait = document.getElementById("step-portrait");
 const stepRoll     = document.getElementById("step-roll");
 const stepSummary  = document.getElementById("step-summary");
 
@@ -350,14 +351,19 @@ document.querySelector('#step-name .next-btn').onclick = () => {
 
 document.querySelectorAll(".next-btn").forEach(btn => {
 
-    // On ignore le bouton du nom (car il a déjà son onclick spécial)
-    if (btn.closest("#step-name")) return;
+    // On ignore nom + sexe + portrait (gérés manuellement)
+    if (
+        btn.closest("#step-name") ||
+        btn.closest("#step-sex") ||
+        btn.closest("#step-portrait")
+    ) return;
 
     btn.onclick = () => {
         const nextId = btn.dataset.next;
         showStep(document.getElementById(nextId));
     };
 });
+
 
 document.getElementById("name-alert-ok").onclick = () => {
     document.getElementById("name-alert").classList.add("hidden");
@@ -496,14 +502,19 @@ raceSelect.onchange = () => {
 };
 
 document.querySelector('#step-sex .next-btn').onclick = () => {
+
     const selectedSex = document.getElementById("char-sex").value;
+    const selectedRace = raceSelect.value;
 
     document.getElementById("sex-dialog").textContent =
         getFantasyLine("sex_" + selectedSex);
 
-    const nextId = document.querySelector('#step-sex .next-btn').dataset.next;
-    showStep(document.getElementById(nextId));
+    loadPortraitChoices(selectedRace, selectedSex);
+
+    showStep(stepPortrait);
 };
+
+
 
 /* =====================================================
       ÉTAPE : TIRAGE DES CARACTÉRISTIQUES
@@ -570,6 +581,109 @@ document.getElementById("roll-dialog").textContent =
     
 document.getElementById("btn-roll-dice").onclick = doRoll;
 doRoll();
+
+/* =====================================================
+      ÉTAPE : CHOIX PORTRAIT
+===================================================== */
+
+let selectedPortrait = null;
+
+const portraitDatabase = {
+    elfe: {
+        femme: [
+            "01_elfe_femme.png",
+            "02_elfe_femme.png",
+            "03_elfe_femme.png",
+            "04_elfe_femme.png"
+        ],
+	
+		homme: [
+            "01_elfe_homme.png",
+            "02_elfe_homme.png",
+            "03_elfe_homme.png",
+            "04_elfe_homme.png"
+        ],
+    },
+	nain: {
+        femme: [
+            "01_nain_femme.png",
+            "02_nain_femme.png",
+            "03_nain_femme.png",
+            "04_nain_femme.png"
+        ],
+	
+		homme: [
+            "01_nain_homme.png",
+            "02_nain_homme.png",
+            "03_nain_homme.png",
+            "04_nain_homme.png"
+        ],
+    },
+	humain: {
+        femme: [
+            "01_humain_femme.png",
+            "02_humain_femme.png",
+            "03_humain_femme.png",
+            "04_humain_femme.png"
+        ],
+	
+		homme: [
+            "01_humain_homme.png",
+            "02_humain_homme.png",
+            "03_humain_homme.png",
+            "04_humain_homme.png"
+        ]
+    },
+};
+
+function loadPortraitChoices(race, sex) {
+
+    const container = document.getElementById("portrait-choices");
+    container.innerHTML = "";
+    selectedPortrait = null;
+
+    if (!portraitDatabase[race] || !portraitDatabase[race][sex]) {
+        container.innerHTML = "<p>Aucun portrait disponible.</p>";
+        return;
+    }
+
+    portraitDatabase[race][sex].forEach(file => {
+
+        const fullPath = `Races/${file}`;
+
+        const div = document.createElement("div");
+        div.classList.add("portrait-choice");
+
+        const img = document.createElement("img");
+        img.src = fullPath;
+
+        div.appendChild(img);
+
+        div.onclick = () => {
+
+            document.querySelectorAll(".portrait-choice")
+                .forEach(p => p.classList.remove("selected"));
+
+            div.classList.add("selected");
+            selectedPortrait = fullPath;
+        };
+
+        container.appendChild(div);
+    });
+}
+
+
+document.querySelector('#step-portrait .next-btn').onclick = () => {
+
+    if (!selectedPortrait) {
+        alert("Choisissez un portrait.");
+        return;
+    }
+
+    showStep(stepRoll);
+};
+
+
 
 /* =====================================================
       AJOUT — FONCTIONS HUD
@@ -648,7 +762,7 @@ document.getElementById("btn-validate-roll").onclick = () => {
         fol: 0
     };
 
-    const img = `Races/${race}_${sex}.png`;
+    const img = selectedPortrait || `Races/${race}_${sex}.png`;
 
     player = {
         nom: name,

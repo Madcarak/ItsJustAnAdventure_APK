@@ -45,6 +45,9 @@
      SONS 
 ================================ -->
 <audio id="loot-sound" src="sons/loot.mp3" preload="auto"></audio>
+<audio id="sound-folie-up" src="sons/folie_up.mp3" preload="auto"></audio>
+<audio id="sound-folie-down" src="sons/folie_down.mp3" preload="auto"></audio>
+
 
 
 <!-- ================================
@@ -135,6 +138,16 @@
 
             <button class="next-btn" data-next="step-roll">Suivant</button>
         </div>
+		
+		<!-- ÉTAPE : Choix PORTRAITS -->
+		<div id="step-portrait" class="step">
+    <h2>Choisissez votre portrait</h2>
+
+    <div id="portrait-choices" class="portrait-grid"></div>
+
+    <button class="next-btn" data-next="step-roll">Continuer</button>
+</div>
+
 
         <!-- ÉTAPE : TIRAGE DES CARACTÉRISTIQUES -->
         <div class="step" id="step-roll">

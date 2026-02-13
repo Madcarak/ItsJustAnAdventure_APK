@@ -2,8 +2,9 @@
         BUILD APK DANS POWERSHELL
 ***---------------------------------------***
 
+cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
 npx cap sync android
-cd C:\dev\ItsJustAnAdventure\android
+cd android
 .\gradlew.bat --stop
 .\gradlew.bat clean
 .\gradlew.bat :app:packageDebug
@@ -13,15 +14,17 @@ cd C:\dev\ItsJustAnAdventure\android
         GITHUB REPOSITORY POWERSHELL
 ***---------------------------------------***
 
-cd "G:\Mon Drive\Documents Personnels\Créations\JDR textuel 2"
+cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
 git add .
 git commit -m "003 - Ajout des visuels PC et Mobile à la fin du README.md"
 git push
 
 Lorsqu'il y a une modification faite directement de Github (comme un changement dans le README.md :
+---------------------------------------------------------------------------------------------------
 git pull origin main
 
 Envoyer du local vers GITHUB :
+------------------------------
 git push origin main
 
 ***---------------------------------------***

@@ -1789,3 +1789,81 @@ body {
     overflow: visible !important;
 }
 
+/* ================================
+   🔥 FLASH FOLIE +1 (ROUGE)
+================================ */
+
+@keyframes folieUpFlash {
+
+    0%   { filter: drop-shadow(0 0 0px rgba(255,0,0,0)) brightness(1); }
+
+    10%  { filter: drop-shadow(0 0 30px rgba(255,0,0,0.9)) brightness(1.5); }
+    20%  { filter: drop-shadow(0 0 0px rgba(255,0,0,0)) brightness(1); }
+
+    30%  { filter: drop-shadow(0 0 30px rgba(255,0,0,0.9)) brightness(1.5); }
+    40%  { filter: drop-shadow(0 0 0px rgba(255,0,0,0)) brightness(1); }
+
+    50%  { filter: drop-shadow(0 0 30px rgba(255,0,0,0.9)) brightness(1.5); }
+    60%  { filter: drop-shadow(0 0 0px rgba(255,0,0,0)) brightness(1); }
+
+    70%  { filter: drop-shadow(0 0 30px rgba(255,0,0,0.9)) brightness(1.5); }
+    80%  { filter: drop-shadow(0 0 0px rgba(255,0,0,0)) brightness(1); }
+
+    90%  { filter: drop-shadow(0 0 30px rgba(255,0,0,0.9)) brightness(1.5); }
+
+    100% { filter: drop-shadow(0 0 0px rgba(255,0,0,0)) brightness(1); }
+}
+
+.folie-up {
+    animation: folieUpFlash 3s ease-in-out;
+}
+
+
+
+/* ================================
+   🌿 FLASH FOLIE -1 (VERT)
+================================ */
+
+@keyframes folieDownFlash {
+    0%   { filter: drop-shadow(0 0 0px #00ff88) brightness(1); }
+    30%  { filter: drop-shadow(0 0 25px #00ff88) brightness(1.4); }
+    60%  { filter: drop-shadow(0 0 15px #00ff88) brightness(1.2); }
+    100% { filter: drop-shadow(0 0 0px #00ff88) brightness(1); }
+}
+
+.folie-down {
+    animation: folieDownFlash 0.6s ease-out;
+}
+
+/* ================================
+   CHOIX PORTRAIT CREATION PERSO
+================================ */
+
+.portrait-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.portrait-choice {
+    cursor: pointer;
+    border: 3px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: 0.2s;
+}
+
+.portrait-choice img {
+    width: 100%;
+    display: block;
+}
+
+.portrait-choice:hover {
+    transform: scale(1.05);
+}
+
+.portrait-choice.selected {
+    border-color: #3aff4f;
+    box-shadow: 0 0 15px #3aff4f;
+}

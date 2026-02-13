@@ -300,3 +300,38 @@ setTimeout(() => {
 
     return true;
 }
+
+function triggerFolieEffect(type) {
+
+    const portraits = [
+        document.getElementById("portrait-mobile"),
+        document.getElementById("portrait-pc")
+    ];
+
+    const soundUp = document.getElementById("sound-folie-up");
+    const soundDown = document.getElementById("sound-folie-down");
+
+    portraits.forEach(portrait => {
+        if (!portrait) return;
+
+        portrait.classList.remove("folie-up", "folie-down");
+        void portrait.offsetWidth; // reset animation
+
+        if (type === "up") {
+            portrait.classList.add("folie-up");
+        } else if (type === "down") {
+            portrait.classList.add("folie-down");
+        }
+    });
+
+    // 🔊 Lecture son
+    if (type === "up" && soundUp) {
+        soundUp.currentTime = 0;
+        soundUp.play().catch(() => {});
+    }
+
+    if (type === "down" && soundDown) {
+        soundDown.currentTime = 0;
+        soundDown.play().catch(() => {});
+    }
+}
