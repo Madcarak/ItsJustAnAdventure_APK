@@ -10,6 +10,24 @@ cd C:\dev\ItsJustAnAdventure\android
 
 
 ***---------------------------------------***
+        GITHUB REPOSITORY POWERSHELL
+***---------------------------------------***
+
+cd "G:\Mon Drive\Documents Personnels\Créations\JDR textuel 2"
+git add .
+git commit -m "003 - Ajout des visuels PC et Mobile à la fin du README.md"
+git push
+
+Lorsqu'il y a une modification faite directement de Github (comme un changement dans le README.md :
+git pull origin main
+
+Envoyer du local vers GITHUB :
+git push origin main
+
+
+MadToken2 : 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 
+
+***---------------------------------------***
               DANS ECRAN.JS
 ***---------------------------------------***
 
@@ -93,49 +111,23 @@ Aide pour gérer les écrans de la folie :
 },
 
 ---------------------------------------
-FLAG OBJET DECOUVERT :
+Flag pour objet déjà découvert :
 ---------------------------------------
 
-ATTENTION : Mettre 
+"Ecran0021": {
+  titre: "Examiner les lieux",
+  texte: "Vous trouvez un parchemin elfique.",
+  image: "Lieux/Foret/005. Parchemin.png",
 
-"Ecran0008": {
-  titre: "Fouille du cimetière",
-  texte: "Vous fouillez autour des tombes et trouvez une bague qui semble dégager une grande énergie !",
-  image: "Lieux/Foret/008. Foret.jpg",
+  giveItem: "Parchemin Elfique",
+  onceFlag: "parchemin_elfique_trouve",
 
-  onceFlag: "bague_cimetiere_recuperee",
-  alternateGotoIfOwned: "Ecran0008A",
-
-  choix: [
-    { texte: "Mettre la bague", goto: "Ecran0017" },
-    { texte: "Ne pas la ramasser et se recueillir", goto: "Ecran0018" },
-    { texte: "Continuer à travers bois", goto: "Ecran0004" },
-  ]
-},
-
-"Ecran0008A": {
-  titre: "Fouille du cimetière",
-  texte: "Plus rien à fouiller par ici..",
-  image: "Lieux/Foret/003. Foret.jpg",
-  choix: [
-    { texte: "Se recueillir", goto: "Ecran0018" },
-    { texte: "Continuer à travers bois", goto: "Ecran0004" },
-  ]
-},
-
-"Ecran0017": {
-  titre: "Malédiction",
-  texte: "Une fois la bague mise vous sentez une douleur qui vous prend jusqu'au bras !",
-  image: "Lieux/Foret/018. Foret.jpg",
-
-  giveItem: "Bague Maudite",
-  onceFlag: "bague_cimetiere_recuperee",
+  alternateGotoIfOwned: "Ecran0033",
 
   choix: [
-    { texte: "Essayer d'enlever la bague", goto: "Ecran0036" },
-    { texte: "Continuer à travers bois", goto: "Ecran0005" },
+    { texte: "Déchiffrer", goto: "Ecran0034" }
   ]
-},
+}
 
 ---------------------------------------------------------
 REQUIREALL - IL FAUT PLUSIEURS OBJET POUR CONTINUER :

@@ -16,6 +16,23 @@ let isLoadingGame = false
 let overlay;
 
 /* =====================================================
+   ONCE FLAG
+===================================================== */
+function onceFlag(flagName) {
+    if (!player.flags) player.flags = {};
+    player.flags[flagName] = true;
+    savePlayer();
+}
+
+/* =====================================================
+   SAVEPLAYER EXPLOSION OBJETS INVENTAIRE
+===================================================== */
+window.savePlayer = function () {
+    if (!player) return;
+    localStorage.setItem("playerData", JSON.stringify(player));
+};
+
+/* =====================================================
    INITIALISATION
 ===================================================== */
 
@@ -82,36 +99,7 @@ function addItem(item) {
     }
 }
 
-/* -----------------------------------------------------
-        RETIRER UN OBJET DE L'INVENTAIRE
------------------------------------------------------- */
-function removeItem(itemName) {
 
-    const index = player.inventory.indexOf(itemName);
-    if (index === -1) {
-        console.warn(`Objet introuvable dans l'inventaire : ${itemName}`);
-        return false;
-    }
-
-    player.inventory.splice(index, 1);
-    console.log(`Objet retiré : ${itemName}`);
-
-    savePlayer();
-
-    addLogEntry(
-        `<p><span class="log-tag log-remove">[Objet utilisé]</span> ${itemName}</p>`
-    );
-
-    updateInventoryDisplay();
-
-    return true;
-}
-
-
-function savePlayer() {
-    if (!player) return;
-    localStorage.setItem("playerData", JSON.stringify(player));
-}
 
 /* =====================================================
       DIALOGUES FANTASY (ROTATION AUTOMATIQUE)

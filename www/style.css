@@ -1745,6 +1745,10 @@ body::-webkit-scrollbar-thumb:hover {
     padding: 10px;
 }
 
+/* =========================================================
+   EFFET ANIMATION OBJETS INVENTAIRE
+========================================================= */
+
 .loot-fly {
     position: fixed;
     width: 64px;
@@ -1753,6 +1757,33 @@ body::-webkit-scrollbar-thumb:hover {
     transition: transform 0.7s ease, opacity 0.7s ease;
     z-index: 99999;
 }
+
+.inventory-glow {
+    box-shadow: 0 0 20px gold;
+}
+
+
+.mobile-header-glow {
+    box-shadow: 0 0 20px gold;
+    transition: box-shadow 0.3s ease;
+}
+
+.mobile-header-bounce {
+    transform: scale(1.05);
+    transition: transform 0.15s ease;
+}
+
+#fx-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999999;
+}
+
+.inventory-grid {
+    overflow: visible !important;
+}
+
 
 body {
     overflow: visible !important;

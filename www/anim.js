@@ -1,52 +1,302 @@
-function animateLootToInventory(imgSrc, startElement, targetElement) {
+window.animatedLootToInventory = function(itemName) {
 
-console.log("Animation déclenchée");
+    console.log("🔥 Loot LÉGENDAIRE déclenché :", itemName);
 
+    let iconPath = itemIcons[itemName];
 
-    if (!startElement || !targetElement) {
-        console.warn("Animation impossible : élément manquant");
+    if (!iconPath) {
+        console.warn("Icône introuvable pour :", itemName);
         return;
     }
 
-    const startRect = startElement.getBoundingClientRect();
-    const targetRect = targetElement.getBoundingClientRect();
+    if (!iconPath.startsWith("Objets/")) {
+        iconPath = "Objets/" + iconPath;
+    }
 
-const lootImg = document.createElement("img");
-lootImg.src = imgSrc;
+    const screenImage = document.getElementById("screen-image");
 
-lootImg.style.position = "fixed";
-lootImg.style.left = "200px";
-lootImg.style.top = "200px";
-lootImg.style.width = "100px";
-lootImg.style.height = "100px";
-lootImg.style.zIndex = "999999999";
-lootImg.style.pointerEvents = "none";
+    let inventoryElement =
+        document.getElementById("inventory-list-pc") ||
+        document.getElementById("inventory-list");
 
-lootImg.style.border = "5px solid red";
+    if (!inventoryElement) {
+        inventoryElement = document.querySelector(".mobile-header");
+    }
 
-document.body.appendChild(lootImg);
+    if (!screenImage || !inventoryElement) {
+        console.warn("Animation impossible : éléments manquants");
+        return;
+    }
 
+    const startRect = screenImage.getBoundingClientRect();
+    const endRect   = inventoryElement.getBoundingClientRect();
+
+    const startSize = 640;
+    const endSize   = 64;
+
+    const centerStartX = startRect.left + startRect.width / 2;
+    const centerStartY = startRect.top + startRect.height / 2;
+
+    const centerEndX = endRect.left + endRect.width / 2;
+    const centerEndY = endRect.top + endRect.height / 2;
+
+    const deltaX = centerEndX - centerStartX;
+    const deltaY = centerEndY - centerStartY;
+
+    const scaleStart = startSize / endSize;
+
+    // =========================
+    // IMAGE PRINCIPALE
+    // =========================
+
+    const lootImg = document.createElement("img");
+    lootImg.src = iconPath;
+
+    lootImg.style.position = "fixed";
+    lootImg.style.width = endSize + "px";
+    lootImg.style.height = endSize + "px";
+    lootImg.style.left = (centerStartX - endSize / 2) + "px";
+    lootImg.style.top = (centerStartY - endSize / 2) + "px";
+    lootImg.style.zIndex = "9999";
+    lootImg.style.pointerEvents = "none";
+    lootImg.style.transformOrigin = "center";
+    lootImg.style.willChange = "transform, filter";
+    lootImg.style.filter = "drop-shadow(0 0 40px gold) blur(12px)";
+    lootImg.style.transition = "transform 1.2s cubic-bezier(.2,.8,.2,1), filter 1.2s cubic-bezier(.2,.8,.2,1)";
+
+    document.body.appendChild(lootImg);
+
+    // =========================
+    // TRAÎNÉE LUMINEUSE
+    // =========================
+
+    const trail = document.createElement("div");
+
+    trail.style.position = "fixed";
+    trail.style.left = (centerStartX) + "px";
+    trail.style.top = (centerStartY) + "px";
+    trail.style.width = "20px";
+    trail.style.height = "20px";
+    trail.style.borderRadius = "50%";
+    trail.style.pointerEvents = "none";
+    trail.style.zIndex = "9998";
+    trail.style.background = "radial-gradient(circle, rgba(255,215,0,0.9) 0%, rgba(255,215,0,0.6) 40%, rgba(255,215,0,0.2) 70%, transparent 100%)";
+    trail.style.filter = "blur(8px)";
+    trail.style.transformOrigin = "center";
+    trail.style.transition = "transform 1.2s cubic-bezier(.2,.8,.2,1), opacity 1.2s ease";
+
+    document.body.appendChild(trail);
+
+    // =========================
+    // FRAME 1 : apparition massive
+    // =========================
 
     requestAnimationFrame(() => {
+        lootImg.style.transform = `
+            translate(0px, 0px)
+            scale(${scaleStart})
+            rotate(15deg)
+        `;
+    });
 
-    const startX = startRect.left + startRect.width / 2;
-    const startY = startRect.top + startRect.height / 2;
-
-    const targetX = targetRect.left + targetRect.width / 2;
-    const targetY = targetRect.top + targetRect.height / 2;
-
-    const deltaX = targetX - startX;
-    const deltaY = targetY - startY;
-
-    lootImg.style.transform =
-        `translate(${deltaX}px, ${deltaY}px) scale(0.3)`;
-
-    lootImg.style.opacity = "0.2";
-});
-
-
+    // =========================
+    // FRAME 2 : déplacement + net progressif
+    // =========================
 
     setTimeout(() => {
+
+        lootImg.style.transform = `
+            translate(${deltaX}px, ${deltaY}px)
+            scale(1)
+            rotate(0deg)
+        `;
+
+        // Blur diminue progressivement
+        lootImg.style.filter = "drop-shadow(0 0 40px gold) blur(0px)";
+
+        // Traînée suit
+        trail.style.transform = `
+            translate(${deltaX}px, ${deltaY}px)
+            scale(3)
+        `;
+
+        trail.style.opacity = "0";
+
+    }, 50);
+
+    // =========================
+    // FIN ANIMATION
+    // =========================
+
+    setTimeout(() => {
+
+        const sound = document.getElementById("loot-sound");
+        if (sound) {
+            sound.currentTime = 0;
+            sound.play().catch(() => {});
+        }
+
+        inventoryElement.classList.add("inventory-glow");
+
+        inventoryElement.style.transition = "transform 0.18s ease";
+        inventoryElement.style.transform = "scale(1.12)";
+
+        setTimeout(() => {
+            inventoryElement.style.transform = "scale(1)";
+        }, 180);
+
+        setTimeout(() => {
+            inventoryElement.classList.remove("inventory-glow");
+        }, 500);
+
         lootImg.remove();
-    }, 700);
+        trail.remove();
+
+    }, 1200);
+};
+
+function removeItem(itemName) {
+
+    console.log("💥 Explosion déclenchée pour :", itemName);
+
+    const index = player.inventory.indexOf(itemName);
+    if (index === -1) return false;
+
+    let inventoryElement =
+        document.getElementById("inventory-list-pc") ||
+        document.getElementById("inventory-list");
+
+    if (!inventoryElement) {
+        inventoryElement = document.querySelector(".mobile-header");
+    }
+
+    if (!inventoryElement) {
+        console.warn("❌ Inventory container introuvable");
+        return false;
+    }
+
+    const fxLayer = document.getElementById("fx-layer");
+    if (!fxLayer) {
+        console.error("❌ fx-layer introuvable !");
+        return false;
+    }
+
+    // =========================
+    // POSITION DU SLOT VISIBLE
+    // =========================
+
+    const invRect = inventoryElement.getBoundingClientRect();
+
+    const slots = inventoryElement.querySelectorAll("img[data-item]");
+    let slotElement = null;
+
+    for (let img of slots) {
+        if (img.dataset.item === itemName) {
+            slotElement = img;
+            break;
+        }
+    }
+
+    let centerX, centerY;
+
+    if (slotElement) {
+        const rect = slotElement.getBoundingClientRect();
+        centerX = rect.left + rect.width / 2;
+        centerY = rect.top + rect.height / 2;
+    } else {
+        // fallback : centre inventaire
+        centerX = invRect.left + invRect.width / 2;
+        centerY = invRect.top + invRect.height / 2;
+    }
+
+    console.log("✅ Position explosion :", centerX, centerY);
+
+    // =========================
+    // CLONE VISUEL (shrink fade)
+    // =========================
+
+    if (slotElement) {
+        const clone = slotElement.cloneNode(true);
+        clone.classList.add("loot-fly");
+        clone.style.left = (centerX - 32) + "px";
+        clone.style.top = (centerY - 32) + "px";
+        clone.style.zIndex = "9999998";
+
+        fxLayer.appendChild(clone);
+
+        requestAnimationFrame(() => {
+            clone.style.transform = "scale(0.3)";
+            clone.style.opacity = "0";
+        });
+
+        setTimeout(() => clone.remove(), 700);
+    }
+
+    // =========================
+    // PARTICULES OR
+    // =========================
+
+    for (let i = 0; i < 40; i++) {
+
+        const particle = document.createElement("div");
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 50 + Math.random() * 70;
+
+        const dx = Math.cos(angle) * distance;
+        const dy = Math.sin(angle) * distance;
+
+        particle.style.position = "fixed";
+        particle.style.left = centerX + "px";
+        particle.style.top = centerY + "px";
+        particle.style.width = "8px";
+        particle.style.height = "8px";
+        particle.style.borderRadius = "50%";
+        particle.style.background = "gold";
+        particle.style.boxShadow = "0 0 15px gold";
+        particle.style.pointerEvents = "none";
+        particle.style.zIndex = "9999999";
+        particle.style.transition = "transform 0.7s ease-out, opacity 0.7s ease-out";
+
+        fxLayer.appendChild(particle);
+
+        requestAnimationFrame(() => {
+            particle.style.transform = `translate(${dx}px, ${dy}px) scale(0.2)`;
+            particle.style.opacity = "0";
+        });
+
+        setTimeout(() => particle.remove(), 700);
+    }
+
+    // =========================
+    // GLOW INVENTAIRE
+    // =========================
+
+    inventoryElement.classList.add("inventory-glow");
+
+    setTimeout(() => {
+        inventoryElement.classList.remove("inventory-glow");
+    }, 500);
+
+    // =========================
+    // SUPPRESSION LOGIQUE
+    // =========================
+
+setTimeout(() => {
+
+    const currentIndex = player.inventory.indexOf(itemName);
+
+    if (currentIndex !== -1) {
+        player.inventory.splice(currentIndex, 1);
+        console.log(`✅ Objet retiré : ${itemName}`);
+    } else {
+        console.warn("⚠️ Objet déjà retiré :", itemName);
+    }
+
+    savePlayer();
+    updateInventoryDisplay();
+
+}, 250);
+
+    return true;
 }

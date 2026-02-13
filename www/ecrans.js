@@ -161,9 +161,14 @@ function updateInventoryDisplay() {
             const item = player.inventory[i];
 
             if (item) {
+
                 const img = document.createElement("img");
                 img.src = `Objets/${itemIcons[item]}`;
                 img.alt = item;
+
+                // ✅ LIGNE IMPORTANTE ICI
+                img.dataset.item = item;
+
                 slot.appendChild(img);
 
                 slot.addEventListener("contextmenu", e => {
@@ -171,7 +176,7 @@ function updateInventoryDisplay() {
                     openContextMenu(item, slot);
                 });
 
-                addLongPress(slot, item);
+                addTouchOpen(slot, item);
             }
 
             inv.appendChild(slot);
@@ -182,48 +187,52 @@ function updateInventoryDisplay() {
     fill(invPC);
 }
 
+
 /* =====================================================
    AJOUTE OBJETS INVENTAIRE
 ===================================================== */
-
 function addItemToInventory(itemName) {
+
+    console.log("INVENTAIRE AVANT AJOUT :", player.inventory);
 
     if (player.inventory.includes(itemName)) return;
 
-    // ✅ On ajoute réellement l'objet
-    player.inventory.push(itemName);
-
-    updateInventoryDisplay();
-
-    // ✅ Animation
     const icon = itemIcons[itemName];
-    if (icon) {
+    const imageLieu = document.getElementById("screen-image");
 
-        const imageLieu = document.getElementById("screen-image");
+    let target;
 
-        let target;
-
-        if (window.innerWidth < 768) {
-            target = document.querySelector(".mobile-menu-button");
-        } else {
-            target = document.getElementById("inventory-list-pc");
-        }
-
-        if (imageLieu && target) {
-            animateLootToInventory(
-                `Objets/${icon}`,
-                imageLieu,
-                target
-            );
-        }
+    if (window.innerWidth < 768) {
+        target = document.querySelector(".mobile-menu-button");
+    } else {
+        target = document.getElementById("inventory-list-pc");
     }
 
-    // ✅ Log
-    const desc = itemDescriptions[itemName] || "Objet ajouté.";
-    addLogEntry(
-        `<p><span class="log-tag log-add">[Objet obtenu]</span> ${itemName} : ${desc}</p>`
-    );
+    // ✅ Si animation possible
+    if (icon && imageLieu && target) {
+
+        // ✅ ON ENVOIE JUSTE LE NOM
+        animatedLootToInventory(itemName);
+
+        setTimeout(() => {
+
+            player.inventory.push(itemName);
+            updateInventoryDisplay();
+
+            const desc = itemDescriptions[itemName] || "Objet ajouté.";
+            addLogEntry(
+                `<p><span class="log-tag log-add">[Objet obtenu]</span> ${itemName} : ${desc}</p>`
+            );
+
+        }, 800);
+
+    } else {
+
+        player.inventory.push(itemName);
+        updateInventoryDisplay();
+    }
 }
+
 
 /* =====================================================
    MENU CONTEXTUEL INVENTAIRE
@@ -309,22 +318,25 @@ showItemPopover(
 
 
 /* =====================================================
-   LONG PRESS MOBILE
+   TOUCH INSTANTANÉ MOBILE
 ===================================================== */
 
-function addLongPress(slot, item) {
+function addTouchOpen(slot, item) {
 
-    let timer;
+    let touched = false;
 
     slot.addEventListener("touchstart", () => {
-        timer = setTimeout(() => {
-            openContextMenu(item, slot);
-        }, 450);
+        touched = true;
+        openContextMenu(item, slot);
     });
 
-    ["touchend", "touchmove"].forEach(evt =>
-        slot.addEventListener(evt, () => clearTimeout(timer))
-    );
+    slot.addEventListener("click", () => {
+        if (touched) {
+            touched = false;
+            return;
+        }
+        openContextMenu(item, slot);
+    });
 }
 
 
@@ -342,9 +354,6 @@ function showItemPopover(slot, html) {
     pop.style.top  = `${rect.top}px`;
     pop.classList.remove("hidden");
 }
-
-
-
 
 /* -----------------------------------------------------
        GESTION ECRAN
@@ -399,19 +408,6 @@ if (screen.onceFlag && player.flags && player.flags[screen.onceFlag]) {
     }
 }
 
-/* -----------------------------------------------------
-    ✅ DON OBJET + ACTIVATION FLAG (1ère fois)
------------------------------------------------------- */
-if (screen.giveItem && screen.onceFlag) {
-
-    if (!player.flags) player.flags = {};
-
-    if (!player.flags[screen.onceFlag]) {
-        addItem(screen.giveItem);
-        player.flags[screen.onceFlag] = true;
-        savePlayer();
-    }
-}
 
     /* -----------------------------------------------------
          SI L'ÉCRAN NE DOIT PAS ÊTRE REJOUÉ
@@ -425,11 +421,36 @@ if (screen.giveItem && screen.onceFlag) {
         }
     }
 
-    /* -----------------------------------------------------
-         GESTION DES OBJETS (ANCIEN COMPORTEMENT)
-         → ignoré si onceFlag est présent
-    ------------------------------------------------------ */
-    if (item && !screen.onceFlag) {
+/* -----------------------------------------------------
+   ✅ GESTION DES OBJETS (corrigée)
+------------------------------------------------------ */
+
+console.log("ITEM ACTUEL :", item);
+console.log("SCREEN :", screen);
+
+if (item) {
+
+    // ✅ CAS OBJET AVEC onceFlag (objet unique)
+    if (screen.onceFlag) {
+		
+		
+        console.log("FLAG ACTUELLE :", screen.onceFlag);
+        console.log("VALEUR FLAG :", player.flags?.[screen.onceFlag]);
+
+        if (!player.flags) {
+            player.flags = {};
+        }
+
+        if (!player.flags[screen.onceFlag]) {
+
+            addItemToInventory(item);
+            player.flags[screen.onceFlag] = true;
+            savePlayer();
+        }
+
+    } 
+    // ✅ CAS OBJET SANS onceFlag (comportement classique)
+    else {
 
         if (player.inventory.includes(item)) {
 
@@ -445,19 +466,13 @@ if (screen.giveItem && screen.onceFlag) {
         } else {
 
             addItemToInventory(item);
-            console.log("Objet ajouté :", item);
-
             savePlayer();
-
-            const desc = itemDescriptions[item] || "Aucune description.";
-
-            addLogEntry(
-                `<p><span class="log-tag">[Nouvel objet]</span> ${item} : ${desc}</p>`
-            );
         }
     }
+}
 
-    addVisitHistoryButton();
+addVisitHistoryButton();
+
 
     /* -----------------------------------------------------
          EFFETS SPÉCIAUX : +1 FOLIE
@@ -528,18 +543,18 @@ if (screen.giveItem && screen.onceFlag) {
         }
     }
 
-    /* -----------------------------------------------------
-         EXECUTION DES ACTIONS DE L'ÉCRAN
-    ------------------------------------------------------ */
-    if (typeof screen.action === "function") {
-        console.log("🔥 Exécution action de :", id);
-        screen.action();
-    }
-
 /* -----------------------------------------------------
      AFFICHAGE FINAL DE L'ÉCRAN
 ------------------------------------------------------ */
 loadScreen(id);
+
+/* -----------------------------------------------------
+     EXECUTION DES ACTIONS DE L'ÉCRAN
+------------------------------------------------------ */
+if (typeof screen.action === "function") {
+    console.log("🔥 Exécution action de :", id);
+    screen.action();
+}
 }
 
 	
@@ -813,8 +828,9 @@ function attachChoiceListeners() {
 }
 
 /* -----------------------------------------------------
-       LOOT ANIMATION OBJETS
+       GESTION LOOT OBJETS ANIMATION
 ------------------------------------------------------ */
+
 function lootObjet() {
 
     const imageLieu = document.getElementById("screen-image");
@@ -824,15 +840,19 @@ function lootObjet() {
     if (window.innerWidth < 768) {
         target = document.querySelector(".mobile-menu-button");
     } else {
-        target = document.getElementById("inventory");
+        target = document.getElementById("inventory-list-pc");
     }
+	
+	console.log("lootObjet appelée");
 
     animateLootToInventory(
-        "Objets/005. ParcheminElfe.png",
-        imageLieu,
-        target
-    );
+    icon,
+    imageLieu,
+    target
+);
+
 }
+
 
 
 /* -----------------------------------------------------
@@ -883,8 +903,10 @@ const screens = {
   titre: "L'Homme-Arbre",
   texte: "Vous tombez face à un homme‑arbre, qui ne semble pas agressif. Il entame la discussion et vous dit : « Que fais‑tu dans ma forêt ? ",
   image: "Lieux/Foret/004. Foret.jpg",
+  
   meetCharacter: "Homme-Arbre",
   redirectIfMet: "Ecran0024",
+  
   choix: [
     { texte: "Je ne sais pas trop, je me suis réveillé pas loin d'ici !", goto: "Ecran0010" },
     { texte: "Dans quelle forêt sommes-nous ?", goto: "Ecran0011" },
@@ -923,8 +945,10 @@ const screens = {
   titre: "Fouille du cimetière",
   texte: "Vous fouillez autour des tombes et trouvez une bague qui semble dégager une grande énergie !",
   image: "Lieux/Foret/008. Foret.jpg",
+  
   onceFlag: "bague_cimetiere_pris",
   alternateGotoIfOwned: "Ecran0008A",
+  
   choix: [
     { texte: "Mettre la bague", goto: "Ecran0017" },
     { texte: "Ne pas la ramasser et se recueillir", goto: "Ecran0018" },
@@ -967,7 +991,7 @@ const screens = {
   image: "Lieux/Foret/004. Foret.jpg",
   choix: [
     { texte: "Non cela ne m'a même pas effleuré l'esprit", goto: "Ecran0019" },
-    { texte: "En effet je suis là pour ça !", goto: "Ecran0020" },
+    { texte: "En effet je suis là pour ça !", goto: "Ecran0038" },
     { texte: "Tu ne vas pas me manger tout de même ?", goto: "Ecran0012" },
   ]
 },
@@ -977,7 +1001,7 @@ const screens = {
   image: "Lieux/Foret/004. Foret.jpg",
   choix: [
     { texte: "Tu ne vas pas me manger tout de même ?", goto: "Ecran0012" },
-    { texte: "Je vois que t'y connais rien, ça ne m'étonne pas pour un Homme-Arbre", goto: "Ecran0020" },
+    { texte: "Je vois que t'y connais rien, ça ne m'étonne pas pour un Homme-Arbre", goto: "Ecran0038" },
     { texte: "Dire au revoir et s'en aller", goto: "Ecran0024" },
   ]
 },
@@ -1014,8 +1038,10 @@ const screens = {
   titre: "Le bon air frais !",
   texte: "Vous humez l'air et vous vous sentez bien ! (Grâce aléatoire)",
   image: "Lieux/Foret/006. Foret.jpg",
+  
   graceAleatoire: true,
   alternateGotoAfterGrace: "Ecran0015A",
+  
   choix: [
     { texte: "Continuer hors de la forêt", goto: "Ecran0016" },
     { texte: "Revenir sur ses pas", goto: "Ecran0002" },
@@ -1043,8 +1069,10 @@ const screens = {
   titre: "Malédiction",
   texte: "Une fois la bague mise vous sentez une douleur qui vous prend jusqu'au bras !",
   image: "Lieux/Foret/018. Foret.jpg",
+  
   giveItem: "Bague Maudite",
   onceFlag: "bague_cimetiere_pris",
+  
   choix: [
     { texte: "Essayer d'enlever la bague", goto: "Ecran0036" },
     { texte: "Continuer à travers bois", goto: "Ecran0005" },
@@ -1055,8 +1083,10 @@ const screens = {
   titre: "Recueillement",
   texte: "Vous abandonnez l'idée de récupérer la bague et vous recueillez près des tombes et vous vous sentez bien ! (Grâce aléatoire)",
   image: "Lieux/Foret/009. Foret.jpg",
+  
   graceAleatoire: true,
   alternateGotoAfterGrace: "Ecran0018A",
+  
   choix: [
     { texte: "Continuer à travers bois", goto: "Ecran0004" },
   ]
@@ -1075,18 +1105,8 @@ const screens = {
   image: "Lieux/Foret/004. Foret.jpg",
   choix: [
     { texte: "Tu ne vas pas me manger tout de même ?", goto: "Ecran0012" },
-    { texte: "Me maltraiter ? Se mettre en position d'attaque !", goto: "Ecran0020" },
+    { texte: "Me maltraiter ? Se mettre en position d'attaque !", goto: "Ecran0038" },
     { texte: "Dire au revoir et s'en aller", goto: "Ecran0024" },
-  ]
-},
-"Ecran0020": {
-  titre: "L'Homme-Arbre",
-  texte: "Je te propose un combat de Pierre, Feuille, Ciseaux",
-  image: "Lieux/Foret/004. Foret.jpg",
-  choix: [
-    { texte: "Pierre", goto: "Ecran0037" },
-    { texte: "Feuille", goto: "Ecran0038" },
-    { texte: "Ciseaux", goto: "Ecran0039" },
   ]
 },
 "Ecran0021": {
@@ -1096,14 +1116,12 @@ const screens = {
 
   giveItem: "Parchemin Elfique",
   onceFlag: "parchemin_elfique_trouve",
-
   alternateGotoIfOwned: "Ecran0033",
 
   choix: [
     { texte: "Déchiffrer", goto: "Ecran0034" },
   ]
 },
-
 "Ecran0022": {
   titre: "Le lac",
   texte: "Vous arrivez devant un joli lac en plein milieu de la forêt",
@@ -1138,10 +1156,14 @@ const screens = {
   titre: "Fouille du squelette",
   texte: "Vous trouvez une torche non allumée",
   image: "Lieux/Foret/014. Foret.jpg",
+  
   giveItem: "Torche",
+  onceFlag: "torche_trouve",
   alternateGotoIfOwned: "Ecran0029",
+  
   meetCharacter: "Squelette",
   redirectIfMet: "Ecran0029",
+  
   choix: [
     { texte: "Revenir devant la ruine", goto: "Ecran0005" },
     { texte: "S'enfoncer dans la forêt", goto: "Ecran0050" },
@@ -1199,8 +1221,11 @@ const screens = {
   titre: "Prendre la barque et partir sur le lac",
   texte: "Vous trouvez une pelle à l'intérieur de la barque qui va vous servir de rame..",
   image: "Lieux/Foret/022. Foret.jpg",
+  
   giveItem: "Pelle",
-  alternateGotoIfOwned: "Ecran0045",
+  onceFlag: "pelle_trouve",
+  alternateGotoIfOwned: "Ecran0029",
+
   choix: [
     { texte: "Faire le tour du lac", goto: "Ecran0040" },
     { texte: "Descendre de la barque finalement", goto: "Ecran0022" },
@@ -1277,8 +1302,11 @@ const screens = {
   titre: "L'Homme-Arbre – Victoire",
   texte: "Vous faites « Ciseaux »… et l’Homme‑Arbre fait « Feuille ».\nIl pousse un soupir impressionné.\n« Le vent coupe parfois les feuilles les plus robustes. Tu as gagné, voyageur. »\nIl récupère quelque chose entre son écorce et vous le tend.",
   image: "Lieux/Foret/004. Foret.jpg",
-  giveItem: "Potion Rouge",
+  
+  giveItem: "Potion Rouge",  
+  onceFlag: "potion_rouge_trouve",
   alternateGotoIfOwned: "Ecran0024",
+  
   choix: [
     { texte: "Remercier et partir", goto: "Ecran0024" },
   ]
@@ -1853,30 +1881,14 @@ action: () => {
     if (!hasItem("Parchemin Elfique")) {
         return;
     }
-    removeItem("Parchemin Elfique");
-    removeItem("Torche");
-    addItem("Torche Allumée");
+	
+	removeItem("Parchemin Elfique");
+	removeItem("Torche");
+
+    addItemToInventory("Torche Allumée");
+	onceFlag("torche_allumee_trouve");
 },
 
-  choix: [
-    { texte: "Et la lumière fut !", goto: "Ecran0098" },
-    { texte: "Sorcière", goto: "Ecran0095" }
-  ]
-},
-"Ecran0097": {
-  titre: "Flamme lumineuse",
-  texte: "Elle écrase la glande lumineuse. Une flamme apparaît sur votre torche.",
-  image: "Lieux/Foret/036. Foret.png",
-  
-  action: () => {
-    if (!hasItem("Glande Lumineuse")) {
-        return; // Sécurité
-    }
-    removeItem("Glande Lumineuse");
-    removeItem("Torche");
-    addItem("Torche Allumée");
-  },
-  
   alternateGotoIfOwned: "Ecran0095",
 
   choix: [
@@ -1884,6 +1896,7 @@ action: () => {
     { texte: "Sorcière", goto: "Ecran0095" }
   ]
 },
+
 "Ecran0098": {
   titre: "Dehors",
   texte: "La torche enchantée crépite doucement.",
