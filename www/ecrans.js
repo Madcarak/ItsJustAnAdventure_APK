@@ -1502,7 +1502,7 @@ const screens = {
   image: "Lieux/Foret/029. Foret.jpg",
   choix: [
     { texte: "Vous allez me manger ?", goto: "Ecran0058" },
-    { texte: "LE GCT, c'est pas un syndicat ?", goto: "Ecran0065" },
+    { texte: "Le GCT, c'est pas un syndicat ?", goto: "Ecran0065" },
   ]
 },
 "Ecran0058": {
