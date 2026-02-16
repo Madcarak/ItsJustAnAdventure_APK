@@ -184,13 +184,13 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
     font-size: 22px;
     text-align: right;
     cursor: pointer;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 
 .mobile-name {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .mobile-name h2 {
@@ -202,7 +202,7 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .folie-label {
@@ -218,7 +218,7 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
 .mobile-character-row {
     display: flex;
     gap: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     align-items: flex-start;
 }
 
@@ -241,6 +241,10 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
     font-size: 0.9rem;
 }
 
+.mobile-menu {
+    margin-top: -10px;
+}
+
 .mobile-stats p {
     margin: 4px 0;
 }
@@ -261,12 +265,12 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
 }
 
 .mobile-inventory {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 	text-align: center;
 }
 
 .mobile-navigation {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 	text-align: center;
 }
 
@@ -397,6 +401,8 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
 .choices {
     display: flex;
     gap: 10px;
+	justify-content: flex-end;
+	margin-left: 100px;
 }
 
 .choices button {
@@ -406,6 +412,7 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
     border: 1px solid white;
     border-radius: 6px;
     color: white;
+	
 }
 
 
@@ -818,7 +825,7 @@ input[type="text"], select {
 /* Compact (PC only) : plus petit et un peu remonté */
 .settings-btn.pc-only {
     position: fixed;
-    top: 6px;               /* remontée plus prononcée */
+    top: 10px;               /* remontée plus prononcée */
     right: 12px;
     font-size: 20px;        /* texte réduit */
     background: rgba(0,0,0,0.6);
@@ -1163,10 +1170,9 @@ textarea {
 #game-hud {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
     background: #1a1a1a;
-    border-bottom: 2px solid #6b0000;
-    padding: 5px 20px;
+    padding: 10px 20px;
     color: #e3d6b9;
     font-family: "Cinzel", serif;
 }
