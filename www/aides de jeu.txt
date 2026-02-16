@@ -19,13 +19,19 @@ cd android
 
 cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
 git add .
-git commit -m "005 - Ajout des visuels de l'ensemble des portraits"
+git commit -m "007 - Dernière version APK avec portraits et effet visuels et sonores"
 git push origin main
+
+
+
 
 Lorsqu'il y a une modification faite directement sur Github (comme un changement dans le README.md) :
 ---------------------------------------------------------------------------------------------------
 cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
 git pull origin main
+
+
+
 
 Envoyer du local vers GITHUB :
 ------------------------------
