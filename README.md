@@ -43,6 +43,9 @@ l'aide de ChatGPT 5.2 sur mammouth.ai et les images sont réalisées à partir d
 =====================================
 ** DERNIERE MISE A JOUR **
 =====================================
+13/02/2026 :
+- Création des effets visuels et sonores lors de la récupération d'objets, de l'utilisation d'objets
+- Effets visuels et sonores lorsque le personnage reçoit 1 point de folie ou récupère 1 point de folie
 12/02/2026 :
 - Lancement du dépôt sur GitHub
 - Création du side-menu pour la version mobile
@@ -55,7 +58,7 @@ l'aide de ChatGPT 5.2 sur mammouth.ai et les images sont réalisées à partir d
 =====================================
 ** Prérequis : **
 - Un navigateur Web récent (Chrome, Firefox ou Edge recommandés).
-- APK : Téléphone mobile sous Android 13
+- APK : Téléphone mobile sous Android 13 ou supérieur
 
 ** Lancer le jeu : **
 - Accédez au repository de Github :  
