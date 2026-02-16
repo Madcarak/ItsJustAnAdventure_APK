@@ -59,7 +59,6 @@ dependencies {
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
 
     implementation project(':capacitor-android')
-    implementation project(':capacitor-cordova-android-plugins')
 	
 	implementation "com.google.android.material:material:1.11.0"
 

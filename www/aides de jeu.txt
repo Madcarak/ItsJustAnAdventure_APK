@@ -17,10 +17,11 @@ cd android
 cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
 git add .
 git commit -m "003 - Ajout des visuels PC et Mobile à la fin du README.md"
-git push
+git push origin main
 
-Lorsqu'il y a une modification faite directement de Github (comme un changement dans le README.md :
+Lorsqu'il y a une modification faite directement sur Github (comme un changement dans le README.md) :
 ---------------------------------------------------------------------------------------------------
+cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
 git pull origin main
 
 Envoyer du local vers GITHUB :
