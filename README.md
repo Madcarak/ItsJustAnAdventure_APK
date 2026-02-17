@@ -66,8 +66,11 @@ l'aide de ChatGPT 5.2 sur mammouth.ai et les images sont réalisées à partir d
 Rendez-vous dans le dossier de votre choix pour l'installation et copiez-collez les 4 commandes ci-dessous :
 
 git clone git@github.com:Madcarak/ItsJustAnAdventure_APK.git
+
 cd ItsJustAnAdventure_APK
+
 cd www
+
 start index.html
 
 
