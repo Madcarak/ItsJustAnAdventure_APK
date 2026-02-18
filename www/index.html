@@ -49,7 +49,6 @@
 <audio id="sound-folie-down" src="sons/folie_down.mp3" preload="auto"></audio>
 
 
-
 <!-- ================================
      FX EXPLOSION OBJETS
 ================================ -->
@@ -322,9 +321,6 @@
      ZONE DE JEU — LARGEUR MAÎTRISÉE
 ========================================================= -->
 
-
-
-
 <div class="game-width">
 
     <!-- =====================================================
@@ -346,11 +342,10 @@
         <section class="left-panel">
 
             <!-- Image du lieu -->
-            <img
-                id="screen-image"
-                src="Lieux/Foret/001. Foret.jpg"
-                alt="Illustration du lieu"
-            >
+            <div class="screen-image-wrapper">
+    <img id="screen-image">
+    <img id="screen-image-overlay">
+</div>
 
             <!-- Choix dynamiques -->
             <div class="panel-choix" id="choices-container"></div>

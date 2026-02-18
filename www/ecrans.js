@@ -34,6 +34,20 @@ const itemIcons = {
     "Corde": "001. corde.png"
 };
 
+/* -----------------------------------------------------
+       JUMPSCARE SCREENS
+------------------------------------------------------ */
+const jumpScareScreens = {
+    "Ecran0153": {
+        sound: "sons/rire.mp3",
+        image: "Lieux/Champignon/012. champignon.png"
+    },
+	"Ecran0092": {
+        sound: "sons/rire2.mp3",
+        image: "Lieux/Foret/036. Foret.png"
+    }
+};
+
 /* =====================================================
    RECETTES D'ASSEMBLAGE
 ===================================================== */
@@ -376,42 +390,23 @@ function showScreen(id) {
 
         if (player.characters.includes(screen.meetCharacter)) {
             if (screen.redirectIfMet) {
-                console.log("Déjà rencontré :", screen.meetCharacter);
                 return showScreen(screen.redirectIfMet);
             }
         } else {
             player.characters.push(screen.meetCharacter);
             savePlayer();
-            console.log("Personnage rencontré :", screen.meetCharacter);
         }
     }
 
     /* -----------------------------------------------------
-         NETTOYAGE DE giveItem
+         REDIRECTION OBJET UNIQUE
     ------------------------------------------------------ */
-    const item = screen.giveItem ? screen.giveItem.trim() : null;
-
-    console.log("Inventaire :", player.inventory);
-    console.log("Objet donné par l'écran :", item);
-
-/* -----------------------------------------------------
-    ✅ REDIRECTION SI OBJET UNIQUE DÉJÀ PRIS
------------------------------------------------------- */
-if (screen.onceFlag && player.flags && player.flags[screen.onceFlag]) {
-
-    if (screen.alternateGotoIfOwned) {
-        console.log(
-            "Objet unique déjà récupéré, redirection :",
-            screen.alternateGotoIfOwned
-        );
-        return showScreen(screen.alternateGotoIfOwned);
+    if (screen.onceFlag && player.flags && player.flags[screen.onceFlag]) {
+        if (screen.alternateGotoIfOwned) {
+            return showScreen(screen.alternateGotoIfOwned);
+        }
     }
-}
 
-
-    /* -----------------------------------------------------
-         SI L'ÉCRAN NE DOIT PAS ÊTRE REJOUÉ
-    ------------------------------------------------------ */
     if (
         screen.requiresMissingItem &&
         player.inventory.includes(screen.requiresMissingItem)
@@ -421,91 +416,78 @@ if (screen.onceFlag && player.flags && player.flags[screen.onceFlag]) {
         }
     }
 
-/* -----------------------------------------------------
-   ✅ GESTION DES OBJETS (corrigée)
------------------------------------------------------- */
+    /* -----------------------------------------------------
+         GESTION OBJETS
+    ------------------------------------------------------ */
+    const item = screen.giveItem ? screen.giveItem.trim() : null;
 
-console.log("ITEM ACTUEL :", item);
-console.log("SCREEN :", screen);
+    if (item) {
 
-if (item) {
+        if (screen.onceFlag) {
 
-    // ✅ CAS OBJET AVEC onceFlag (objet unique)
-    if (screen.onceFlag) {
-		
-		
-        console.log("FLAG ACTUELLE :", screen.onceFlag);
-        console.log("VALEUR FLAG :", player.flags?.[screen.onceFlag]);
+            if (!player.flags) player.flags = {};
 
-        if (!player.flags) {
-            player.flags = {};
-        }
-
-        if (!player.flags[screen.onceFlag]) {
-
-            addItemToInventory(item);
-            player.flags[screen.onceFlag] = true;
-            savePlayer();
-        }
-
-    } 
-    // ✅ CAS OBJET SANS onceFlag (comportement classique)
-    else {
-
-        if (player.inventory.includes(item)) {
-
-            if (screen.alternateTextIfOwned) {
-                screen._savedText = screen._savedText || screen.texte;
-                screen.texte = screen.alternateTextIfOwned;
-            }
-
-            if (screen.alternateGotoIfOwned) {
-                return showScreen(screen.alternateGotoIfOwned);
+            if (!player.flags[screen.onceFlag]) {
+                addItemToInventory(item);
+                player.flags[screen.onceFlag] = true;
+                savePlayer();
             }
 
         } else {
 
-            addItemToInventory(item);
-            savePlayer();
+            if (player.inventory.includes(item)) {
+
+                if (screen.alternateTextIfOwned) {
+                    screen._savedText = screen._savedText || screen.texte;
+                    screen.texte = screen.alternateTextIfOwned;
+                }
+
+                if (screen.alternateGotoIfOwned) {
+                    return showScreen(screen.alternateGotoIfOwned);
+                }
+
+            } else {
+                addItemToInventory(item);
+                savePlayer();
+            }
         }
     }
-}
 
-addVisitHistoryButton();
-
+    addVisitHistoryButton();
 
     /* -----------------------------------------------------
-         EFFETS SPÉCIAUX : +1 FOLIE
+         +1 FOLIE
     ------------------------------------------------------ */
     const foliePlusUn = [
         "Ecran0017",
         "Ecran0108",
         "Ecran0114",
         "Ecran0117",
-        "Ecran0119"
+        "Ecran0119",
+        "Ecran0148",
+        "Ecran0152"
     ];
 
-if (foliePlusUn.includes(id)) {
+    if (foliePlusUn.includes(id)) {
 
-    player.folie = Math.min(15, (player.folie || 0) + 1);
+        player.folie = Math.min(15, (player.folie || 0) + 1);
 
-    addLogEntry(`
-        <p>
-            <span class="log-tag">[Caractéristique]</span>
-            Folie : +1
-        </p>
-    `);
+        addLogEntry(`
+            <p>
+                <span class="log-tag">[Caractéristique]</span>
+                Folie : +1
+            </p>
+        `);
 
-    triggerFolieEffect("up");
-
-    updateFolieBar(player.folie);
-    updateFolieBarMobile(player.folie);
-    savePlayer();
-}
-
+        triggerFolieEffect("up");
+        updateFolieBar(player.folie);
+        updateFolieBarMobile(player.folie);
+        checkFoliePermanent();
+        savePlayer();
+    }
 
     /* -----------------------------------------------------
-         EFFETS SPÉCIAUX : -1 FOLIE
+         -1 FOLIE
     ------------------------------------------------------ */
     const folieMoinsUn = ["Ecran0074"];
 
@@ -519,79 +501,68 @@ if (foliePlusUn.includes(id)) {
                 Folie : -1
             </p>
         `);
-		
-		triggerFolieEffect("down");
 
+        triggerFolieEffect("down");
         updateFolieBar(player.folie);
         updateFolieBarMobile(player.folie);
+        checkFoliePermanent();
         savePlayer();
     }
 
     /* -----------------------------------------------------
-         GRÂCE ALÉATOIRE
+         ✅ APPLICATION VARIANTE FOLIE
     ------------------------------------------------------ */
-    if (screen.graceAleatoire === true) {
 
-        if (!player.graces) player.graces = [];
+    let folieOverlayImage = null;
+    let folieTextOverride = null;
 
-        if (player.graces.includes(id)) {
+    if (screen.folieVariants) {
 
-            if (screen.alternateGotoAfterGrace) {
-                return showScreen(screen.alternateGotoAfterGrace);
-            }
+        const variante = applyFolieVariant(screen);
 
-        } else {
+        if (variante.texte !== screen.texte) {
+            folieTextOverride = variante.texte;
+        }
 
-            graceAleatoire();
-            player.graces.push(id);
-            savePlayer();
+        if (variante.image !== screen.image) {
+            folieOverlayImage = variante.image;
         }
     }
 
-/* -----------------------------------------------------
-     AFFICHAGE FINAL DE L'ÉCRAN
------------------------------------------------------- */
+    /* -----------------------------------------------------
+         AFFICHAGE NORMAL
+    ------------------------------------------------------ */
 loadScreen(id);
+triggerJumpScareEffect(id);
+
+    /* -----------------------------------------------------
+         ✅ MORPHING IMAGE
+    ------------------------------------------------------ */
+
+    if (folieTextOverride) {
+        const textEl = document.getElementById("text");
+        if (textEl) textEl.textContent = folieTextOverride;
+    }
+
+    if (folieOverlayImage) {
+        updateImage(folieOverlayImage);
+    } else {
+        updateImage(null);
+    }
+
+    /* -----------------------------------------------------
+         ACTION
+    ------------------------------------------------------ */
+    if (typeof screen.action === "function") {
+        screen.action();
+    }
+}
+
 
 /* -----------------------------------------------------
-     EXECUTION DES ACTIONS DE L'ÉCRAN
+       UPDATE STATISTIQUES
 ------------------------------------------------------ */
-if (typeof screen.action === "function") {
-    console.log("🔥 Exécution action de :", id);
-    screen.action();
-}
-}
 
-	
-function graceAleatoire() {
-    const stats = ["force", "intelligence", "agilite", "constitution"];
-    const labels = {
-        force: "FOR",
-        intelligence: "INT",
-        agilite: "AGI",
-        constitution: "CON"
-    };
-
-    const stat = stats[Math.floor(Math.random() * stats.length)];
-
-    player[stat] = (player[stat] || 0) + 1;
-
-    console.log("✨ Grâce aléatoire :", stat, "+1 (Total =", player[stat], ")");
-
-    addLogEntry(`
-        <p>
-            <span class="log-tag">[Grâce]</span>
-            ${labels[stat]} : +1
-        </p>
-    `);
-
-    updateStatsInterface();
-    savePlayer();
-}
-
-
-
-// -- Mise à jour affichage des stats --
 function updateStatsInterface() {
 
     const mapPC = {
@@ -635,17 +606,21 @@ function resolveMadnessScreen(id) {
 ------------------------------------------------------ */
 function loadScreen(id, options = {}) {
 
-    // === AJOUT : gestion folie ===
     id = resolveMadnessScreen(id);
 
     const { fromLoad = false } = options;
     const data = screens[id];
+
     if (!data) {
         console.error(`Écran inconnu : ${id}`);
         return;
     }
 
-    // Ne pas écraser lastScreen si on charge une sauvegarde
+    const finalData = applyFolieVariant({
+    ...data,
+    choix: data.choix // on garde référence directe
+	});
+
     if (!fromLoad) {
         if (!localStorage.getItem("justReset")) {
             localStorage.setItem("lastScreen", id);
@@ -658,33 +633,48 @@ function loadScreen(id, options = {}) {
     const title = document.getElementById("screen-title");
     const textEl = document.getElementById("screen-text");
     const choicesContainer = document.getElementById("choices-container");
+    const overlay = document.getElementById("screen-image-overlay");
+    const wrapper = document.querySelector(".screen-image-wrapper");
 
-    // Fade-out
+    /* ===============================
+       FADE OUT
+    =============================== */
+
     img.classList.add("fade-out");
     textEl.classList.add("fade-out");
     title.classList.add("fade-out");
 
     setTimeout(() => {
 
-        // Mise à jour des images
+        /* ===============================
+           AFFICHAGE NORMAL (IMPORTANT)
+        =============================== */
+
         img.src = data.image;
         document.body.style.setProperty("--bg-image", `url("${data.image}")`);
 
-        // Mise à jour du texte
         title.textContent = data.titre || id;
         textEl.textContent = data.texte || "Aucune description.";
 
-        // Mise à jour des choix
+        overlay.style.opacity = "0";
+        overlay.src = "";
+
+        wrapper.classList.remove("madness-distort", "madness-shake", "madness-breath");
+
+        /* ===============================
+           CHOIX
+        =============================== */
+
         choicesContainer.innerHTML = "";
 
         if (data.choix && data.choix.length > 0) {
             data.choix.forEach((choice, i) => {
+
                 const div = document.createElement("div");
                 div.className = "choix-item";
                 div.dataset.goto = choice.goto || "";
                 div.innerHTML = `<span class="choix-num">${i + 1}</span> ${choice.texte}`;
 
-                // Gestion du clic
                 div.addEventListener("click", () => {
                     keyboardEnabled = true;
 
@@ -701,7 +691,10 @@ function loadScreen(id, options = {}) {
             });
         }
 
-        // Fade-in
+        /* ===============================
+           FADE IN
+        =============================== */
+
         img.classList.remove("fade-out");
         img.classList.add("fade-in");
 
@@ -716,94 +709,266 @@ function loadScreen(id, options = {}) {
             textEl.classList.remove("fade-in");
             title.classList.remove("fade-in");
         }, 400);
+		
+		
+        /* ===============================
+           REQUIRE ALL
+        =============================== */
+        if (data.requireAll) {
 
-// requireAll (toutes les conditions doivent être vraies)
-if (data.requireAll) {
-    let ok = true; // on part du principe que tout est bon, puis on invalide si nécessaire
+            let ok = true;
 
-    for (let cond of data.requireAll) {
+            for (let cond of data.requireAll) {
 
-        if (cond.type === "race") {
-            if (player.race.toLowerCase() !== cond.value.toLowerCase()) {
-                ok = false;
+                if (cond.type === "race") {
+                    if (player.race.toLowerCase() !== cond.value.toLowerCase()) {
+                        ok = false;
+                    }
+                }
+
+                if (cond.type === "statMin") {
+                    if (player[cond.stat] < cond.value) {
+                        ok = false;
+                    }
+                }
+
+                if (cond.type === "item") {
+                    if (!player.inventory.includes(cond.value)) {
+                        ok = false;
+                    }
+                }
+            }
+
+            if (!ok) {
+                addLogEntry(`<p><span class="log-tag log-fail">[Action ratée]</span> ${data.titre}</p>`);
+                return loadScreen(data.elseGoto);
+            }
+
+            addLogEntry(`<p><span class="log-tag log-success">[Action réussie]</span> ${data.titre}</p>`);
+
+            if (data.goto) {
+                return showScreen(data.goto);
             }
         }
 
-        if (cond.type === "statMin") {
-            if (player[cond.stat] < cond.value) {
-                ok = false;
+        /* ===============================
+           REQUIRE ANY
+        =============================== */
+        if (data.requireAny) {
+
+            let ok = false;
+
+            for (let cond of data.requireAny) {
+
+                if (cond.type === "race" &&
+                    player.race.toLowerCase() === cond.value.toLowerCase()) {
+                    ok = true;
+                }
+
+                if (cond.type === "statMin" &&
+                    player[cond.stat] >= cond.value) {
+                    ok = true;
+                }
+
+                if (cond.type === "item" &&
+                    player.inventory.includes(cond.value)) {
+                    ok = true;
+                }
+            }
+
+            if (!ok) {
+                addLogEntry(`<p><span class="log-tag log-fail">[Action ratée]</span> ${data.titre}</p>`);
+                return loadScreen(data.elseGoto);
+            }
+
+            addLogEntry(`<p><span class="log-tag log-success">[Action réussie]</span> ${data.titre}</p>`);
+
+            if (data.goto) {
+                return showScreen(data.goto);
             }
         }
 
-        if (cond.type === "item") {
-            if (!player.inventory.includes(cond.value)) {
-                ok = false;
+        /* ===============================
+           INVENTAIRE + MORPH FOLIE
+        =============================== */
+
+        setTimeout(() => {
+
+            updateInventoryDisplay();
+
+            if (finalData.image !== data.image) {
+
+                const normalText = data.texte;
+                const madnessText = finalData.texte;
+                const madnessImage = finalData.image;
+
+                overlay.src = madnessImage;
+                overlay.style.opacity = "0";
+
+                /* ---- TRANSITION VERS FOLIE (2.5s) ---- */
+
+                setTimeout(() => {
+
+                    overlay.style.transition = "opacity 2.5s ease-in-out";
+                    overlay.style.opacity = "1";
+
+                    textEl.classList.add("fade-out");
+
+                    setTimeout(() => {
+                        textEl.textContent = madnessText;
+                        textEl.classList.remove("fade-out");
+                        textEl.classList.add("fade-in");
+                    }, 400);
+
+                    wrapper.classList.add("madness-distort");
+
+                    if (player.folie >= 10) {
+                        wrapper.classList.add("madness-breath");
+                    }
+
+                    if (player.folie >= 15) {
+                        wrapper.classList.add("madness-shake");
+                    }
+
+                }, 1500);
+
+                /* ---- RETOUR NORMAL (12.5s) ---- */
+
+                setTimeout(() => {
+
+                    overlay.style.opacity = "0";
+
+                    textEl.classList.add("fade-out");
+
+                    setTimeout(() => {
+                        textEl.textContent = normalText;
+                        textEl.classList.remove("fade-out");
+                        textEl.classList.add("fade-in");
+                    }, 400);
+
+                    wrapper.classList.remove(
+                        "madness-distort",
+                        "madness-breath",
+                        "madness-shake"
+                    );
+
+                }, 10000);
             }
-        }
-    }
 
-    // ❌ Condition non remplie
-    if (!ok) {
-        addLogEntry(
-            `<p><span class="log-tag log-fail">[Action ratée]</span> ${data.titre}</p>`
-        );
-        return loadScreen(data.elseGoto);
-    }
-
-    // ✔ Succès
-    addLogEntry(
-        `<p><span class="log-tag log-success">[Action réussie]</span> ${data.titre}</p>`
-    );
-
-    // ⭐⭐ Saut automatique ⭐⭐
-    if (data.goto) {
-        return showScreen(data.goto);
-    }
-}
-
-// requireAny (conditions)
-if (data.requireAny) {
-    let ok = false;
-
-    for (let cond of data.requireAny) {
-
-        if (cond.type === "race" &&
-            player.race.toLowerCase() === cond.value.toLowerCase()) {
-            ok = true;
-        }
-
-        if (cond.type === "statMin" && player[cond.stat] >= cond.value) {
-            ok = true;
-        }
-
-        if (cond.type === "item" && player.inventory.includes(cond.value)) {
-            ok = true;
-        }
-    }
-
-    if (!ok) {
-        addLogEntry(
-            `<p><span class="log-tag log-fail">[Action ratée]</span> ${data.titre}</p>`
-        );
-        return loadScreen(data.elseGoto);
-    }
-
-    addLogEntry(
-        `<p><span class="log-tag log-success">[Action réussie]</span> ${data.titre}</p>`
-    );
-
-    // ⭐⭐ SAUT AUTOMATIQUE ⭐⭐
-    if (data.goto) {
-        return showScreen(data.goto);
-    }
-}
-
-
-        // Mise à jour inventaire
-        updateInventoryDisplay();
+        }, 300);
 
     }, 300);
 }
+
+/* -----------------------------------------------------
+       UPDATE IMAGE
+------------------------------------------------------ */
+
+function updateImage(overlaySrc) {
+
+    const baseImage = document.getElementById("screen-image");
+    const overlayImage = document.getElementById("screen-image-overlay");
+
+    if (!overlaySrc) {
+        overlayImage.style.opacity = "0";
+        return;
+    }
+
+    console.log("Overlay src appliqué :", overlaySrc);
+
+    overlayImage.src = overlaySrc;
+
+    // petit délai pour forcer le navigateur à enregistrer le changement
+    requestAnimationFrame(() => {
+        overlayImage.style.opacity = "1";
+    });
+}
+
+/* -----------------------------------------------------
+       EFFET SURPRISE
+------------------------------------------------------ */
+function triggerJumpScareEffect(screenId) {
+
+    if (!jumpScareScreens[screenId]) return;
+
+    if (!player.jumpScares) player.jumpScares = [];
+    if (player.jumpScares.includes(screenId)) return;
+
+    player.jumpScares.push(screenId);
+    savePlayer();
+
+    const config = jumpScareScreens[screenId];
+    const baseImage = document.getElementById("screen-image");
+
+    if (!baseImage) return;
+
+    // 🔊 SON
+    if (config.sound) {
+        const audio = new Audio(config.sound);
+        audio.volume = 1;
+        audio.play().catch(() => {});
+    }
+
+    const rect = baseImage.getBoundingClientRect();
+
+    const scareImage = document.createElement("img");
+    scareImage.src = config.image || baseImage.src;
+
+    scareImage.style.position = "fixed";
+    scareImage.style.top = rect.top + "px";
+    scareImage.style.left = rect.left + "px";
+    scareImage.style.width = rect.width + "px";
+    scareImage.style.height = rect.height + "px";
+    scareImage.style.objectFit = "cover";
+    scareImage.style.zIndex = "999999999";
+    scareImage.style.pointerEvents = "none";
+    scareImage.style.transformOrigin = "center center";
+    scareImage.style.transition = "none";
+
+    document.body.appendChild(scareImage);
+
+    // ✅ Flash element
+    let flash = document.getElementById("jumpscare-flash");
+    if (!flash) {
+        flash = document.createElement("div");
+        flash.id = "jumpscare-flash";
+        document.body.appendChild(flash);
+    }
+
+    scareImage.onload = () => {
+
+        scareImage.getBoundingClientRect();
+
+        // ⚡ FLASH BLANC
+        flash.style.transition = "none";
+        flash.style.opacity = "1";
+
+        setTimeout(() => {
+            flash.style.transition = "opacity 0.2s ease";
+            flash.style.opacity = "0";
+        }, 60);
+
+        // 🌪 SHAKE GLOBAL
+        document.body.classList.add("jumpscare-shake");
+        setTimeout(() => {
+            document.body.classList.remove("jumpscare-shake");
+        }, 400);
+
+        // 📺 GLITCH
+        scareImage.classList.add("glitch-effect");
+
+        // 💥 Zoom centre
+        scareImage.style.transition = "all 0.8s cubic-bezier(.2,.8,.2,1)";
+        scareImage.style.top = "50%";
+        scareImage.style.left = "50%";
+        scareImage.style.transform = "translate(-50%, -50%) scale(6)";
+
+        setTimeout(() => {
+            scareImage.remove();
+        }, 900);
+    };
+}
+
 
 /* -----------------------------------------------------
        GESTION DES CHOIX
@@ -870,14 +1035,15 @@ const screens = {
   texte: "Désolé mais le jeu est encore en construction, vous pouvez continuer à explorer les autres chapitres",
   image: "Lieux/error.png",
   choix: [
-    { texte: "Revenir au chapitre de la forêt", goto: "Ecran0001" },
-    { texte: "Revenir au début de la montagne", goto: "Ecran0049" },
+    { texte: "Se rendre au chapitre de la forêt", goto: "Ecran0001" },
+    { texte: "Se rendre vers celui de la montagne", goto: "Ecran0049" },
+	{ texte: "Tester la partie du champignon", goto: "Ecran0143" },
   ]
 },
 "Ecran0001": {
   titre: "Dans une forêt inconnue",
   texte: "Un mal de tête vous prend au réveil, vous vous trouvez dans une forêt que vous ne connaissez pas..",
-  image: "Lieux/Foret/001. Foret.jpg",
+  image: "Lieux/Foret/001. Foret.png",
   choix: [
     { texte: "Continuer sur le sentier", goto: "Ecran0002" },
     { texte: "S'enfoncer dans les bois à gauche", goto: "Ecran0003" },
@@ -931,7 +1097,7 @@ const screens = {
 	"Ecran0006": {
   titre: "La route des cols",
   texte: "La forêt devient de moins en moins dense. Un petit vent, qui semble magique, souffle..",
-  image: "Lieux/Foret/006. Foret.jpg",
+  image: "Lieux/Foret/006. Foret.png",
   choix: [
     { texte: "Respirer un bon coup d'air frais !", goto: "Ecran0015" },
     { texte: "Redescendre vert la forêt", goto: "Ecran0001" },
@@ -1042,7 +1208,7 @@ const screens = {
 "Ecran0015": {
   titre: "Le bon air frais !",
   texte: "Vous humez l'air et vous vous sentez bien ! (Grâce aléatoire)",
-  image: "Lieux/Foret/006. Foret.jpg",
+  image: "Lieux/Foret/006. Foret.png",
   
   graceAleatoire: true,
   alternateGotoAfterGrace: "Ecran0015A",
@@ -1055,7 +1221,7 @@ const screens = {
 "Ecran0015A": {
   titre: "Le bon air frais !",
   texte: "L'air de la montagne vous gagne..",
-  image: "Lieux/Foret/006. Foret.jpg",
+  image: "Lieux/Foret/006. Foret.png",
   choix: [
     { texte: "Continuer hors de la forêt", goto: "Ecran0016" },
     { texte: "Revenir sur ses pas", goto: "Ecran0002" },
@@ -1176,7 +1342,7 @@ const screens = {
 },
 "Ecran0026": {
   titre: "L'Homme-Arbre",
-  texte: "L'homme-arbre baisse ses grandes branches, comme pour mieux vous observer.\n« Alors tu t’es réveillé ici… Ce lieu attire parfois les égarés. Certains disent que la forêt de Hankpath ressent le mal‑être des voyageurs et tente de les guider… ou de les perdre. ",
+  texte: "L'homme-arbre baisse ses grandes branches, comme pour mieux vous observer. « Alors tu t’es réveillé ici… Ce lieu attire parfois les égarés. Certains disent que la forêt de Hankpath ressent le mal‑être des voyageurs et tente de les guider… ou de les perdre. ",
   image: "Lieux/Foret/004. Foret.jpg",
   choix: [
     { texte: "Je veux seulement comprendre où je suis", goto: "Ecran0011" },
@@ -1304,7 +1470,7 @@ const screens = {
 },
 "Ecran0039": {
   titre: "L'Homme-Arbre – Victoire",
-  texte: "Vous faites « Ciseaux »… et l’Homme‑Arbre fait « Feuille ».\nIl pousse un soupir impressionné.\n« Le vent coupe parfois les feuilles les plus robustes. Tu as gagné, voyageur. »\nIl récupère quelque chose entre son écorce et vous le tend.",
+  texte: "Vous faites « Ciseaux »… et l’Homme‑Arbre fait « Feuille ». Il pousse un soupir impressionné. « Le vent coupe parfois les feuilles les plus robustes. Tu as gagné, voyageur. » Il récupère quelque chose entre son écorce et vous le tend.",
   image: "Lieux/Foret/004. Foret.jpg",
   
   giveItem: "Potion Rouge",  
@@ -2330,7 +2496,146 @@ action: () => {
     { texte: "Allez vers la statue", goto: "Ecran0102" },
     { texte: "Continuer le chemin en contre bas", goto: "Ecran0126" },
   ]
+},
+"Ecran0143": {
+  titre: "Une excroissance rouge",
+  texte: "Au détour du sentier, un champignon gigantesque bloque presque la clairière.",
+  image: "Lieux/Champignon/001. champignon.png",
+
+  folieVariants: {
+    5: {
+      texte: "Vous sentez la folie vous envahir, le rouge du champignon semble légèrement plus sombre.",
+	  image: "Lieux/Champignon/001. champignon_A.png"
+    },
+    10: {
+      texte: "Vous sentez la folie vous envahir, le champignon incline légèrement son chapeau. — Tu reviens.",
+      image: "Lieux/Champignon/001. distordue.png"
+    },
+    15: {
+      texte: "Vous sentez la folie vous envahir, le champignon change de forme et vous dit : Tu es enfin prêt !! Le champignon respire au même rythme que toi.",
+      image: "Lieux/Champignon/001. distordue.png"
+    }
+  },
+
+  choix: [
+    { texte: "S’approcher encore", goto: "Ecran0144" },
+    { texte: "Essayer de fuir", goto: "Ecran0144" },
+  ]
+},
+"Ecran0144": {
+  titre: "La voix humide",
+  texte: "Le temps change à la vitesse de l'éclair, le champignon brille de mille feux. — Enfin. La voix semble vibrer directement dans votre poitrine.",
+  image: "Lieux/Champignon/002. champignon.png",
+  
+    folieVariants: {
+    5: {
+      texte: "La folie prend le dessus, le rouge du champignon semble légèrement plus sombre ou n'est-ce qu'une impression.",
+	  image: "Lieux/Champignon/002. champignon_A.png"
+    },
+    10: {
+      texte: "La folie prend le dessus, tu fais semblant de ne pas me reconnaître ? La lumière semble s'intensifier.",
+      image: "Lieux/Champignon/002. distordue.png"
+    },
+    15: {
+      texte: "La folie prend le dessus, tu fais semblant de ne pas me reconnaître ? Le champignon s’élargit comme un sourire.",
+      image: "Lieux/Champignon/002. distordue.png"
+    }
+  },
+  
+  choix: [
+    { texte: "Qui parle ?", goto: "Ecran0145" },
+    { texte: "Essayer de comprendre", goto: "Ecran0146" },
+  ]
+},
+"Ecran0145": {
+  titre: "Annonce absurde",
+  texte: "Nous sommes en 2026. Le nombre résonne étrangement. Êtes-vous certain que vous êtes dans la bonne époque ?",
+  image: "Lieux/Champignon/002. champignon.png",
+  choix: [
+    { texte: "Que signifie 2026 ?", goto: "Ecran0147" },
+    { texte: "C’est insensé.", goto: "Ecran0146" },
+  ]
+},
+"Ecran0146": {
+  titre: "Refus instinctif",
+  texte: "Votre cœur accélère. Les images ne sont plus réalité, une lumière intense passe entre les arbre et le champignon n'est plus.. Parler à un champignon n’est déjà pas raisonnable. L’écouter parler d’une époque inconnue l’est encore moins.",
+  image: "Lieux/Champignon/003. champignon.png",
+  choix: [
+    { texte: "Fermer les yeux et essayer de revenir à la réalité", goto: "Ecran0147" },
+    { texte: "Se boucher les oreilles", goto: "Ecran0147" },
+  ]
+},
+"Ecran0147": {
+  titre: "Le Wi‑Fi",
+  texte: "Votre vision semble altéré une fois de plus ! Le son résonne dans votre tête. En 2026, les humains prient le Wi‑Fi. Il prononce ce mot comme une prière sacrée. Une divinité invisible qui relie tous les esprits.",
+  image: "Lieux/Champignon/004. champignon.png",
+  choix: [
+    { texte: "Se moquer du champignon", goto: "Ecran0148" },
+    { texte: "En savoir plus", goto: "Ecran0148" },
+  ]
+},
+"Ecran0148": {
+  titre: "Rectangle lumineux",
+  texte: "Ils fixent des rectangles lumineux pendant des heures. Quand la divinité disparaît… ils paniquent. Une image fugace clignote dans votre esprit.",
+  image: "Lieux/Champignon/009. champignon.png",
+  choix: [
+    { texte: "Secouer la tête", goto: "Ecran0149" },
+    { texte: "Fermer les yeux et écouter", goto: "Ecran0149" },
+  ]
+},
+"Ecran0149": {
+  titre: "Pluie de spores",
+  texte: "Des spores lumineuses commencent à tomber lentement autour de vous. Elles brillent d’un vert doux, presque apaisant. — Le temps ici n’est pas fixe, murmure la voix, jour nuit, lever de soleil ou encore pluie, rien n'est figé !",
+  image: "Lieux/Champignon/005. champignon.png",
+  choix: [
+    { texte: "Observer les spores", goto: "Ecran0150" },
+    { texte: "Tenter de les balayer", goto: "Ecran0150" },
+  ]
+},
+"Ecran0150": {
+  titre: "Le soleil se déplace",
+  texte: "Le soleil a changé d’angle. Les ombres s’allongent. Vous êtes certain que le temps vient d’accélérer.",
+  image: "Lieux/Champignon/007. champignon.png",
+  choix: [
+    { texte: "Admirer le paysage", goto: "Ecran0151" },
+    { texte: "Se mettre en boule et prendre votre tête entre les mains", goto: "Ecran0151" },
+  ]
+},
+"Ecran0151": {
+  titre: "Approche",
+  texte: "Un vieil homme apparaît devant vous, il tient un objet qui éclair son visage, il dit : Approche. Écoute. Ou touche. Sa surface semble respirer.",
+  image: "Lieux/Champignon/006. champignon.png",
+  choix: [
+    { texte: "Toucher l'objet brillant", goto: "Ecran0152" },
+	{ texte: "Écouter attentivement", goto: "Ecran0153" },
+  ]
+},
+"Ecran0152": {
+  titre: "Contact interdit",
+  texte: "Votre main touche la surface de l'objet. Une vision brutale vous traverse. Tours de verre. Lumières sans flamme. Ciel gris. Est-ce donc ça 2026..?",
+  image: "Lieux/Champignon/011. champignon.png",
+  choix: [
+    { texte: "Retirer votre main", goto: "Ecran0153" }
+  ]
+},
+"Ecran0153": {
+  titre: "Approche",
+  texte: "Le vieil homme hurle, sa tête se déforme, il est semble fou..",
+  image: "Lieux/Champignon/012. champignon.png",
+  choix: [
+    { texte: "Faire un pas en arrière", goto: "Ecran0154" },
+	{ texte: "Se protéger", goto: "Ecran0154" },
+  ]
+},
+"Ecran0186": {
+  titre: "Silence forestier",
+  texte: "Lorsque vous vous retournez, la clairière semble ordinaire. Le champignon est toujours là. Immobile. Comme s’il n’avait jamais parlé.",
+  image: "Lieux/Champignon/010. champignon.png",
+  choix: [
+    { texte: "Reprendre votre route", goto: "Ecran0103" }
+  ]
 }
+
 
 
 

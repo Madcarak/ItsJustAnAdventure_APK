@@ -2,14 +2,23 @@
         BUILD APK DANS POWERSHELL
 ***---------------------------------------***
 
+Supprimer les dossiers suivants : 
+---------------------------------
+- android\Build
+- android\Capacitor
+- android\.gradle
+- android\app\build\outputs\apk
+
+
+
+Ensuite sur powershel en version administrator :
+------------------------------------------------
 cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
 npx cap sync android
 cd android
 .\gradlew.bat --stop
 .\gradlew.bat clean
 .\gradlew.bat :app:packageDebug
-
-
 
 
 
@@ -24,7 +33,6 @@ git push origin main
 
 
 
-
 Lorsqu'il y a une modification faite directement sur Github (comme un changement dans le README.md) :
 ---------------------------------------------------------------------------------------------------
 cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
@@ -32,12 +40,9 @@ git pull origin main
 
 
 
-
 Envoyer du local vers GITHUB :
 ------------------------------
 git push origin main
-
-
 
 
 
@@ -95,33 +100,42 @@ const VISIT_HISTORY_ALLOWED_SCREENS = [
 Aide pour gérer les écrans de la folie :
 ---------------------------------------
 
-"Ecran0023": {
-    titre: "Le tumulus",
-    texte: "L’entrée est sombre et humide.",
-    image: "...",
-    choix: [...]
+"Ecran0143": {
+  titre: "Une excroissance rouge",
+  texte: "Au détour du sentier, un champignon gigantesque bloque presque la clairière.",
+  image: "Lieux/Champignon/001. champignon.png",
+
+  folieVariants: {
+    5: {
+      texte: "Vous sentez la folie vous envahir, le rouge du champignon semble légèrement plus sombre.",
+	  image: "Lieux/Champignon/001. champignon_A.png"
+    },
+    10: {
+      texte: "Vous sentez la folie vous envahir, le champignon incline légèrement son chapeau.\n\n— Tu reviens.",
+      image: "Lieux/Champignon/001. distordue.png"
+    },
+    15: {
+      texte: "Vous sentez la folie vous envahir, le champignon change de forme et vous dit : Tu es enfin prêt !!\n\nLe champignon respire au même rythme que toi.",
+      image: "Lieux/Champignon/001. distordue.png"
+    }
+  },
+
+  choix: [
+    { texte: "S’approcher encore", goto: "Ecran0144" },
+    { texte: "Essayer de fuir", goto: "Ecran0144" },
+  ]
 },
 
-"Ecran0023_f5": {
-    titre: "Le tumulus",
-    texte: "Une silhouette bouge furtivement à l’intérieur...",
-    image: "...",
-    choix: [...]
-},
 
-"Ecran0023_f10": {
-    titre: "Le tumulus",
-    texte: "Les murs semblent respirer lentement.",
-    image: "...",
-    choix: [...]
-},
+-------------------------------------------------
+Ajouter des points de folie dans la console F12 :
+-------------------------------------------------
 
-"Ecran0023_f12": {
-    titre: "Le tumulus",
-    texte: "Quelqu’un pleure. C’est votre voix.",
-    image: "...",
-    choix: [...]
-},
+player.folie = 15;
+updateFolieBar(player.folie);
+triggerFolieEffect("up");
+
+
 
 ---------------------------------------
 Flag pour objet déjà découvert :

@@ -728,6 +728,144 @@ function updateGoldUI(value) {
         goldMobile.textContent = value;
 }
 
+function triggerFolieEffect(type) {
+
+    const portraits = [
+        document.getElementById("portrait-mobile"),
+        document.getElementById("portrait-pc")
+    ];
+
+    const soundUp = document.getElementById("sound-folie-up");
+    const soundDown = document.getElementById("sound-folie-down");
+
+    /* ===============================
+       ✅ EFFET PORTRAIT
+    =============================== */
+
+    portraits.forEach(portrait => {
+        if (!portrait) return;
+
+        portrait.classList.remove("folie-up", "folie-down");
+        void portrait.offsetWidth;
+
+        if (type === "up") {
+            portrait.classList.add("folie-up");
+        } else if (type === "down") {
+            portrait.classList.add("folie-down");
+        }
+    });
+
+    /* ===============================
+       ✅ EFFET ÉCRAN
+    =============================== */
+
+    const overlay = document.createElement("div");
+    overlay.classList.add("folie-overlay", type);
+
+if (type === "up") {
+
+    const maxRadius = Math.max(window.innerWidth, window.innerHeight);
+
+    const intensity = (player.folie / 15); // 0 → 1 à 10 de folie
+
+    overlay.style.boxShadow =
+        `inset 0 0 ${maxRadius * intensity * 0.6}px rgba(255,0,0,0.9)`;
+}
+
+overlay.style.background = `rgba(120,0,0,${0.05 * player.folie})`;
+
+
+    document.body.appendChild(overlay);
+
+    setTimeout(() => {
+        overlay.remove();
+    }, 3000);
+
+    /* ===============================
+       ✅ SON
+    =============================== */
+
+    if (type === "up" && soundUp) {
+        soundUp.currentTime = 0;
+        soundUp.play().catch(() => {});
+    }
+
+    if (type === "down" && soundDown) {
+        soundDown.currentTime = 0;
+        soundDown.play().catch(() => {});
+    }
+}
+
+function applyFolieVariant(originalData) {
+
+    if (!originalData.folieVariants) {
+        return originalData;
+    }
+
+    // ✅ clone superficiel uniquement
+    const data = { ...originalData };
+
+    const thresholds = Object.keys(originalData.folieVariants)
+        .map(Number)
+        .sort((a, b) => a - b);
+
+    let activeVariant = null;
+
+    for (const threshold of thresholds) {
+        if (player.folie >= threshold) {
+            activeVariant = originalData.folieVariants[threshold];
+        }
+    }
+
+    if (activeVariant) {
+        if (activeVariant.texte !== undefined) {
+            data.texte = activeVariant.texte;
+        }
+        if (activeVariant.image !== undefined) {
+            data.image = activeVariant.image;
+        }
+        if (activeVariant.titre !== undefined) {
+            data.titre = activeVariant.titre;
+        }
+    }
+
+    return data;
+}
+
+
+
+function updateImage(baseSrc, overlaySrc) {
+
+    const base = document.getElementById("screenImageBase");
+    const overlay = document.getElementById("screenImageOverlay");
+
+    // Sécurité
+    if (!base || !overlay) return;
+
+    // Reset
+    overlay.style.transition = "none";
+    overlay.style.opacity = 0;
+
+    // Charge l’image normale
+    base.src = baseSrc;
+
+    // Si pas de variante → stop
+    if (baseSrc === overlaySrc) {
+        overlay.src = "";
+        return;
+    }
+
+    // Charge image distordue
+    overlay.src = overlaySrc;
+
+    // Petit délai pour forcer le reflow
+    setTimeout(() => {
+        overlay.style.transition = "opacity 2s ease-in-out";
+        overlay.style.opacity = 1;
+    }, 50);
+}
+
+
 
 /* =====================================================
       ÉTAPE : RÉSUMÉ FINAL
@@ -937,7 +1075,7 @@ document.addEventListener("DOMContentLoaded", () => {
             savePlayer();
             updatePlayerDisplay();
 
-            loadScreen("Ecran0001");
+            loadScreen("Ecran0000");
         };
     }
 

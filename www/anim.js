@@ -335,3 +335,24 @@ function triggerFolieEffect(type) {
         soundDown.play().catch(() => {});
     }
 }
+
+function checkFoliePermanent() {
+
+    let permanent = document.getElementById("folie-permanent-overlay");
+
+    if (player.folie >= 15) {
+
+        if (!permanent) {
+            permanent = document.createElement("div");
+            permanent.id = "folie-permanent-overlay";
+            permanent.className = "folie-permanente";
+            document.body.appendChild(permanent);
+        }
+
+    } else {
+
+        if (permanent) {
+            permanent.remove();
+        }
+    }
+}
