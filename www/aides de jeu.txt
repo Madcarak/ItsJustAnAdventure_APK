@@ -28,7 +28,7 @@ cd android
 
 cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
 git add .
-git commit -m "007 - Dernière version APK avec portraits et effet visuels et sonores"
+git commit -m "008 - Ajout d'effets visuels lorsque la folie s'empare du personnage (3 niveaux - Fol : 5, Fol : 10 et Fol : 15). Ajout de Jump Scream"
 git push origin main
 
 

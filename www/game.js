@@ -796,13 +796,16 @@ overlay.style.background = `rgba(120,0,0,${0.05 * player.folie})`;
     }
 }
 
+const madnessSound = new Audio("sons/madness.mp3");
+madnessSound.volume = 0.4; // ajuste si besoin
+
+
 function applyFolieVariant(originalData) {
 
     if (!originalData.folieVariants) {
         return originalData;
     }
 
-    // ✅ clone superficiel uniquement
     const data = { ...originalData };
 
     const thresholds = Object.keys(originalData.folieVariants)
@@ -818,6 +821,7 @@ function applyFolieVariant(originalData) {
     }
 
     if (activeVariant) {
+
         if (activeVariant.texte !== undefined) {
             data.texte = activeVariant.texte;
         }
@@ -827,10 +831,17 @@ function applyFolieVariant(originalData) {
         if (activeVariant.titre !== undefined) {
             data.titre = activeVariant.titre;
         }
+
+        // 🔊 Joue le son UNE FOIS
+        if (madnessSound) {
+            madnessSound.currentTime = 0;
+            madnessSound.play().catch(() => {});
+        }
     }
 
     return data;
 }
+
 
 
 

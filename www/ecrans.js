@@ -16,6 +16,9 @@ const itemDescriptions = {
     "Pierre du Passage Gauche": "Une pierre magique incomplète",
     "Pierre du Passage Complète": "La pierre est enfin complète",
     "Corde": "Une corde usagée mais fonctionnelle",
+	"Spore Connectée": "Un genre de champignon vivant avec des tentacules, étrange !",
+	"Fragment de Signal": "On dirait un diadème, il vibre légèrement",
+	"Pierre Wi‑Fi Sacrée": "Une pierre avec un symbole étrange, elle dégage une chaleur rassurante",
 };
 
 const itemIcons = {
@@ -31,7 +34,10 @@ const itemIcons = {
     "Pierre du Passage Droite": "022. Pierre de passage droit.png",
     "Pierre du Passage Gauche": "023. Pierre de passage gauche.png",
     "Pierre du Passage Complète": "021. Pierre de passage complete.png",
-    "Corde": "001. corde.png"
+    "Corde": "001. corde.png",
+	"Spore Connectée": "024. Spore Connectee.png",
+	"Fragment de Signal": "025. Fragment de Signal.png",
+	"Pierre Wi‑Fi Sacrée": "026. Pierre Wi-Fi Sacree.png",
 };
 
 /* -----------------------------------------------------
@@ -42,11 +48,16 @@ const jumpScareScreens = {
         sound: "sons/rire.mp3",
         image: "Lieux/Champignon/012. champignon.png"
     },
+	    "Ecran0170": {
+        sound: "sons/rire.mp3",
+        image: "Lieux/Champignon/027. champignon.png"
+    },
 	"Ecran0092": {
         sound: "sons/rire2.mp3",
         image: "Lieux/Foret/036. Foret.png"
     }
 };
+
 
 /* =====================================================
    RECETTES D'ASSEMBLAGE
@@ -375,7 +386,8 @@ function showItemPopover(slot, html) {
 function showScreen(id) {
 
     // 1️⃣ Marque l'écran comme visité
-    markScreenAsVisited(id);
+    currentScreenId = id;
+	markScreenAsVisited(id);
 
     const screen = screens[id];
     if (!screen) {
@@ -465,7 +477,8 @@ function showScreen(id) {
         "Ecran0117",
         "Ecran0119",
         "Ecran0148",
-        "Ecran0152"
+        "Ecran0152",
+		"Ecran0161"
     ];
 
     if (foliePlusUn.includes(id)) {
@@ -489,7 +502,10 @@ function showScreen(id) {
     /* -----------------------------------------------------
          -1 FOLIE
     ------------------------------------------------------ */
-    const folieMoinsUn = ["Ecran0074"];
+    const folieMoinsUn = [
+	"Ecran0074",
+	"Ecran0163"
+	];
 
     if (folieMoinsUn.includes(id) && player.folie > 0) {
 
@@ -533,6 +549,7 @@ function showScreen(id) {
          AFFICHAGE NORMAL
     ------------------------------------------------------ */
 loadScreen(id);
+handleZoneMusic(screen);
 triggerJumpScareEffect(id);
 
     /* -----------------------------------------------------
@@ -809,7 +826,7 @@ function loadScreen(id, options = {}) {
 
                 setTimeout(() => {
 
-                    overlay.style.transition = "opacity 2.5s ease-in-out";
+                    overlay.style.transition = "opacity 1.5s ease-in-out";
                     overlay.style.opacity = "1";
 
                     textEl.classList.add("fade-out");
@@ -1041,6 +1058,7 @@ const screens = {
   ]
 },
 "Ecran0001": {
+  zone: "foret",
   titre: "Dans une forêt inconnue",
   texte: "Un mal de tête vous prend au réveil, vous vous trouvez dans une forêt que vous ne connaissez pas..",
   image: "Lieux/Foret/001. Foret.png",
@@ -1051,16 +1069,18 @@ const screens = {
   ]
 },
 "Ecran0002": {
+	zone: "foret",
   titre: "Sur le sentier",
   texte: "Vous continuez sur le sentier et vous tombez sur un panneau qui propose deux routes",
   image: "Lieux/Foret/002. Foret.jpg",
   choix: [
     { texte: "Prendre la route à droite", goto: "Ecran0005" },
     { texte: "Plutôt celle de gauche", goto: "Ecran0006" },
-    { texte: "Examiner les panneaux", goto: "Ecran0007" },
+    { texte: "Examiner le panneau", goto: "Ecran0007" },
   ]
 },
 "Ecran0003": {
+	zone: "cimetiere",
   titre: "Un cimetière",
   texte: "Après un petit moment de marche à travers bois, vous tombez sur d'anciennes tombes.",
   image: "Lieux/Foret/003. Foret.jpg",
@@ -1071,6 +1091,7 @@ const screens = {
   ]
 },
 "Ecran0004": {
+	zone: "foret",
   titre: "L'Homme-Arbre",
   texte: "Vous tombez face à un homme‑arbre, qui ne semble pas agressif. Il entame la discussion et vous dit : « Que fais‑tu dans ma forêt ? ",
   image: "Lieux/Foret/004. Foret.jpg",
@@ -1085,6 +1106,7 @@ const screens = {
   ]
 },
 "Ecran0005": {
+	zone: "foret",
   titre: "La ruine",
   texte: "Vous tombez nez à nez face à une ancienne ruine",
   image: "Lieux/Foret/005. Foret.jpg",
@@ -1095,6 +1117,7 @@ const screens = {
   ]
 },
 	"Ecran0006": {
+		zone: "montagne",
   titre: "La route des cols",
   texte: "La forêt devient de moins en moins dense. Un petit vent, qui semble magique, souffle..",
   image: "Lieux/Foret/006. Foret.png",
@@ -1104,8 +1127,9 @@ const screens = {
   ]
 },
 "Ecran0007": {
+	zone: "foret",
   titre: "Le panneau",
-  texte: "Les panneaux sont écrits dans une langue inconnue. Il n’y a rien d’autre dans les parages.",
+  texte: "Le panneau est écrit dans une langue inconnue. Il n’y a rien d’autre dans les parages.",
   image: "Lieux/Foret/002. Foret.jpg",
   choix: [
     { texte: "Prendre la route à droite", goto: "Ecran0005" },
@@ -1113,6 +1137,7 @@ const screens = {
   ]
 },
 "Ecran0008": {
+	zone: "cimetiere",
   titre: "Fouille du cimetière",
   texte: "Vous fouillez autour des tombes et trouvez une bague qui semble dégager une grande énergie !",
   image: "Lieux/Foret/008. Foret.jpg",
@@ -1129,6 +1154,7 @@ const screens = {
 
 
 "Ecran0008A": {
+	zone: "cimetiere",
   titre: "Fouille du cimetière",
   texte: "Plus rien à fouiller par ici..",
   image: "Lieux/Foret/003. Foret.jpg",
@@ -1138,6 +1164,7 @@ const screens = {
   ]
 },
 "Ecran0009": {
+	zone: "cimetiere",
   titre: "Recueillement",
   texte: "Vous vous recueillez un moment auprès des tombes et vous vous sentez bien ! (Grâce aléatoire)",
   image: "Lieux/Foret/009. Foret.jpg",
@@ -1148,6 +1175,7 @@ const screens = {
   ]
 },
 "Ecran0009A": {
+	zone: "cimetiere",
   titre: "Recueillement",
   texte: "Vous vous recueillez un moment auprès des tombes..",
   image: "Lieux/Foret/009. Foret.jpg",
@@ -1157,6 +1185,7 @@ const screens = {
   ]
 },
 "Ecran0010": {
+	zone: "foret",
   titre: "L'Homme-Arbre",
   texte: "L'Homme-Arbre vous regarde et vous dit : « Es‑tu là pour troubler l’ordre qui règne en ces lieux ? »",
   image: "Lieux/Foret/004. Foret.jpg",
@@ -1167,6 +1196,7 @@ const screens = {
   ]
 },
 "Ecran0011": {
+	zone: "foret",
   titre: "L'Homme-Arbre",
   texte: "Nous sommes dans la forêt de Hankpath, l’une des plus belles forêts que je connaisse... et la seule.",
   image: "Lieux/Foret/004. Foret.jpg",
@@ -1177,6 +1207,7 @@ const screens = {
   ]
 },
 "Ecran0012": {
+	zone: "foret",
   titre: "L'Homme-Arbre",
   texte: "L'Homme‑Arbre rigole lentement... « Je ne mange pas de chair ». ",
   image: "Lieux/Foret/004. Foret.jpg",
@@ -1187,6 +1218,7 @@ const screens = {
   ]
 },
 "Ecran0013": {
+	zone: "donjon",
   titre: "Dans la ruine",
   texte: "Une odeur désagréable émane de la pièce, c'est poussiéreux et l'air est pesant.",
   image: "Lieux/Foret/013. Foret.jpg",
@@ -1197,6 +1229,7 @@ const screens = {
   ]
 },
 "Ecran0014": {
+	zone: "foret",
   titre: "Le Squelette",
   texte: "Un squelette est là, il semble être mort en faisant la sieste.",
   image: "Lieux/Foret/014. Foret.jpg",
@@ -1206,6 +1239,7 @@ const screens = {
   ]
 },
 "Ecran0015": {
+	zone: "montagne",
   titre: "Le bon air frais !",
   texte: "Vous humez l'air et vous vous sentez bien ! (Grâce aléatoire)",
   image: "Lieux/Foret/006. Foret.png",
@@ -1219,6 +1253,7 @@ const screens = {
   ]
 },
 "Ecran0015A": {
+	zone: "montagne",
   titre: "Le bon air frais !",
   texte: "L'air de la montagne vous gagne..",
   image: "Lieux/Foret/006. Foret.png",
@@ -1228,6 +1263,7 @@ const screens = {
   ]
 },
 "Ecran0016": {
+	zone: "montagne",
   titre: "Hors de la forêt",
   texte: "Enfin sortie de cette forêt ! La vue est époustouflante..",
   image: "Lieux/Montagne/001. Montagne.jpg",
@@ -1237,6 +1273,7 @@ const screens = {
   ]
 },
 "Ecran0017": {
+	zone: "cimetiere",
   titre: "Malédiction",
   texte: "Une fois la bague mise vous sentez une douleur qui vous prend jusqu'au bras !",
   image: "Lieux/Foret/018. Foret.jpg",
@@ -1251,6 +1288,7 @@ const screens = {
 },
 
 "Ecran0018": {
+	zone: "cimetiere",
   titre: "Recueillement",
   texte: "Vous abandonnez l'idée de récupérer la bague et vous recueillez près des tombes et vous vous sentez bien ! (Grâce aléatoire)",
   image: "Lieux/Foret/009. Foret.jpg",
@@ -1263,6 +1301,7 @@ const screens = {
   ]
 },
 "Ecran0018A": {
+	zone: "cimetiere",
   titre: "Recueillement",
   texte: "Vous abandonnez l'idée de récupérer la bague et vous recueillez près des tombes, vous vous sentez bien !",
   image: "Lieux/Foret/009. Foret.jpg",
@@ -1271,6 +1310,7 @@ const screens = {
   ]
 },
 "Ecran0019": {
+	zone: "foret",
   titre: "L'Homme-Arbre",
   texte: "Cela m'embêterai de devoir te maltraiter..",
   image: "Lieux/Foret/004. Foret.jpg",
@@ -1281,6 +1321,7 @@ const screens = {
   ]
 },
 "Ecran0021": {
+	zone: "donjon",
   titre: "Examiner les lieux",
   texte: "Vous trouvez un parchemin elfique.",
   image: "Lieux/Foret/005. Parchemin.png",
@@ -1294,6 +1335,7 @@ const screens = {
   ]
 },
 "Ecran0022": {
+	zone: "lac",
   titre: "Le lac",
   texte: "Vous arrivez devant un joli lac en plein milieu de la forêt",
   image: "Lieux/Foret/022. Foret.jpg",
@@ -1304,6 +1346,7 @@ const screens = {
   ]
 },
 "Ecran0023": {
+	zone: "donjon",
   titre: "Le tumulus",
   texte: "Une fois dans le tumulus vous ne voyez plus rien",
   image: "Lieux/Foret/024. Foret.jpg",
@@ -1314,6 +1357,7 @@ const screens = {
   ]
 },
 "Ecran0024": {
+	zone: "foret",
   titre: "L'Homme-Arbre",
   texte: "L'homme-arbre vous regarde mais ne réagit pas",
   image: "Lieux/Foret/004. Foret.jpg",
@@ -1324,6 +1368,7 @@ const screens = {
   ]
 },
 "Ecran0025": {
+	zone: "foret",
   titre: "Fouille du squelette",
   texte: "Vous trouvez une torche non allumée",
   image: "Lieux/Foret/014. Foret.jpg",
@@ -1341,6 +1386,7 @@ const screens = {
   ]
 },
 "Ecran0026": {
+	zone: "foret",
   titre: "L'Homme-Arbre",
   texte: "L'homme-arbre baisse ses grandes branches, comme pour mieux vous observer. « Alors tu t’es réveillé ici… Ce lieu attire parfois les égarés. Certains disent que la forêt de Hankpath ressent le mal‑être des voyageurs et tente de les guider… ou de les perdre. ",
   image: "Lieux/Foret/004. Foret.jpg",
@@ -1351,6 +1397,7 @@ const screens = {
   ]
 },
 "Ecran0027": {
+	zone: "foret",
   titre: "L'Homme-Arbre",
   texte: "La forêt souffre, ses racines sont tourmentées",
   image: "Lieux/Foret/004. Foret.jpg",
@@ -1361,6 +1408,7 @@ const screens = {
   ]
 },
 "Ecran0028": {
+	zone: "foret",
   titre: "L'Homme-Arbre",
   texte: "Quelque chose rôde… une présence lourde",
   image: "Lieux/Foret/004. Foret.jpg",
@@ -1371,6 +1419,7 @@ const screens = {
   ]
 },
 "Ecran0029": {
+	zone: "foret",
   titre: "Le Squelette",
   texte: "Vous avez déjà fouillé cette emplacement",
   image: "Lieux/Foret/014. Foret.jpg",
@@ -1380,6 +1429,7 @@ const screens = {
   ]
 },
 "Ecran0030": {
+	zone: "lac",
   titre: "Essayer d'identifier l'odeur",
   texte: "L'odeur que vous sentez semble être celui d'octopodes, elle est forte et pas agréable au nez",
   image: "Lieux/Foret/022. Foret.jpg",
@@ -1389,6 +1439,7 @@ const screens = {
   ]
 },
 "Ecran0031": {
+	zone: "lac",
   titre: "Prendre la barque et partir sur le lac",
   texte: "Vous trouvez une pelle à l'intérieur de la barque qui va vous servir de rame..",
   image: "Lieux/Foret/022. Foret.jpg",
@@ -1402,6 +1453,7 @@ const screens = {
   ]
 },
 "Ecran0032": {
+	zone: "lac",
   titre: "Faire le tour du lac",
   texte: "Vous suivez le ruisseau jusqu'à une clairière",
   image: "Lieux/Foret/022. Foret.jpg",
@@ -1412,6 +1464,7 @@ const screens = {
   ]
 },
 "Ecran0033": {
+	zone: "donjon",
   titre: "Examiner les lieux",
   texte: "Rien de plus à récupérer ici",
   image: "Lieux/Foret/013. Foret.jpg",
@@ -1421,6 +1474,7 @@ const screens = {
   ]
 },
 "Ecran0034": {
+	zone: "donjon",
   titre: "Déchiffrage du parchemin",
   texte: "Vous tentez de déchiffrer les symboles...",
   image: "Lieux/Foret/005. Parchemin.png",
@@ -1434,6 +1488,7 @@ const screens = {
   ]
 },
 "Ecran0035": {
+	zone: "donjon",
   titre: "Déchiffrage du parchemin",
   texte: "Vous essayer de déchiffrer le parchemin mais rien n'y fais, vous comprenez rien à ce charabia",
   image: "Lieux/Foret/005. Parchemin.png",
@@ -1442,6 +1497,7 @@ const screens = {
   ]
 },
 "Ecran0036": {
+	zone: "cimetiere",
   titre: "Malédiction",
   texte: "Impossible de retirer la bague",
   image: "Lieux/Foret/018. Foret.jpg",
@@ -1451,6 +1507,7 @@ const screens = {
   ]
 },
 "Ecran0037": {
+	zone: "foret",
   titre: "L'Homme-Arbre – Défaite",
   texte: "La nature recouvre toujours la pierre",
   image: "Lieux/Foret/004. Foret.jpg",
@@ -1459,6 +1516,7 @@ const screens = {
   ]
 },
 "Ecran0038": {
+	zone: "foret",
   titre: "L'Homme-Arbre – Égalité",
   texte: "Deux esprits sylvestres ! Rejouons !",
   image: "Lieux/Foret/004. Foret.jpg",
@@ -1469,6 +1527,7 @@ const screens = {
   ]
 },
 "Ecran0039": {
+	zone: "foret",
   titre: "L'Homme-Arbre – Victoire",
   texte: "Vous faites « Ciseaux »… et l’Homme‑Arbre fait « Feuille ». Il pousse un soupir impressionné. « Le vent coupe parfois les feuilles les plus robustes. Tu as gagné, voyageur. » Il récupère quelque chose entre son écorce et vous le tend.",
   image: "Lieux/Foret/004. Foret.jpg",
@@ -1482,6 +1541,7 @@ const screens = {
   ]
 },
 "Ecran0040": {
+	zone: "lac",
   titre: "L'octopus",
   texte: "Vous rencontrez un Octopus géant, à première vue il ne semble pas agressif,",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1491,6 +1551,7 @@ const screens = {
   ]
 },
 "Ecran0041": {
+	zone: "lac",
   titre: "L'octopus",
   texte: "L’octopus ne semble pas réagir, pourtant il regarde dans votre direction, peut-être attend-il quelque chose,",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1500,6 +1561,7 @@ const screens = {
   ]
 },
 "Ecran0041A": {
+	zone: "lac",
   titre: "Le poulpe est attiré par la Glande Lumineuse",
   image: "Lieux/Foret/029. Foret.jpg",
 
@@ -1511,6 +1573,7 @@ const screens = {
   goto: "Ecran0055"
 },
 "Ecran0042": {
+	zone: "lac",
   titre: "L'octopus",
   texte: "Toujours aucune réaction.. que peut-il bien vouloir",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1519,6 +1582,7 @@ const screens = {
   ]
 },
 "Ecran0043": {
+	zone: "donjon",
   titre: "Le tumulus",
   texte: "Sans lumière je ne peux pas aller plus loin",
   image: "Lieux/Foret/024. Foret.jpg",
@@ -1527,14 +1591,16 @@ const screens = {
   ]
 },
 "Ecran0044": {
+	zone: "lac",
   titre: "Le cerf",
   texte: "Un cerf majestueux regarde au loin, vous ne semblez pas le déranger",
-  image: "Lieux/Foret/032 - Foret.jpg",
+  image: "Lieux/Foret/032 - Foret.png",
   choix: [
     { texte: "S'approcher discrètement", goto: "Ecran0061" },
   ]
 },
 "Ecran0045": {
+	zone: "lac",
   titre: "Essayer d'identifier l'odeur",
   texte: "Vous reprenez la barque et faite le tour",
   image: "Lieux/Foret/022. Foret.jpg",
@@ -1544,6 +1610,7 @@ const screens = {
   ]
 },
 "Ecran0046": {
+	zone: "donjon",
   titre: "Continue dans le Tumulus",
   image: "Lieux/Foret/024. Foret.jpg",
 
@@ -1555,6 +1622,7 @@ const screens = {
   goto: "Ecran0080"
 },
 "Ecran0047": {
+	zone: "montagne",
   titre: "Éboulement",
   texte: "Vous tombez face à un éboulement infranchissable, peut-être quelque chose de magique m'aiderai",
   image: "Lieux/Montagne/011. Montagne.png",
@@ -1564,6 +1632,7 @@ const screens = {
   ]
 },
 "Ecran0047A": {
+	zone: "montagne",
   titre: "J'ai l'impression que je vais devoir trouver un objet qui m'aidera à franchir cet amas de pierres",
   image: "Lieux/Montagne/011. Montagne.png",
  requireAny: [
@@ -1574,6 +1643,7 @@ const screens = {
   goto: "Ecran0049"
 },
 "Ecran0048": {
+	zone: "montagne",
   titre: "Éboulement",
   texte: "Impossible , ni de grimper ni de retirer les pierres pour passer",
   image: "Lieux/Montagne/011. Montagne.png",
@@ -1582,6 +1652,7 @@ const screens = {
   ]
 },
 "Ecran0049": {
+	zone: "montagne",
   titre: "La voie est dégagée",
   texte: "La pierre de passage magique à complètement dégagée le chemin, c'est maintenant possible d'atteindre ce temple au loin",
   image: "Lieux/Montagne/012. Montagne.png",
@@ -1600,6 +1671,7 @@ const screens = {
   ]
 },
 "Ecran0050": {
+	zone: "foret",
   titre: "Le lutin fou",
   texte: "Un petit être bondit devant vous : « AH ! Enfin quelqu’un ! Tu vas dans la montagne ? J’ai quelque chose pour mon cousin ! »",
   image: "Lieux/Foret/025. Foret.jpg",
@@ -1611,6 +1683,7 @@ const screens = {
   ]
 },
 "Ecran0051": {
+	zone: "foret",
   titre: "La demande du lutin",
   texte: "« Donne-lui cette lettre ! C'est TRÈS important ! Enfin, je crois… » dit-il en secouant un papier froissé.",
   image: "Lieux/Foret/025. Foret.jpg",
@@ -1620,6 +1693,7 @@ const screens = {
   ]
 },
 "Ecran0052": {
+	zone: "foret",
   titre: "Le lutin s'agite",
   texte: "« Hein ? Ce qu’elle contient ? Aucune idée ! Je l’ai écrite y’a des mois ! »",
   image: "Lieux/Foret/025. Foret.jpg",
@@ -1628,6 +1702,7 @@ const screens = {
   ]
 },
 "Ecran0053": {
+	zone: "foret",
   titre: "Lettre du lutin",
   texte: "Vous recevez une lettre froissée et collante, adressée à un lutin des montagnes.",
   image: "Lieux/Foret/033. Foret.png",
@@ -1639,6 +1714,7 @@ const screens = {
   ]
 },
 "Ecran0054": {
+	zone: "foret",
   titre: "Lutin silencieux",
   texte: "Le lutin vous regarde, l’air distrait : « Ah… c’est toi. J’ai rien d’autre pour toi. »",
   image: "Lieux/Foret/025. Foret.jpg",
@@ -1647,6 +1723,7 @@ const screens = {
   ]
 },
 "Ecran0055": {
+	zone: "lac",
   titre: "Résonance visqueuse",
   texte: "La glande lumineuse dans votre sac se met à vibrer. L’octopus cligne lentement de ses huit yeux. Une voix humide résonne directement dans votre esprit : Enfin quelqu’un qui sent correctement…",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1656,6 +1733,7 @@ const screens = {
   ]
 },
 "Ecran0056": {
+	zone: "lac",
   titre: "Dialogue céphalopodique",
   texte: "Évidemment. Je suis Grôthul l’Octopode Réfléchi. Porteur officiel des secrets humides. Tu portes la Glande. Donc tu m’entends. Donc tu es potentiellement intéressant.",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1667,6 +1745,7 @@ const screens = {
   ]
 },
 "Ecran0057": {
+	zone: "lac",
   titre: "La révélation molle",
   texte: "La Glande Lumineuse est un organe sacré du GCT : le Grand Cycle Tentaculaire. Elle brille quand le destin frissonne. Et là… ça frissonne beaucoup. L’eau autour de lui fait des bulles nerveuses.",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1676,6 +1755,7 @@ const screens = {
   ]
 },
 "Ecran0058": {
+	zone: "lac",
   titre: "Offense tentaculaire",
   texte: "Te manger ? Je ne mange que les prophètes mal assaisonnés. Non. Tu es ici pour la Pierre du Passage Gauche. Une tentacule émerge lentement de l’eau.",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1685,6 +1765,7 @@ const screens = {
   ]
 },
 "Ecran0059": {
+	zone: "lac",
   titre: "Philosophie latérale",
   texte: "Parce que la droite mène toujours à des escaliers inutiles. La gauche mène aux vérités inconfortables. C’est scientifique.",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1693,6 +1774,7 @@ const screens = {
   ]
 },
 "Ecran0060": {
+	zone: "lac",
   titre: "Transmission humide",
   texte: "Le poulpe dépose dans votre main une pierre froide marquée d’un symbole spiralé. Utilise-la quand un choix semblera idiot. C’est généralement le bon.",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1711,9 +1793,10 @@ const screens = {
   ]
 },
 "Ecran0061": {
+	zone: "lac",
   titre: "Approche",
   texte: "Le cerf ne fuit pas. Une boule verdâtre tombe au sol, vous la récupérez, elle se solidifie dans votre main",
-  image: "Lieux/Foret/032 - Foret.jpg",
+  image: "Lieux/Foret/032 - Foret.png",
   giveItem: "Glande Lumineuse",
   onceFlag: "glande_lumineuse_pris",
   alternateGotoIfOwned: "Ecran0063",
@@ -1723,22 +1806,25 @@ const screens = {
   ]
 },
 "Ecran0063": {
+	zone: "lac",
   titre: "Détour",
   texte: "Le cerf semble imperturbable",
-  image: "Lieux/Foret/032 - Foret.jpg",
+  image: "Lieux/Foret/032 - Foret.png",
   choix: [
     { texte: "Continuer", goto: "Ecran0022" },
   ]
 },
 "Ecran0064": {
+	zone: "lac",
   titre: "Face au cerf",
   texte: "Vous restez immobile. Le cerf incline la tête et s’éloigne en silence.",
-  image: "Lieux/Foret/032 - Foret.jpg",
+  image: "Lieux/Foret/032 - Foret.png",
   choix: [
     { texte: "Retour au lac", goto: "Ecran0022" },
   ]
 },
 "Ecran0065": {
+	zone: "lac",
   titre: "Le poulpe… encore",
   texte: "Toutes les tentacules se figent. Ne prononce pas ceci ici mon ami ! Ces derniers nous doivent encore trois marées et un cataclysme.",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1748,6 +1834,7 @@ const screens = {
   ]
 },
 "Ecran0066": {
+	zone: "lac",
   titre: "Vieille rancune",
   texte: "Disons qu'ils sont décalés, qu'ils sont fous et de gauche sûrement. Nous sommes très sensibles à ça. Une tentacule pince la glande lumineuse avec intérêt, mmmhhh...",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1756,6 +1843,7 @@ const screens = {
   ]
 },
 "Ecran0067": {
+	zone: "lac",
   titre: "Excuses marines",
   texte: "Acceptées. Nous aimons les êtres capables de rétropédalage stratégique.",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1764,6 +1852,7 @@ const screens = {
   ]
 },
 "Ecran0068": {
+	zone: "lac",
   titre: "Accord tentaculaire",
   texte: "Je te confie la Pierre du Passage Gauche je sens qu'elle te sera utile dans un endroit haut et froid.",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1782,6 +1871,7 @@ const screens = {
   ]
 },
 "Ecran0069": {
+	zone: "lac",
   titre: "Épilogue visqueux",
   texte: "Alors que vous partez, une dernière pensée glisse dans votre esprit : J'ai l'impression qu'ils sont tous un peu fou dans cette forêt !",
   image: "Lieux/Foret/029. Foret.jpg",
@@ -1790,6 +1880,7 @@ const screens = {
   ]
 },
 "Ecran0070": {
+	zone: "foret",
   titre: "Maison forestière",
   texte: "Vous arrivez devant une petite maison de bois se tenant entre les arbres. La porte est entrouverte.",
   image: "Lieux/Foret/028. Foret.jpg",
@@ -1801,6 +1892,7 @@ const screens = {
   ]
 },
 "Ecran0071": {
+	zone: "foret",
   titre: "À l’intérieur",
   texte: "La maison est vide. Sur une table ce trouve un pot de miel et une clef rouillée.",
   image: "Lieux/Foret/034. Foret.png",
@@ -1811,16 +1903,18 @@ const screens = {
   ]
 },
 "Ecran0072": {
+	zone: "foret",
   titre: "Porte close",
   texte: "Personne ne répond. Le silence est lourd.",
   image: "Lieux/Foret/028. Foret.jpg",
   choix: [
     { texte: "Entrer quand même", goto: "Ecran0071" },
     { texte: "Repartir en direction du lac", goto: "Ecran0022" },
-    { texte: "Retourner vers les panneaux", goto: "Ecran0002" },
+    { texte: "Retourner vers le panneau", goto: "Ecran0002" },
   ]
 },
 "Ecran0073": {
+	zone: "foret",
   titre: "La clef rouillée",
   texte: "Vous prenez la clef rouillée. Elle semble très ancienne.",
   image: "Lieux/Foret/034. Foret.png",
@@ -1831,6 +1925,7 @@ const screens = {
   ]
 },
 "Ecran0074": {
+	zone: "foret",
   titre: "Miel étrange",
   texte: "Le miel apaise votre esprit. Votre folie semble diminuer…",
   image: "Lieux/Foret/034. Foret.png",
@@ -1839,16 +1934,18 @@ const screens = {
   ]
 },
 "Ecran0075": {
+	zone: "foret",
   titre: "Maison forestière",
   texte: "Il semble qu'il n'y est plus rien dans cette maison",
   image: "Lieux/Foret/028. Foret.jpg",
   choix: [
     { texte: "Repartir en direction du lac", goto: "Ecran0022" },
-    { texte: "Retourner vers les panneaux", goto: "Ecran0002" },
+    { texte: "Retourner vers le panneau", goto: "Ecran0002" },
     { texte: "Suivre une étrange lumière verte", goto: "Ecran0090" },
   ]
 },
 "Ecran0079": {
+	zone: "donjon",
   titre: "Salle du coffre",
   texte: "Sans la clé je ne pourrais pas ouvrir ce coffre !",
   image: "Lieux/Foret/046. Foret.png",
@@ -1857,6 +1954,7 @@ const screens = {
   ]
 },
 "Ecran0080": {
+	zone: "donjon",
   titre: "Tumulus – Couloir principal",
   texte: "Le tunnel s’enfonce en lignes brisées. Les murs semblent vibrer légèrement.",
   image: "Lieux/Foret/041. Foret.png",
@@ -1867,6 +1965,7 @@ const screens = {
   ]
 },
 "Ecran0081": {
+	zone: "donjon",
   titre: "Ghorbin le gnome-tunnel",
   texte: "AH ! Un visiteur ! Salutation je m'appelle Ghorbin, j’adore les visiteurs. Vous avez de beaux genoux. Puis-je les voler ? Ha !",
   image: "Lieux/Foret/045. Foret.png",
@@ -1877,6 +1976,7 @@ const screens = {
   ]
 },
 "Ecran0082": {
+	zone: "donjon",
   titre: "Impasse suintante",
   texte: "Le tunnel se termine sur un mur noirci par la moisissure.",
   image: "Lieux/Foret/041. Foret.png",
@@ -1885,6 +1985,7 @@ const screens = {
   ]
 },
 "Ecran0083": {
+	zone: "donjon",
   titre: "Passage tournant",
   texte: "Je suis revenu au début, comment est-ce possible ? Plus vous avancez plus vous avez l’étrange sensation de revenir sur vos pas.",
   image: "Lieux/Foret/041. Foret.png",
@@ -1894,6 +1995,7 @@ const screens = {
   ]
 },
 "Ecran0084": {
+	zone: "donjon",
   titre: "Couloir en ruine",
   texte: "Des pierres tombent parfois du plafond comme si le tumulus respirait.",
   image: "Lieux/Foret/043. Foret.png",
@@ -1903,6 +2005,7 @@ const screens = {
   ]
 },
 "Ecran0085": {
+	zone: "donjon",
   titre: "Ghorbin encore",
   texte: "Ghorbin apparaît au détour d'un couloir : Ici la gauche va à droite et la droite va au mauvais endroit ! Ou l’inverse… j'ne sais plus..",
   image: "Lieux/Foret/042. Foret.png",
@@ -1912,6 +2015,7 @@ const screens = {
   ]
 },
 "Ecran0086": {
+	zone: "donjon",
   titre: "Salle du coffre",
   texte: "Un coffre trône au milieu de la pièce. Sa serrure rouillée semble fragile.",
   image: "Lieux/Foret/046. Foret.png",
@@ -1920,6 +2024,7 @@ const screens = {
   ]
 },
 "Ecran0086A": {
+	zone: "donjon",
   titre: "Ouverture du coffre",
   image: "Lieux/Foret/046. Foret.png",
 
@@ -1931,6 +2036,7 @@ const screens = {
   goto: "Ecran0089"
 },
 "Ecran0087": {
+	zone: "donjon",
   titre: "Impasse des ossements",
   texte: "Un tas d’ossements brisés jonche le sol. Mieux vaut ne pas rester ici.",
   image: "Lieux/Foret/047. Foret.png",
@@ -1939,6 +2045,7 @@ const screens = {
   ]
 },
 "Ecran0088": {
+	zone: "donjon",
   titre: "Impasse mouvante",
   texte: " Le tumulus change… même les couleurs sont étranges !",
   image: "Lieux/Foret/048. Foret.png",
@@ -1947,6 +2054,7 @@ const screens = {
   ]
 },
 "Ecran0089": {
+	zone: "donjon",
   titre: "Salle du trésor",
   texte: "Le coffre s’ouvre dans un craquement. Une énergie magique s'en échappe..",
   image: "Lieux/Foret/049. Foret.png",
@@ -1955,6 +2063,7 @@ const screens = {
   ]
 },
 "Ecran0089A": {
+	zone: "donjon",
   titre: "Salle du trésor",
   texte: "Vous trouvez une moitié de pierre vibrante, elle ne semble pas complète",
   image: "Lieux/Foret/040. Foret.png",
@@ -1966,6 +2075,7 @@ const screens = {
   ]
 },
 "Ecran0089B": {
+	zone: "donjon",
   titre: "Salle du trésor",
   texte: "Le coffre est vide, je pense qu'il n'y a plus rien à trouver dans ces tunnels,",
   image: "Lieux/Foret/049. Foret.png",
@@ -1974,6 +2084,7 @@ const screens = {
   ]
 },
 "Ecran0090": {
+	zone: "foret",
   titre: "Maison de la sorcière",
   texte: "Une maison biscornue pulse d’une lumière verte.",
   image: "Lieux/Foret/035. Foret.png",
@@ -1984,6 +2095,7 @@ const screens = {
   ]
 },
 "Ecran0091": {
+	zone: "foret",
   titre: "Antre de la sorcière",
   texte: "Une femme en manteau noir manipule une potion fumante. « QUI OSE ? »",
   image: "Lieux/Foret/026. Foret.png",
@@ -1994,6 +2106,7 @@ const screens = {
   ]
 },
 "Ecran0092": {
+	zone: "foret",
   titre: "Surprise",
   texte: "La sorcière ouvre brusquement : « QUI OSE ? »",
   image: "Lieux/Foret/036. Foret.png",
@@ -2004,6 +2117,7 @@ const screens = {
   ]
 },
 "Ecran0093": {
+	zone: "foret",
   titre: "Le pacte",
   texte: "« J’allumerai ta torche… mais j’ai besoin d'un parchemin elfique et d'un bout de bois bien sûr ! »",
   image: "Lieux/Foret/036. Foret.png",
@@ -2014,6 +2128,7 @@ const screens = {
   ]
 },
 "Ecran0093A": {
+	zone: "foret",
   titre: "Allumer la torche à l'aide du parchemin",
   image: "Lieux/Foret/036. Foret.png",
 
@@ -2027,6 +2142,7 @@ const screens = {
 },
 
 "Ecran0094": {
+	zone: "foret",
   titre: "Rejet",
   texte: "« Reviens avec les objets que j'ai cité »",
   image: "Lieux/Foret/036. Foret.png",
@@ -2035,6 +2151,7 @@ const screens = {
   ]
 },
 "Ecran0095": {
+	zone: "foret",
   titre: "Indifférence",
   texte: "La sorcière ne vous accorde plus un regard. « Je suis occupée. »",
   image: "Lieux/Foret/026. Foret.png",
@@ -2043,6 +2160,7 @@ const screens = {
   ]
 },
 "Ecran0096": {
+	zone: "foret",
   titre: "Flamme elfique",
   texte: "La sorcière brûle le parchemin et enflamme ta torche.",
   image: "Lieux/Foret/036. Foret.png",
@@ -2068,6 +2186,7 @@ action: () => {
 },
 
 "Ecran0098": {
+	zone: "foret",
   titre: "Dehors",
   texte: "La torche enchantée crépite doucement.",
   image: "Lieux/Foret/037. Foret.png",
@@ -2076,6 +2195,7 @@ action: () => {
   ]
 },
 "Ecran0099": {
+	zone: "foret",
   titre: "Il manque un élément",
   texte: "« T'es bête ou quoi !? Sans un des éléments je ne peux rien faire. »",
   image: "Lieux/Foret/036. Foret.png",
@@ -2085,14 +2205,16 @@ action: () => {
   ]
 },
 "Ecran0100": {
+	zone: "foret",
   titre: "Maison de la sorcière",
   texte: "Je n'ai plus rien à faire dans la maison de l'autre folle de sorcière !",
   image: "Lieux/Foret/035. Foret.png",
   choix: [
-    { texte: "Retourner aux panneaux", goto: "Ecran0002" },
+    { texte: "Retourner au panneau", goto: "Ecran0002" },
   ]
 },
 "Ecran0101": {
+	zone: "montagne",
   titre: "Le temple démoniaque",
   texte: "Vous arrivez face à un jolie temple pris dans la neige, tout autour il y a des statues qui semblent appartenir à une divinité démoniaque",
   image: "Lieux/Montagne/013. Montagne.png",
@@ -2103,6 +2225,7 @@ action: () => {
   ]
 },
 "Ecran0102": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "Où que vous alliez, les yeux de pierre jaunes vous suivent, Même les héros n’aiment pas être jugés par un caillou immortel.",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2114,6 +2237,7 @@ action: () => {
   ]
 },
 "Ecran0103": {
+	zone: "montagne",
   titre: "La porte du temple",
   texte: "Vous arrivez devant la lourde porte de bois du temple, couverte de runes anciennes qui frémissent doucement un léger murmure : « Non, ça ne s’ouvrira pas gratuitement. »",
   image: "Lieux/Montagne/015. Montagne.png",
@@ -2124,8 +2248,9 @@ action: () => {
   ]
 },
 "Ecran0104": {
+	zone: "musicien",
   titre: "Le musicien fou",
-  texte: "Après avoir fait le tour du temple, vous tombez sur un musicien fou, soufflant dans un instrument improbable aux sons interdits.",
+  texte: "Après avoir fait le tour du temple, vous tombez sur un musicien fou, soufflant et tapotant dans un instrument improbable aux sons interdits.",
   image: "Lieux/Montagne/006. Montagne.jpg",
   choix: [
     { texte: "Aller à sa rencontre", goto: "Ecran0128" },
@@ -2134,6 +2259,7 @@ action: () => {
   ]
 },
 "Ecran0105": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "« Vous voilà enfin. Avant de continuer, acceptez-vous d’entendre la parole de Morbélios, le Dévoreur de Soleils ? »",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2144,6 +2270,7 @@ action: () => {
   ]
 },
 "Ecran0106": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "« Cela fait bien longtemps qu'il n'y a pas eu d'agitation dans les parages, je ne peux pas m'en empêcher !! J'ai une énigme pour toi, mortel : Qu’est-ce qui marche sans pieds, parle sans bouche et ment toujours ? »",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2154,6 +2281,7 @@ action: () => {
   ]
 },
 "Ecran0107": {
+	zone: "montagne",
   titre: "La porte du temple",
   texte: "Le murmure disparaît, vous n'entendez plus rien, il semblerai que je ne vais pas pouvoir rentrer facilement",
   image: "Lieux/Montagne/015. Montagne.png",
@@ -2165,6 +2293,7 @@ action: () => {
   ]
 },
 "Ecran0108": {
+	zone: "montagne",
   titre: "La porte du temple",
   texte: "Une douleur vous prend au cerveau ! La porte se métamorphose et les runes se mettent à tournoyer d'une lumière jaune en son centre",
   image: "Lieux/Montagne/016. Montagne.png",
@@ -2173,6 +2302,7 @@ action: () => {
   ]
 },
 "Ecran0109": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "« La sortie est un mensonge inventé par ceux qui refusent Morbélios. J'ai une énigme pour toi, mortel : Qu’est-ce qui marche sans pieds, parle sans bouche et ment toujours ? »",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2183,6 +2313,7 @@ action: () => {
   ]
 },
 "Ecran0110": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "« Principalement l’espoir. Et parfois les genoux. J'ai une énigme pour toi, mortel : Qu’est-ce qui marche sans pieds, parle sans bouche et ment toujours ? »",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2193,6 +2324,7 @@ action: () => {
   ]
 },
 "Ecran0111": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "« Excellent état d’esprit. La foi commence par l’ennui. J'ai une énigme pour toi, mortel : Qu’est-ce qui marche sans pieds, parle sans bouche et ment toujours ? »",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2203,6 +2335,7 @@ action: () => {
   ]
 },
 "Ecran0112": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "« Correct. L’honnêteté est surfait chez nous. Une autre : Qu’abandonne-t-on pour gagner, et gagne-t-on en l’abandonnant ? »",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2213,6 +2346,7 @@ action: () => {
   ]
 },
 "Ecran0113": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "« Acceptable… Morbélios apprécie le cynisme. Une autre : Qu’abandonne-t-on pour gagner, et gagne-t-on en l’abandonnant ? »",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2223,6 +2357,7 @@ action: () => {
   ]
 },
 "Ecran0114": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "Vous sentez une douleur au cerveau ! « Faux, mais audacieux. Vous serez recyclé. Une autre : Qu’abandonne-t-on pour gagner, et gagne-t-on en l’abandonnant ? »",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2233,6 +2368,7 @@ action: () => {
   ]
 },
 "Ecran0115": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "« Magnifique. Morbélios vous observe déjà intensément. Félicitations. Vous êtes désormais un peu moins libre. »",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2243,6 +2379,7 @@ action: () => {
   ]
 },
 "Ecran0116": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "« Exact. Vous êtes prêt pour le chœur des murmures. Félicitations. Vous êtes désormais un peu moins libre. »",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2253,6 +2390,7 @@ action: () => {
   ]
 },
 "Ecran0117": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "Vous sentez une douleur au cerveau ! « Insolent… mais Morbélios aime l’ironie. Conversion partielle acceptée. Félicitations. Vous êtes désormais un peu moins libre. »",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2263,6 +2401,7 @@ action: () => {
   ]
 },  
 "Ecran0118": {
+	zone: "montagne",
   titre: "La statue qui vous regarde",
   texte: "La statue reste muette, cependant elle ne cesse de vous dévisager !",
   image: "Lieux/Montagne/014. Montagne.png",
@@ -2272,6 +2411,7 @@ action: () => {
   ]
 },
 "Ecran0119": {
+	zone: "montagne",
   titre: "La porte du temple",
   texte: "Votre cerveau vous fait souffrir ! La porte change de forme subitement « Nul ne franchira ces portes sans l'objet de désire de Morbélios »",
   image: "Lieux/Montagne/016. Montagne.png",
@@ -2281,6 +2421,7 @@ action: () => {
   ]
 },
 "Ecran0120": {
+	zone: "montagne",
   titre: "La porte du temple",
   texte: "« Nul ne franchira ces portes sans l'objet de désire de Morbélios »",
   image: "Lieux/Montagne/016. Montagne.png",
@@ -2290,6 +2431,7 @@ action: () => {
   ]
 },
 "Ecran0121": {
+	zone: "montagne",
   titre: "La porte du temple",
   texte: "L'objet qui ferait plier l'esprit de Morbélios n'est pas de ce monde mais se trouve dans ces montagnes.",
   image: "Lieux/Montagne/016. Montagne.png",
@@ -2299,6 +2441,7 @@ action: () => {
   ]
 },
 "Ecran0122": {
+	zone: "montagne",
   titre: "La porte du temple",
   texte: "Quand tu le verras, tu comprendras et tu ouvrira ton âme à Morbélios,",
   image: "Lieux/Montagne/016. Montagne.png",
@@ -2307,6 +2450,7 @@ action: () => {
   ]
 },
 "Ecran0123": {
+	zone: "montagne",
   titre: "La porte du temple",
   texte: "Ahahahahah.. j'ai hâte de voir ça !!",
   image: "Lieux/Montagne/016. Montagne.png",
@@ -2315,6 +2459,7 @@ action: () => {
   ]
 },
 "Ecran0124": {
+	zone: "montagne",
   titre: "La porte du temple",
   texte: "Les murmures se sont arrêtés ! L'énergie centrale de la porte continue à tourner et briller de jaune..",
   image: "Lieux/Montagne/016. Montagne.png",
@@ -2323,6 +2468,7 @@ action: () => {
   ]
 },
 "Ecran0125": {
+	zone: "montagne",
   titre: "La porte du temple",
   texte: "Seul le bruit de l'énergie magique et du souffle du vent résonnent devant la porte.",
   image: "Lieux/Montagne/016. Montagne.png",
@@ -2333,6 +2479,7 @@ action: () => {
   ]
 },
 "Ecran0126": {
+	zone: "montagne",
   titre: "Le puit",
   texte: "Le temps devient étrange, on dirais que la nuit tombe et que le ciel s’assombrit, mais lorsque vous regarder vers le temple le jour est  présent.",
   image: "Lieux/Montagne/002. Montagne.jpg",
@@ -2342,6 +2489,7 @@ action: () => {
   ]
 },
 "Ecran0127": {
+	zone: "montagne",
   titre: "Maison de montagne",
   texte: "Vous approchez de la maison, devant celle-ci se trouve un homme bourru qui vous regarde d'un air étrange",
   image: "Lieux/Montagne/007. Montagne.jpg",
@@ -2352,6 +2500,7 @@ action: () => {
   ]
 },
 "Ecran0128": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "« Oh… un auditeur. Rare. Fragile. ♪ doooom »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2364,6 +2513,7 @@ action: () => {
   ]
 },
 "Ecran0129": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "« Un morbhorn. Accordé sur la peur. Cadeau de Morbélios… ♪ braaah, Petit jeu. Si tu gagnes… récompense. Si tu perds… concert. ♪ do-do-do »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2373,6 +2523,7 @@ action: () => {
   ]
 },
 "Ecran0130": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "« Perdu ? Non. Consacré. ♪ ti-ti-ti, Petit jeu. Si tu gagnes… récompense. Si tu perds… concert. ♪ do-do-do »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2382,6 +2533,7 @@ action: () => {
   ]
 },
 "Ecran0131": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "« C’est normal. La vérité pique. ♪ gnnnng, Petit jeu. Si tu gagnes… récompense. Si tu perds… concert. ♪ do-do-do »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2391,6 +2543,7 @@ action: () => {
   ]
 },
 "Ecran0132": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "« Qui est le chanteur sacré du culte de Morbléios ? »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2401,6 +2554,7 @@ action: () => {
   ]
 },
 "Ecran0133": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "Le musicien fou.. lance un accord et vous paralise le corps ! « Je ne te laisse pas le choix.. Qui est le chanteur sacré du culte de Morbléios ? »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2411,6 +2565,7 @@ action: () => {
   ]
 },
 "Ecran0134": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "« Il semblerait que tu as vu juste.. L'impro est ce qui nous correspond, par contre il chante mal.. mais c'est voulu ! Dernière note. Pourquoi la musique plaît à Morbélios ? ♪ do… »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2421,6 +2576,7 @@ action: () => {
   ]
 },
 "Ecran0135": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "« Faux. Il hurle, et ne sait chanter qu'avec ses fesse.. en plus ça pu !. ♪ bwom. Dernière note. Pourquoi la musique plaît à Morbélios ? ♪ do… »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2431,6 +2587,7 @@ action: () => {
   ]
 },
 "Ecran0136": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "« Flatteur mais dangereux tout de même ♪ piiing. Dernière note. Pourquoi la musique plaît à Morbélios ? ♪ do… »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2441,6 +2598,7 @@ action: () => {
   ]
 },
 "Ecran0137": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "« Très juste. Très inquiétant., mais faux Shtoiiiing ♪ Recommence »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2451,6 +2609,7 @@ action: () => {
   ]
 },
 "Ecran0138": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "« Oui. Simple. Efficace. ♪ Tu as joué. Tu as écouté. Prends. ♪ cliiing »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2459,6 +2618,7 @@ action: () => {
   ]
 },
 "Ecran0139": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "« …Peut-être. Personne n’a vérifié. plooong ♪ »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2469,6 +2629,7 @@ action: () => {
   ]
 },
 "Ecran0140": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "« Réessaye.. tu n'as pas du bien comprendre la question.. Splouuungiiii ♪ »",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2479,8 +2640,9 @@ action: () => {
   ]
 },
 "Ecran0141": {
+	zone: "musicien",
   titre: "Corde",
-  texte: "Il vous tend une corde usée mais qui semble fonctionelle.",
+  texte: "Il vous tend une corde usée mais qui semble fonctionnelle.",
   image: "Lieux/Montagne/017. Montagne.png",
   giveItem: "Corde",
   choix: [
@@ -2488,6 +2650,7 @@ action: () => {
   ]
 },
 "Ecran0142": {
+	zone: "musicien",
   titre: "Le musicien fou",
   texte: "Le musicien fou semble en pleine création musicale, les sons qui parviennent à vos oreilles sont  désagréables, il a les yeux révulsés et ne semble plus dans la réalité.",
   image: "Lieux/Montagne/018. Montagne.png",
@@ -2498,6 +2661,7 @@ action: () => {
   ]
 },
 "Ecran0143": {
+	zone: "champignon",
   titre: "Une excroissance rouge",
   texte: "Au détour du sentier, un champignon gigantesque bloque presque la clairière.",
   image: "Lieux/Champignon/001. champignon.png",
@@ -2523,8 +2687,9 @@ action: () => {
   ]
 },
 "Ecran0144": {
+	zone: "champignon",
   titre: "La voix humide",
-  texte: "Le temps change à la vitesse de l'éclair, le champignon brille de mille feux. — Enfin. La voix semble vibrer directement dans votre poitrine.",
+  texte: "Le temps change à la vitesse de l'éclair, le champignon brille de mille feux. Enfin. La voix semble vibrer directement dans votre poitrine.",
   image: "Lieux/Champignon/002. champignon.png",
   
     folieVariants: {
@@ -2537,7 +2702,7 @@ action: () => {
       image: "Lieux/Champignon/002. distordue.png"
     },
     15: {
-      texte: "La folie prend le dessus, tu fais semblant de ne pas me reconnaître ? Le champignon s’élargit comme un sourire.",
+      texte: "La folie prend le dessus, tu fais semblant de ne pas me reconnaître ? Le champignon ouvre la bouche et ricane.",
       image: "Lieux/Champignon/002. distordue.png"
     }
   },
@@ -2548,6 +2713,7 @@ action: () => {
   ]
 },
 "Ecran0145": {
+	zone: "champignon",
   titre: "Annonce absurde",
   texte: "Nous sommes en 2026. Le nombre résonne étrangement. Êtes-vous certain que vous êtes dans la bonne époque ?",
   image: "Lieux/Champignon/002. champignon.png",
@@ -2557,8 +2723,9 @@ action: () => {
   ]
 },
 "Ecran0146": {
+	zone: "champignon",
   titre: "Refus instinctif",
-  texte: "Votre cœur accélère. Les images ne sont plus réalité, une lumière intense passe entre les arbre et le champignon n'est plus.. Parler à un champignon n’est déjà pas raisonnable. L’écouter parler d’une époque inconnue l’est encore moins.",
+  texte: "Votre cœur s'accélère. Les images ne sont plus réalité, une lumière intense passe entre les arbre et le champignon n'est plus.. Parler à un champignon n’est déjà pas raisonnable. L’écouter parler d’une époque inconnue l’est encore moins.",
   image: "Lieux/Champignon/003. champignon.png",
   choix: [
     { texte: "Fermer les yeux et essayer de revenir à la réalité", goto: "Ecran0147" },
@@ -2566,6 +2733,7 @@ action: () => {
   ]
 },
 "Ecran0147": {
+	zone: "champignon",
   titre: "Le Wi‑Fi",
   texte: "Votre vision semble altéré une fois de plus ! Le son résonne dans votre tête. En 2026, les humains prient le Wi‑Fi. Il prononce ce mot comme une prière sacrée. Une divinité invisible qui relie tous les esprits.",
   image: "Lieux/Champignon/004. champignon.png",
@@ -2575,6 +2743,7 @@ action: () => {
   ]
 },
 "Ecran0148": {
+	zone: "champignon",
   titre: "Rectangle lumineux",
   texte: "Ils fixent des rectangles lumineux pendant des heures. Quand la divinité disparaît… ils paniquent. Une image fugace clignote dans votre esprit.",
   image: "Lieux/Champignon/009. champignon.png",
@@ -2584,8 +2753,9 @@ action: () => {
   ]
 },
 "Ecran0149": {
+	zone: "champignon",
   titre: "Pluie de spores",
-  texte: "Des spores lumineuses commencent à tomber lentement autour de vous. Elles brillent d’un vert doux, presque apaisant. — Le temps ici n’est pas fixe, murmure la voix, jour nuit, lever de soleil ou encore pluie, rien n'est figé !",
+  texte: "Des spores lumineuses commencent à tomber lentement autour de vous. Elles brillent d’un vert doux, presque apaisant. Le temps ici n’est pas fixe, murmure la voix, jour, nuit, lever de soleil ou encore pluie, rien n'est figé !",
   image: "Lieux/Champignon/005. champignon.png",
   choix: [
     { texte: "Observer les spores", goto: "Ecran0150" },
@@ -2593,6 +2763,7 @@ action: () => {
   ]
 },
 "Ecran0150": {
+	zone: "champignon",
   titre: "Le soleil se déplace",
   texte: "Le soleil a changé d’angle. Les ombres s’allongent. Vous êtes certain que le temps vient d’accélérer.",
   image: "Lieux/Champignon/007. champignon.png",
@@ -2602,6 +2773,7 @@ action: () => {
   ]
 },
 "Ecran0151": {
+	zone: "champignon",
   titre: "Approche",
   texte: "Un vieil homme apparaît devant vous, il tient un objet qui éclair son visage, il dit : Approche. Écoute. Ou touche. Sa surface semble respirer.",
   image: "Lieux/Champignon/006. champignon.png",
@@ -2611,14 +2783,16 @@ action: () => {
   ]
 },
 "Ecran0152": {
+	zone: "champignon",
   titre: "Contact interdit",
   texte: "Votre main touche la surface de l'objet. Une vision brutale vous traverse. Tours de verre. Lumières sans flamme. Ciel gris. Est-ce donc ça 2026..?",
   image: "Lieux/Champignon/011. champignon.png",
   choix: [
-    { texte: "Retirer votre main", goto: "Ecran0153" }
+    { texte: "Retirer votre main", goto: "Ecran0153" },
   ]
 },
 "Ecran0153": {
+	zone: "champignon",
   titre: "Approche",
   texte: "Le vieil homme hurle, sa tête se déforme, il est semble fou..",
   image: "Lieux/Champignon/012. champignon.png",
@@ -2627,12 +2801,206 @@ action: () => {
 	{ texte: "Se protéger", goto: "Ecran0154" },
   ]
 },
+"Ecran0154": {
+	zone: "champignon",
+  titre: "Les Prophètes",
+  texte: "Nouvelle vision : en 2026, les prophètes ne portent sont différents. Ils portent des anneaux lumineux et parlent dans des miroirs noirs. On les appelle... Influenceurs.",
+  image: "Lieux/Champignon/013. champignon.png",
+  choix: [
+    { texte: "Influenceurs ?", goto: "Ecran0155" },
+    { texte: "Tu es fou...", goto: "Ecran0155" },
+  ]
+},
+
+"Ecran0155": {
+	zone: "champignon",
+  titre: "Les Miracles Numériques",
+  texte: "Ils vendent des potions invisibles. Ils bénissent des foules sans les toucher. Chaque parole génère de l’or. Les fidèles les suivent sans jamais les voir.",
+  image: "Lieux/Champignon/014. champignon.png",
+  choix: [
+    { texte: "Et cet or ?", goto: "Ecran0156" },
+    { texte: "C’est absurde.", goto: "Ecran0156" },
+  ]
+},
+
+"Ecran0156": {
+	zone: "champignon",
+  titre: "La Pierre Philosophale",
+  texte: "L’or n’est plus frappé. Il est miné mais d'une autre manière que tu ne peux l'imaginer. On l’appelle Crypto. Une pierre philosophale invisible que tous convoitent.",
+  image: "Lieux/Champignon/015. champignon.png",
+  choix: [
+    { texte: "Miné ?", goto: "Ecran0157" },
+    { texte: "Tu délires.", goto: "Ecran0157" },
+  ]
+},
+
+"Ecran0157": {
+	zone: "champignon",
+  titre: "La Malédiction",
+  texte: "Mais le plus terrible ce n’est pas l’or. C’est la Batterie Faible. Quand l’énergie descend sous les 10%, les hommes deviennent fous. Ils cherchent désespérément une prise sacrée.",
+  image: "Lieux/Champignon/016. champignon.png",
+  choix: [
+    { texte: "Assez !", goto: "Ecran0158" },
+    { texte: "Continue...", goto: "Ecran0158" },
+  ]
+},
+
+"Ecran0158": {
+	zone: "champignon",
+  titre: "L'Être du Signal",
+  texte: "Une créature avec une étrange tête faite de fils de cuivre et un champignon apparaît sous vos yeux. Il dit vrai ! Je capte encore les échos du Réseau !",
+  image: "Lieux/Champignon/017. champignon.png",
+  meetCharacter: "Ermite du Signal",
+  redirectIfMet: "Ecran0159",
+  choix: [
+    { texte: "Qui es-tu ?", goto: "Ecran0159" },
+    { texte: "Encore un fou...", goto: "Ecran0159" },
+  ]
+},
+
+"Ecran0159": {
+	zone: "champignon",
+  titre: "L’Ermite du Signal",
+  texte: "Il dit avec une voix étrange : Je suis le dernier récepteur, je capte les fragments. Il fouille dans sa toge et fait apparaître trois objets derrière des particules bleues électriques, il vous propose de choisir : désires-tu le Spore Connecté, le Fragment de Signal ou la Pierre de Wi-Fi Sacrée ?",
+  image: "Lieux/Champignon/018. champignon.png",
+  choix: [
+    { texte: "Prendre la Spore Connectée", goto: "Ecran0161" },
+    { texte: "Prendre le Fragment de Signal", goto: "Ecran0162" },
+    { texte: "Prendre la Pierre Wi‑Fi Sacrée", goto: "Ecran0163" },
+  ]
+},
+"Ecran0161": {
+	zone: "champignon",
+  titre: "Spore Connectée",
+  texte: "La spore pulse dans votre main, ça semble vivant. Un murmure numérique traverse votre esprit et une douleur vous foudroie..",
+  image: "Lieux/Champignon/019. champignon.png",
+  giveItem: "Spore Connectée",
+  onceFlag: "spore_connectee_obtenue",
+  choix: [
+    { texte: "Continuer", goto: "Ecran0164" },
+  ]
+},
+
+"Ecran0162": {
+	zone: "champignon",
+  titre: "Fragment de Signal",
+  texte: "Le fragment vibre légèrement. Vous entendez un écho lointain. Connexion instable...",
+  image: "Lieux/Champignon/020. champignon.png",
+  giveItem: "Fragment de Signal",
+  onceFlag: "fragment_signal_obtenu",
+  choix: [
+    { texte: "Continuer", goto: "Ecran0164" },
+  ]
+},
+
+"Ecran0163": {
+	zone: "champignon",
+  titre: "Pierre Wi‑Fi Sacrée",
+  texte: "La pierre irradie d'une chaleur rassurante. Votre esprit semble s’apaiser brièvement.",
+  image: "Lieux/Champignon/021. champignon.png",
+  giveItem: "Pierre Wi‑Fi Sacrée",
+  onceFlag: "pierre_wifi_obtenue",
+  choix: [
+    { texte: "Continuer", goto: "Ecran0164" },
+  ]
+},
+
+"Ecran0164": {
+	zone: "champignon",
+  titre: "Connexion",
+  texte: "Une vision traverse votre esprit, comme si vous vous voyez de loin face à un énorme champignon. Une voix agréable parle dans votre tête : tu portes désormais une relique du futur.",
+  image: "Lieux/Champignon/022. champignon.png",
+  choix: [
+    { texte: "Rester encore", goto: "Ecran0165" },
+    { texte: "S’éloigner lentement", goto: "Ecran0165" },
+  ]
+},
+
+"Ecran0165": {
+	zone: "champignon",
+  titre: "Fracture légère",
+  texte: "Le vent change. Les ombres s’étirent. Quelque chose commence à se fissurer dans le temps.",
+  image: "Lieux/Champignon/023. champignon.png",
+  choix: [
+    { texte: "Observer le phénomène", goto: "Ecran0166" },
+	{ texte: "Vous vous dites que cela ne ce finira jamais", goto: "Ecran0166" },
+  ]
+},
+"Ecran0166": {
+	zone: "champignon",
+  titre: "Lumière déclinante",
+  texte: "Le soleil descend lentement derrière les arbres. Les ombres deviennent longues et fines. Le champignon semble plus grand qu’avant. Cette légère chaleur est agréable",
+  image: "Lieux/Champignon/024. champignon.png",
+
+  folieVariants: {
+    10: {
+      texte: "Le soleil chute brutalement vers l’horizon. Le champignon respire au rythme du monde.",
+	  image: "Lieux/Champignon/024. distordue.png"
+    },
+    15: {
+      texte: "Le ciel se fissure légèrement. Le champignon vous observe comme s’il connaissait déjà votre fin.",
+	  image: "Lieux/Champignon/024. distordue.png"
+    }
+  },
+
+  choix: [
+    { texte: "Rester silencieux", goto: "Ecran0167" },
+    { texte: "Apprécier la chaleur du coucher de soleil", goto: "Ecran0167" },
+  ]
+},
+"Ecran0167": {
+	zone: "champignon",
+  titre: "Voix grave",
+  texte: "Le temps change à une vitesse hallucinante. Le champignon incline son chapeau. Sa voix devient plus profonde. Le temps n’est pas une ligne, dit-il. C’est une racine.",
+  image: "Lieux/Champignon/025. champignon.png",
+  choix: [
+    { texte: "Que veux-tu dire ?", goto: "Ecran0168" },
+    { texte: "Je ne crois pas en tes paroles", goto: "Ecran0168" },
+  ]
+},
+"Ecran0168": {
+	zone: "champignon",
+  titre: "Racines du futur",
+  texte: "Chaque choix pousse quelque part. Chaque peur arrose une possibilité. Tu es déjà en train de devenir ce que tu redoutes.",
+  image: "Lieux/Champignon/025. champignon.png",
+  choix: [
+    { texte: "Je n’ai pas peur", goto: "Ecran0169" },
+    { texte: "Que vois-tu pour moi ?", goto: "Ecran0169" },
+  ]
+},
+"Ecran0169": {
+	zone: "champignon",
+  titre: "Proposition",
+  texte: "Le champignon se penche vers vous. Veux-tu voir ton futur ?",
+  image: "Lieux/Champignon/026. champignon.png",
+  choix: [
+    { texte: "Oui. Montre-moi.", goto: "Ecran0170" },
+    { texte: "Non. Je refuse.", goto: "Ecran0174" },
+  ]
+},
+"Ecran0170": {
+	zone: "champignon",
+  titre: "Toi",
+  texte: "Vous vous voyez plus vieux. Vos yeux sont vides. Une racine traverse votre poitrine.",
+  image: "Lieux/Champignon/027. champignon.png",
+  choix: [
+    { texte: "Hurler", goto: "Ecran0172" },
+    { texte: "Toucher la vision", goto: "Ecran0173" },
+  ]
+},
+
+
+
+
+
+
 "Ecran0186": {
+	zone: "foret",
   titre: "Silence forestier",
   texte: "Lorsque vous vous retournez, la clairière semble ordinaire. Le champignon est toujours là. Immobile. Comme s’il n’avait jamais parlé.",
   image: "Lieux/Champignon/010. champignon.png",
   choix: [
-    { texte: "Reprendre votre route", goto: "Ecran0103" }
+    { texte: "Reprendre votre route", goto: "Ecran0103" },
   ]
 }
 
