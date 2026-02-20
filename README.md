@@ -63,7 +63,7 @@ l'aide de ChatGPT 5.2 sur mammouth.ai et les images sont réalisées à partir d
 - Accédez au repository de Github :  
    🕸️ ** [   Github : https://github.com/Madcarak/ItsJustAnAdventure_APK   ] ** 
  
-(643 Mo) ** Clonez le projet ** et exécutez le localement à partir de ** cmd.exe ** ou ** powershell ** sous Windows :
+(1.65 Go) ** Clonez le projet ** et exécutez le localement à partir de ** cmd.exe ** ou ** powershell ** sous Windows :
 -----------------------------------------------------------------------------------------------------
 Rendez-vous dans le dossier de votre choix pour l'installation et copiez-collez les 4 commandes ci-dessous :
 
@@ -77,7 +77,7 @@ start index.html
 
 
 -----------------------------------------------------------------------------------------------------
-(293 Mo) ** APK android ** disponible en version debug à cette emplacement en local :
+(227 Mo) ** APK android ** disponible en version debug à cette emplacement en local :
 -----------------------------------------------------------------------------------------------------
 
 ~\ItsJustAnAdventure_APK\android\app\build\outputs\apk\debug\app-debug.apk
