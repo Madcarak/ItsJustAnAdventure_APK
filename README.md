@@ -8,11 +8,11 @@
   <tr>
     <td align="center">
       <h4>🖥️ Version PC</h4>
-      <img src="www/gif/GIF_pc.gif" alt="Aperçu de la version PC" width="600">
+      <img src="Fichiers ressources/gif/GIF_pc.gif" alt="Aperçu de la version PC" width="600">
     </td>
     <td align="center">
       <h4>📱 Version Mobile</h4>
-      <img src="www/gif/GIF_mobile.gif" alt="Aperçu de la version Mobile" width="175">
+      <img src="Fichiers ressources/gif/GIF_mobile.gif" alt="Aperçu de la version Mobile" width="175">
     </td>
   </tr>
 </table>
@@ -71,7 +71,7 @@ git clone git@github.com:Madcarak/ItsJustAnAdventure_APK.git
 
 cd ItsJustAnAdventure_APK
 
-cd www
+cd Fichiers ressources
 
 start index.html
 
@@ -118,13 +118,13 @@ GitHub : Madcarak
   <!-- Ligne 1 -->
   <tr>
     <td align="center">
-      <a href="www/images/pc__visuel (1).png" target="_blank">
-        <img src="www/images/pc__visuel (1).png" alt="Visuel PC 1" width="600">
+      <a href="Fichiers ressources/images/pc__visuel (1).png" target="_blank">
+        <img src="Fichiers ressources/images/pc__visuel (1).png" alt="Visuel PC 1" width="600">
       </a>
     </td>
     <td align="center">
-      <a href="www/images/mobile_visuel (1).png" target="_blank">
-        <img src="www/images/mobile_visuel (1).png" alt="Visuel Mobile 1" width="175">
+      <a href="Fichiers ressources/images/mobile_visuel (1).png" target="_blank">
+        <img src="Fichiers ressources/images/mobile_visuel (1).png" alt="Visuel Mobile 1" width="175">
       </a>
     </td>
   </tr>
@@ -132,13 +132,13 @@ GitHub : Madcarak
   <!-- Ligne 2 -->
   <tr>
     <td align="center">
-      <a href="www/images/pc__visuel (2).png" target="_blank">
-        <img src="www/images/pc__visuel (2).png" alt="Visuel PC 2" width="600">
+      <a href="Fichiers ressources/images/pc__visuel (2).png" target="_blank">
+        <img src="Fichiers ressources/images/pc__visuel (2).png" alt="Visuel PC 2" width="600">
       </a>
     </td>
     <td align="center">
-      <a href="www/images/mobile_visuel (2).png" target="_blank">
-        <img src="www/images/mobile_visuel (2).png" alt="Visuel Mobile 2" width="175">
+      <a href="Fichiers ressources/images/mobile_visuel (2).png" target="_blank">
+        <img src="Fichiers ressources/images/mobile_visuel (2).png" alt="Visuel Mobile 2" width="175">
       </a>
     </td>
   </tr>
@@ -146,13 +146,13 @@ GitHub : Madcarak
   <!-- Ligne 3 -->
   <tr>
     <td align="center">
-      <a href="www/images/pc__visuel (3).png" target="_blank">
-        <img src="www/images/pc__visuel (3).png" alt="Visuel PC 3" width="600">
+      <a href="Fichiers ressources/images/pc__visuel (3).png" target="_blank">
+        <img src="Fichiers ressources/images/pc__visuel (3).png" alt="Visuel PC 3" width="600">
       </a>
     </td>
     <td align="center">
-      <a href="www/images/mobile_visuel (3).png" target="_blank">
-        <img src="www/images/mobile_visuel (3).png" alt="Visuel Mobile 3" width="175">
+      <a href="Fichiers ressources/images/mobile_visuel (3).png" target="_blank">
+        <img src="Fichiers ressources/images/mobile_visuel (3).png" alt="Visuel Mobile 3" width="175">
       </a>
     </td>
   </tr>
@@ -160,13 +160,13 @@ GitHub : Madcarak
   <!-- Ligne 4 -->
   <tr>
     <td align="center">
-      <a href="www/images/pc__visuel (4).png" target="_blank">
-        <img src="www/images/pc__visuel (4).png" alt="Visuel PC 4" width="600">
+      <a href="Fichiers ressources/images/pc__visuel (4).png" target="_blank">
+        <img src="Fichiers ressources/images/pc__visuel (4).png" alt="Visuel PC 4" width="600">
       </a>
     </td>
     <td align="center">
-      <a href="www/images/mobile_visuel (4).png" target="_blank">
-        <img src="www/images/mobile_visuel (4).png" alt="Visuel Mobile 4" width="175">
+      <a href="Fichiers ressources/images/mobile_visuel (4).png" target="_blank">
+        <img src="Fichiers ressources/images/mobile_visuel (4).png" alt="Visuel Mobile 4" width="175">
       </a>
     </td>
   </tr>
@@ -174,13 +174,13 @@ GitHub : Madcarak
   <!-- Ligne 5 -->
   <tr>
     <td align="center">
-      <a href="www/images/pc__visuel (5).png" target="_blank">
-        <img src="www/images/pc__visuel (5).png" alt="Visuel PC 5" width="600">
+      <a href="Fichiers ressources/images/pc__visuel (5).png" target="_blank">
+        <img src="Fichiers ressources/images/pc__visuel (5).png" alt="Visuel PC 5" width="600">
       </a>
     </td>
     <td align="center">
-      <a href="www/images/mobile_visuel (5).png" target="_blank">
-        <img src="www/images/mobile_visuel (5).png" alt="Visuel Mobile 5" width="175">
+      <a href="Fichiers ressources/images/mobile_visuel (5).png" target="_blank">
+        <img src="Fichiers ressources/images/mobile_visuel (5).png" alt="Visuel Mobile 5" width="175">
       </a>
     </td>
   </tr>
@@ -188,13 +188,13 @@ GitHub : Madcarak
   <!-- Ligne 6 -->
   <tr>
     <td align="center">
-      <a href="www/images/pc__visuel (6).png" target="_blank">
-        <img src="www/images/pc__visuel (6).png" alt="Visuel PC 6" width="600">
+      <a href="Fichiers ressources/images/pc__visuel (6).png" target="_blank">
+        <img src="Fichiers ressources/images/pc__visuel (6).png" alt="Visuel PC 6" width="600">
       </a>
     </td>
     <td align="center">
-      <a href="www/images/mobile_visuel (6).png" target="_blank">
-        <img src="www/images/mobile_visuel (6).png" alt="Visuel Mobile 6" width="175">
+      <a href="Fichiers ressources/images/mobile_visuel (6).png" target="_blank">
+        <img src="Fichiers ressources/images/mobile_visuel (6).png" alt="Visuel Mobile 6" width="175">
       </a>
     </td>
   </tr>
@@ -202,13 +202,13 @@ GitHub : Madcarak
   <!-- Ligne 7 -->
   <tr>
     <td align="center">
-      <a href="www/images/pc__visuel (7).png" target="_blank">
-        <img src="www/images/pc__visuel (7).png" alt="Visuel PC 7" width="600">
+      <a href="Fichiers ressources/images/pc__visuel (7).png" target="_blank">
+        <img src="Fichiers ressources/images/pc__visuel (7).png" alt="Visuel PC 7" width="600">
       </a>
     </td>
     <td align="center">
-      <a href="www/images/mobile_visuel (7).png" target="_blank">
-        <img src="www/images/mobile_visuel (7).png" alt="Visuel Mobile 7" width="175">
+      <a href="Fichiers ressources/images/mobile_visuel (7).png" target="_blank">
+        <img src="Fichiers ressources/images/mobile_visuel (7).png" alt="Visuel Mobile 7" width="175">
       </a>
     </td>
   </tr>
@@ -216,13 +216,13 @@ GitHub : Madcarak
   <!-- Ligne 8 -->
   <tr>
     <td align="center">
-      <a href="www/images/pc__visuel (8).png" target="_blank">
-        <img src="www/images/pc__visuel (8).png" alt="Visuel PC 8" width="600">
+      <a href="Fichiers ressources/images/pc__visuel (8).png" target="_blank">
+        <img src="Fichiers ressources/images/pc__visuel (8).png" alt="Visuel PC 8" width="600">
       </a>
     </td>
     <td align="center">
-      <a href="www/images/mobile_visuel (8).png" target="_blank">
-        <img src="www/images/mobile_visuel (8).png" alt="Visuel Mobile 8" width="175">
+      <a href="Fichiers ressources/images/mobile_visuel (8).png" target="_blank">
+        <img src="Fichiers ressources/images/mobile_visuel (8).png" alt="Visuel Mobile 8" width="175">
       </a>
     </td>
   </tr>
@@ -231,8 +231,8 @@ GitHub : Madcarak
   <tr>
     <td align="center">—</td>
     <td align="center">
-      <a href="www/images/mobile_visuel (9).png" target="_blank">
-        <img src="www/images/mobile_visuel (9).png" alt="Visuel Mobile 9" width="175">
+      <a href="Fichiers ressources/images/mobile_visuel (9).png" target="_blank">
+        <img src="Fichiers ressources/images/mobile_visuel (9).png" alt="Visuel Mobile 9" width="175">
       </a>
     </td>
   </tr>
