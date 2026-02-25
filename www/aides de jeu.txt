@@ -28,7 +28,7 @@ cd android
 
 cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
 git add .
-git commit -m "009 - Gestion des musiques selon les zones - Zone Champignon : 27 écrans créés"
+git commit -m "010 - Mode plein écran pour PC fonctionnel"
 git push origin main
 
 
