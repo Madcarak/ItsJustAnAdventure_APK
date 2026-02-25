@@ -45,19 +45,18 @@ const itemIcons = {
 ------------------------------------------------------ */
 const jumpScareScreens = {
     "Ecran0153": {
-        sound: "sons/rire.mp3",
+        sound: "cri",
         image: "Lieux/Champignon/012. champignon.png"
     },
-	    "Ecran0170": {
-        sound: "sons/rire.mp3",
+    "Ecran0170": {
+        sound: "mort_vivant",
         image: "Lieux/Champignon/027. champignon.png"
     },
-	"Ecran0092": {
-        sound: "sons/rire2.mp3",
-        image: "Lieux/Foret/036. Foret.png"
+    "Ecran0092": {
+        sound: "rire2",
+        image: "Lieux/Foret/036. Foret.jpg"
     }
 };
-
 
 /* =====================================================
    RECETTES D'ASSEMBLAGE
@@ -81,7 +80,6 @@ function playerHasItems(items) {
 }
 
 function combineItems(recipe) {
-
     // Retirer les objets sources
     recipe.items.forEach(i => {
         const index = player.inventory.indexOf(i);
@@ -99,15 +97,13 @@ function combineItems(recipe) {
         `<p><span class="log-tag">[Assemblage]</span> ${recipe.message}<br>
         ➜ Vous obtenez : <strong>${recipe.result}</strong></p>`
     );
+    // Ajout dans le deuxième journal
+    addLogEntry(
+        `<p><span class="log-tag">[Assemblage]</span> ${recipe.message}<br>
+        ➜ Vous obtenez : <strong>${recipe.result}</strong></p>`,
+        'log-list2'
+    );
 }
-
-
-document.addEventListener("click", () => {
-    document.getElementById("item-popover")?.classList.add("hidden");
-    document.getElementById("context-menu")?.classList.add("hidden");
-});
-
-
 
 /* =====================================================
    INTERACTION ITEM
@@ -149,18 +145,24 @@ function inspectItem(item, slot) {
         `;
     }
 
-    // ✅ Affichage
-    showItemPopover(
-        slot,
-        `<span class="tag">[Interaction]</span><br>
-         <strong>${item}</strong><br>
-         ${text}
-         ${combineButton}`
-    );
+// ✅ Affichage
+showItemPopover(
+    slot,
+    `<span class="tag">[Interaction]</span><br>
+     <strong>${item}</strong><br>
+     ${text}
+     ${combineButton}`
+);
 
-    addLogEntry(
-        `<p><span class="log-tag">[Interaction]</span> ${item} : ${text}</p>`
-    );
+addLogEntry(
+    `<p><span class="log-tag">[Interaction]</span> ${item} : ${text}</p>`
+);
+// Ajout dans le deuxième journal
+addLogEntry(
+    `<p><span class="log-tag">[Interaction]</span> ${item} : ${text}</p>`,
+    'log-list2'
+);
+
 }
 
 
@@ -172,6 +174,7 @@ function inspectItem(item, slot) {
 function updateInventoryDisplay() {
 
     const invMobile = document.getElementById("inventory-list");
+    const invMob    = document.getElementById("inventory-list-mob");
     const invPC     = document.getElementById("inventory-list-pc");
 
     function fill(inv) {
@@ -209,6 +212,7 @@ function updateInventoryDisplay() {
     }
 
     fill(invMobile);
+    fill(invMob);
     fill(invPC);
 }
 
@@ -228,7 +232,8 @@ function addItemToInventory(itemName) {
     let target;
 
     if (window.innerWidth < 768) {
-        target = document.querySelector(".mobile-menu-button");
+        target = document.querySelector(".mobile-menu-button-mob")
+              || document.querySelector(".mobile-menu-button");
     } else {
         target = document.getElementById("inventory-list-pc");
     }
@@ -239,17 +244,21 @@ function addItemToInventory(itemName) {
         // ✅ ON ENVOIE JUSTE LE NOM
         animatedLootToInventory(itemName);
 
-        setTimeout(() => {
+setTimeout(() => {
+    player.inventory.push(itemName);
+    updateInventoryDisplay();
 
-            player.inventory.push(itemName);
-            updateInventoryDisplay();
+    const desc = itemDescriptions[itemName] || "Objet ajouté.";
+    addLogEntry(
+        `<p><span class="log-tag log-add">[Objet obtenu]</span> ${itemName} : ${desc}</p>`
+    );
+    // Ajout dans le deuxième journal
+    addLogEntry(
+        `<p><span class="log-tag log-add">[Objet obtenu]</span> ${itemName} : ${desc}</p>`,
+        'log-list2'
+    );
+}, 800);
 
-            const desc = itemDescriptions[itemName] || "Objet ajouté.";
-            addLogEntry(
-                `<p><span class="log-tag log-add">[Objet obtenu]</span> ${itemName} : ${desc}</p>`
-            );
-
-        }, 800);
 
     } else {
 
@@ -257,7 +266,6 @@ function addItemToInventory(itemName) {
         updateInventoryDisplay();
     }
 }
-
 
 /* =====================================================
    MENU CONTEXTUEL INVENTAIRE
@@ -305,13 +313,18 @@ showItemPopover(
      <strong>${contextItem}</strong><br>${desc}`
 );
 
+// ✅ Journal (CE QUI MANQUAIT)
+addLogEntry(
+    `<p><span class="log-tag">[Description]</span> ${contextItem} : ${desc}</p>`
+);
+// Ajout dans le deuxième journal
+addLogEntry(
+    `<p><span class="log-tag">[Description]</span> ${contextItem} : ${desc}</p>`,
+    'log-list2'
+);
 
-    // ✅ Journal (CE QUI MANQUAIT)
-    addLogEntry(
-        `<p><span class="log-tag">[Description]</span> ${contextItem} : ${desc}</p>`
-    );
+contextMenu.classList.add("hidden");
 
-    contextMenu.classList.add("hidden");
 };
 
 
@@ -387,13 +400,44 @@ function showScreen(id) {
 
     // 1️⃣ Marque l'écran comme visité
     currentScreenId = id;
-	markScreenAsVisited(id);
+    markScreenAsVisited(id);
 
     const screen = screens[id];
+
     if (!screen) {
         console.error("Écran introuvable :", id);
         return;
     }
+
+/* -----------------------------------------------------
+   🔊 SON SPÉCIFIQUE ÉCRAN (séquentiel propre)
+------------------------------------------------------ */
+
+if (screen.sounds && Array.isArray(screen.sounds)) {
+
+    let index = 0;
+
+    function playNext() {
+
+        if (index >= screen.sounds.length) return;
+        if (currentScreenId !== id) return;
+
+        const audio = playSFX(screen.sounds[index], true); // ✅ ignore cooldown
+        index++;
+
+        if (audio) {
+            audio.onended = playNext;
+        } else {
+            setTimeout(playNext, 500);
+        }
+    }
+
+    playNext();
+
+} else if (screen.sound) {
+
+    playSFX(screen.sound);
+}
 
     /* -----------------------------------------------------
          GESTION DES PERSONNAGES RENCONTRES
@@ -441,6 +485,7 @@ function showScreen(id) {
 
             if (!player.flags[screen.onceFlag]) {
                 addItemToInventory(item);
+                playSFX("loot");
                 player.flags[screen.onceFlag] = true;
                 savePlayer();
             }
@@ -460,6 +505,7 @@ function showScreen(id) {
 
             } else {
                 addItemToInventory(item);
+                playSFX("loot");
                 savePlayer();
             }
         }
@@ -467,117 +513,134 @@ function showScreen(id) {
 
     addVisitHistoryButton();
 
-    /* -----------------------------------------------------
-         +1 FOLIE
-    ------------------------------------------------------ */
-    const foliePlusUn = [
-        "Ecran0017",
-        "Ecran0108",
-        "Ecran0114",
-        "Ecran0117",
-        "Ecran0119",
-        "Ecran0148",
-        "Ecran0152",
-		"Ecran0161"
-    ];
+/* -----------------------------------------------------
+     +1 FOLIE
+------------------------------------------------------ */
+const foliePlusUn = [
+    "Ecran0017",
+    "Ecran0108",
+    "Ecran0114",
+    "Ecran0117",
+    "Ecran0119",
+    "Ecran0148",
+    "Ecran0152",
+    "Ecran0161"
+];
 
-    if (foliePlusUn.includes(id)) {
+if (foliePlusUn.includes(id)) {
+    player.folie = Math.min(15, (player.folie || 0) + 1);
 
-        player.folie = Math.min(15, (player.folie || 0) + 1);
+    // Log pour le premier journal
+    addLogEntry(`
+        <p>
+            <span class="log-tag">[Caractéristique]</span>
+            Folie : +1
+        </p>
+    `);
 
-        addLogEntry(`
-            <p>
-                <span class="log-tag">[Caractéristique]</span>
-                Folie : +1
-            </p>
-        `);
+    // Log pour le deuxième journal
+    addLogEntry(`
+        <p>
+            <span class="log-tag">[Caractéristique]</span>
+            Folie : +1
+        </p>
+    `, 'log-list2');
 
-        triggerFolieEffect("up");
-        updateFolieBar(player.folie);
-        updateFolieBarMobile(player.folie);
-        checkFoliePermanent();
-        savePlayer();
-    }
+    triggerFolieEffect("up");
+    updateFolieBar(player.folie);
+    updateFolieBarMobile(player.folie);
+    checkFoliePermanent();
+    savePlayer();
+}
 
-    /* -----------------------------------------------------
-         -1 FOLIE
-    ------------------------------------------------------ */
-    const folieMoinsUn = [
-	"Ecran0074",
-	"Ecran0163"
-	];
+/* -----------------------------------------------------
+     -1 FOLIE
+------------------------------------------------------ */
+const folieMoinsUn = [
+    "Ecran0074",
+    "Ecran0163"
+];
 
-    if (folieMoinsUn.includes(id) && player.folie > 0) {
+if (folieMoinsUn.includes(id) && player.folie > 0) {
+    player.folie = Math.max(0, player.folie - 1);
 
-        player.folie = Math.max(0, player.folie - 1);
+    // Log pour le premier journal
+    addLogEntry(`
+        <p>
+            <span class="log-tag">[Caractéristique]</span>
+            Folie : -1
+        </p>
+    `);
 
-        addLogEntry(`
-            <p>
-                <span class="log-tag">[Caractéristique]</span>
-                Folie : -1
-            </p>
-        `);
+    // Log pour le deuxième journal
+    addLogEntry(`
+        <p>
+            <span class="log-tag">[Caractéristique]</span>
+            Folie : -1
+        </p>
+    `, 'log-list2');
 
-        triggerFolieEffect("down");
-        updateFolieBar(player.folie);
-        updateFolieBarMobile(player.folie);
-        checkFoliePermanent();
-        savePlayer();
-    }
-
-    /* -----------------------------------------------------
-         ✅ APPLICATION VARIANTE FOLIE
-    ------------------------------------------------------ */
-
-    let folieOverlayImage = null;
-    let folieTextOverride = null;
-
-    if (screen.folieVariants) {
-
-        const variante = applyFolieVariant(screen);
-
-        if (variante.texte !== screen.texte) {
-            folieTextOverride = variante.texte;
-        }
-
-        if (variante.image !== screen.image) {
-            folieOverlayImage = variante.image;
-        }
-    }
-
-    /* -----------------------------------------------------
-         AFFICHAGE NORMAL
-    ------------------------------------------------------ */
-loadScreen(id);
-handleZoneMusic(screen);
-triggerJumpScareEffect(id);
-
-    /* -----------------------------------------------------
-         ✅ MORPHING IMAGE
-    ------------------------------------------------------ */
-
-    if (folieTextOverride) {
-        const textEl = document.getElementById("text");
-        if (textEl) textEl.textContent = folieTextOverride;
-    }
-
-    if (folieOverlayImage) {
-        updateImage(folieOverlayImage);
-    } else {
-        updateImage(null);
-    }
-
-    /* -----------------------------------------------------
-         ACTION
-    ------------------------------------------------------ */
-    if (typeof screen.action === "function") {
-        screen.action();
-    }
+    triggerFolieEffect("down");
+    updateFolieBar(player.folie);
+    updateFolieBarMobile(player.folie);
+    checkFoliePermanent();
+    savePlayer();
 }
 
 
 /* -----------------------------------------------------
-       UPDATE STATISTIQUES
+     VARIANTES FOLIE
+------------------------------------------------------ */
+
+let folieTextOverride = null;
+let folieOverlayImage = null;
+
+if (screen.folieVariants) {
+
+    const variante = applyFolieVariant(screen, id);
+
+    if (variante.texte !== screen.texte) {
+        folieTextOverride = variante.texte;
+    }
+
+    if (variante.image !== screen.image) {
+        folieOverlayImage = variante.image;
+    }
+}
+
+/* -----------------------------------------------------
+     AFFICHAGE NORMAL
+------------------------------------------------------ */
+
+loadScreen(id);
+handleZoneMusic(screen);
+triggerJumpScareEffect(id);
+
+/* -----------------------------------------------------
+     MORPHING IMAGE / TEXTE
+------------------------------------------------------ */
+
+if (folieTextOverride) {
+    const textEl = document.getElementById("text");
+    if (textEl) textEl.textContent = folieTextOverride;
+}
+
+if (folieOverlayImage) {
+    updateImage(folieOverlayImage);
+} else {
+    updateImage(null);
+}
+
+/* -----------------------------------------------------
+     ACTION
+------------------------------------------------------ */
+if (typeof screen.action === "function") {
+    screen.action();
+}
+}
+
+/* -----------------------------------------------------
+     UPDATE STATISTIQUES
 ------------------------------------------------------ */
 
 function updateStatsInterface() {
@@ -605,9 +668,23 @@ function updateStatsInterface() {
         const elem = document.getElementById(mapMobile[stat]);
         if (elem) elem.textContent = player[stat] || 0;
     }
+
+    // --- Ajout mob ---
+    const mapMob = {
+        force: "char-for-mob",
+        intelligence: "char-int-mob",
+        agilite: "char-agi-mob",
+        constitution: "char-con-mob"
+    };
+
+    for (let stat in mapMob) {
+        const elem = document.getElementById(mapMob[stat]);
+        if (elem) elem.textContent = player[stat] || 0;
+    }
 }
+
 /* -----------------------------------------------------
-       REDIRECTION SELON LA FOLIE
+     REDIRECTION SELON LA FOLIE
 ------------------------------------------------------ */
 function resolveMadnessScreen(id) {
     const madness = player.madness || 0;
@@ -619,7 +696,7 @@ function resolveMadnessScreen(id) {
 }
 
 /* -----------------------------------------------------
-       AFFICHAGE ÉCRAN
+     AFFICHAGE ÉCRAN
 ------------------------------------------------------ */
 function loadScreen(id, options = {}) {
 
@@ -634,9 +711,9 @@ function loadScreen(id, options = {}) {
     }
 
     const finalData = applyFolieVariant({
-    ...data,
-    choix: data.choix // on garde référence directe
-	});
+        ...data,
+        choix: data.choix
+    });
 
     if (!fromLoad) {
         if (!localStorage.getItem("justReset")) {
@@ -652,6 +729,7 @@ function loadScreen(id, options = {}) {
     const choicesContainer = document.getElementById("choices-container");
     const overlay = document.getElementById("screen-image-overlay");
     const wrapper = document.querySelector(".screen-image-wrapper");
+
 
     /* ===============================
        FADE OUT
@@ -919,12 +997,10 @@ function triggerJumpScareEffect(screenId) {
 
     if (!baseImage) return;
 
-    // 🔊 SON
-    if (config.sound) {
-        const audio = new Audio(config.sound);
-        audio.volume = 1;
-        audio.play().catch(() => {});
-    }
+	// 🔊 SON
+	if (config.sound && typeof playSFX === "function") {
+		playSFX(config.sound);
+	}
 
     const rect = baseImage.getBoundingClientRect();
 
@@ -1015,7 +1091,7 @@ function attachChoiceListeners() {
 }
 
 /* -----------------------------------------------------
-       GESTION LOOT OBJETS ANIMATION
+     GESTION LOOT OBJETS ANIMATION
 ------------------------------------------------------ */
 
 function lootObjet() {
@@ -1025,22 +1101,22 @@ function lootObjet() {
     let target;
 
     if (window.innerWidth < 768) {
-        target = document.querySelector(".mobile-menu-button");
+        // Cible le bouton qui ouvre le side-menu-mobile (nouveau)
+        target = document.querySelector(".mobile-menu-button-mob") 
+              || document.querySelector(".mobile-menu-button");
     } else {
         target = document.getElementById("inventory-list-pc");
     }
-	
-	console.log("lootObjet appelée");
+
+    console.log("lootObjet appelée");
 
     animateLootToInventory(
-    icon,
-    imageLieu,
-    target
-);
+        icon,
+        imageLieu,
+        target
+    );
 
 }
-
-
 
 /* -----------------------------------------------------
        BASE DE DONNEES DES ECRANS
@@ -1048,13 +1124,22 @@ function lootObjet() {
 
 const screens = {
 "Ecran0000": {
-  titre: "Site encore en construction",
-  texte: "Désolé mais le jeu est encore en construction, vous pouvez continuer à explorer les autres chapitres",
+  titre: "Bienvenue dans le jeu : It's Just An Adventure de Madcarak",
+  texte: "Vous êtes dans la beta v0.2 du jeu, ceci est une démo qui va vous permettre d'explorer 3 zones. Je vous conseille fortement de commencer par le chapitre de la forêt qui est le début du jeu pour une meilleure immersion.",
+  image: "Lieux/intro.png",
+  choix: [
+    { texte: "Se rendre au chapitre de la forêt (C'est en effet un bon conseil que celui-là !)", goto: "Ecran0001" },
+    { texte: "Se rendre vers celui de la montagne (uniquement si je suis un fainéant et que je n'arrive pas à finir la zone de la forêt ! ^^)", goto: "Ecran0049" },
+	{ texte: "Tester la partie du champignon (partie horrifique en test)", goto: "Ecran0143" },
+  ]
+},"Ecran0000A": {
+  titre: "Fin de la démo, jeu encore en construction",
+  texte: "Bravo vous êtes arrivé jusqu'au bout de la démo, avez-vous essayer la partie champignon pour des sensations fortes ?",
   image: "Lieux/error.png",
   choix: [
     { texte: "Se rendre au chapitre de la forêt", goto: "Ecran0001" },
     { texte: "Se rendre vers celui de la montagne", goto: "Ecran0049" },
-	{ texte: "Tester la partie du champignon", goto: "Ecran0143" },
+	{ texte: "Tester la partie du champignon (partie horrifique)", goto: "Ecran0143" },
   ]
 },
 "Ecran0001": {
@@ -1120,7 +1205,7 @@ const screens = {
 		zone: "montagne",
   titre: "La route des cols",
   texte: "La forêt devient de moins en moins dense. Un petit vent, qui semble magique, souffle..",
-  image: "Lieux/Foret/006. Foret.png",
+  image: "Lieux/Foret/006. Foret.jpg",
   choix: [
     { texte: "Respirer un bon coup d'air frais !", goto: "Ecran0015" },
     { texte: "Redescendre vert la forêt", goto: "Ecran0001" },
@@ -1242,7 +1327,7 @@ const screens = {
 	zone: "montagne",
   titre: "Le bon air frais !",
   texte: "Vous humez l'air et vous vous sentez bien ! (Grâce aléatoire)",
-  image: "Lieux/Foret/006. Foret.png",
+  image: "Lieux/Foret/006. Foret.jpg",
   
   graceAleatoire: true,
   alternateGotoAfterGrace: "Ecran0015A",
@@ -1256,7 +1341,7 @@ const screens = {
 	zone: "montagne",
   titre: "Le bon air frais !",
   texte: "L'air de la montagne vous gagne..",
-  image: "Lieux/Foret/006. Foret.png",
+  image: "Lieux/Foret/006. Foret.jpg",
   choix: [
     { texte: "Continuer hors de la forêt", goto: "Ecran0016" },
     { texte: "Revenir sur ses pas", goto: "Ecran0002" },
@@ -1277,6 +1362,7 @@ const screens = {
   titre: "Malédiction",
   texte: "Une fois la bague mise vous sentez une douleur qui vous prend jusqu'au bras !",
   image: "Lieux/Foret/018. Foret.jpg",
+  sound: "folieUp",
   
   giveItem: "Bague Maudite",
   onceFlag: "bague_cimetiere_pris",
@@ -1324,7 +1410,7 @@ const screens = {
 	zone: "donjon",
   titre: "Examiner les lieux",
   texte: "Vous trouvez un parchemin elfique.",
-  image: "Lieux/Foret/005. Parchemin.png",
+  image: "Lieux/Foret/005. Parchemin.jpg",
 
   giveItem: "Parchemin Elfique",
   onceFlag: "parchemin_elfique_trouve",
@@ -1477,7 +1563,7 @@ const screens = {
 	zone: "donjon",
   titre: "Déchiffrage du parchemin",
   texte: "Vous tentez de déchiffrer les symboles...",
-  image: "Lieux/Foret/005. Parchemin.png",
+  image: "Lieux/Foret/005. Parchemin.jpg",
   requireAny: [
     { type: "race", value: "Elfe" },
     { type: "statMin", stat: "intelligence", value: 10 }
@@ -1491,7 +1577,7 @@ const screens = {
 	zone: "donjon",
   titre: "Déchiffrage du parchemin",
   texte: "Vous essayer de déchiffrer le parchemin mais rien n'y fais, vous comprenez rien à ce charabia",
-  image: "Lieux/Foret/005. Parchemin.png",
+  image: "Lieux/Foret/005. Parchemin.jpg",
   choix: [
     { texte: "Continuer", goto: "Ecran0033" },
   ]
@@ -1594,7 +1680,7 @@ const screens = {
 	zone: "lac",
   titre: "Le cerf",
   texte: "Un cerf majestueux regarde au loin, vous ne semblez pas le déranger",
-  image: "Lieux/Foret/032 - Foret.png",
+  image: "Lieux/Foret/032 - Foret.jpg",
   choix: [
     { texte: "S'approcher discrètement", goto: "Ecran0061" },
   ]
@@ -1652,24 +1738,27 @@ const screens = {
   ]
 },
 "Ecran0049": {
-	zone: "montagne",
-  titre: "La voie est dégagée",
-  texte: "La pierre de passage magique à complètement dégagée le chemin, c'est maintenant possible d'atteindre ce temple au loin",
-  image: "Lieux/Montagne/012. Montagne.png",
-  action: () => {
+    zone: "montagne",
+    titre: "La voie est dégagée",
+    texte: "La pierre de passage magique a complètement dégagé le chemin...",
+    image: "Lieux/Montagne/012. Montagne.png",
+	sound: "magic_spell_4.mp3",
 
-    if (!hasItem("Pierre du Passage Complète")) {
-        return;
-    }
+    action: () => {
 
-    removeItem("Pierre du Passage Complète");
+        if (!hasItem("Pierre du Passage Complète")) {
+            return;
+        }
+
+        removeItem("Pierre du Passage Complète");
+    },
+
+    choix: [
+        { texte: "Se diriger vers le temple", goto: "Ecran0101" },
+        { texte: "Revenir sur ses pas", goto: "Ecran0016" },
+    ]
 },
 
-  choix: [
-    { texte: "Se diriger vers le temple", goto: "Ecran0101" },
-    { texte: "Revenir sur ses pas", goto: "Ecran0016" },
-  ]
-},
 "Ecran0050": {
 	zone: "foret",
   titre: "Le lutin fou",
@@ -1705,7 +1794,7 @@ const screens = {
 	zone: "foret",
   titre: "Lettre du lutin",
   texte: "Vous recevez une lettre froissée et collante, adressée à un lutin des montagnes.",
-  image: "Lieux/Foret/033. Foret.png",
+  image: "Lieux/Foret/033. Foret.jpg",
   giveItem: "Lettre Froissée",
   alternateGotoIfOwned: "Ecran0054",
   choix: [
@@ -1796,7 +1885,7 @@ const screens = {
 	zone: "lac",
   titre: "Approche",
   texte: "Le cerf ne fuit pas. Une boule verdâtre tombe au sol, vous la récupérez, elle se solidifie dans votre main",
-  image: "Lieux/Foret/032 - Foret.png",
+  image: "Lieux/Foret/032 - Foret.jpg",
   giveItem: "Glande Lumineuse",
   onceFlag: "glande_lumineuse_pris",
   alternateGotoIfOwned: "Ecran0063",
@@ -1809,7 +1898,7 @@ const screens = {
 	zone: "lac",
   titre: "Détour",
   texte: "Le cerf semble imperturbable",
-  image: "Lieux/Foret/032 - Foret.png",
+  image: "Lieux/Foret/032 - Foret.jpg",
   choix: [
     { texte: "Continuer", goto: "Ecran0022" },
   ]
@@ -1818,7 +1907,7 @@ const screens = {
 	zone: "lac",
   titre: "Face au cerf",
   texte: "Vous restez immobile. Le cerf incline la tête et s’éloigne en silence.",
-  image: "Lieux/Foret/032 - Foret.png",
+  image: "Lieux/Foret/032 - Foret.jpg",
   choix: [
     { texte: "Retour au lac", goto: "Ecran0022" },
   ]
@@ -1895,7 +1984,7 @@ const screens = {
 	zone: "foret",
   titre: "À l’intérieur",
   texte: "La maison est vide. Sur une table ce trouve un pot de miel et une clef rouillée.",
-  image: "Lieux/Foret/034. Foret.png",
+  image: "Lieux/Foret/034. Foret.jpg",
   choix: [
     { texte: "Prendre la clef", goto: "Ecran0073" },
     { texte: "Goûter le miel", goto: "Ecran0074" },
@@ -1917,7 +2006,7 @@ const screens = {
 	zone: "foret",
   titre: "La clef rouillée",
   texte: "Vous prenez la clef rouillée. Elle semble très ancienne.",
-  image: "Lieux/Foret/034. Foret.png",
+  image: "Lieux/Foret/034. Foret.jpg",
   giveItem: "Clé Rouillée",
   choix: [
     { texte: "Goûter le miel", goto: "Ecran0074" },
@@ -1928,7 +2017,8 @@ const screens = {
 	zone: "foret",
   titre: "Miel étrange",
   texte: "Le miel apaise votre esprit. Votre folie semble diminuer…",
-  image: "Lieux/Foret/034. Foret.png",
+  image: "Lieux/Foret/034. Foret.jpg",
+  sound: "folieDown",
   choix: [
     { texte: "Sortir de la maison", goto: "Ecran0075" },
   ]
@@ -1948,7 +2038,7 @@ const screens = {
 	zone: "donjon",
   titre: "Salle du coffre",
   texte: "Sans la clé je ne pourrais pas ouvrir ce coffre !",
-  image: "Lieux/Foret/046. Foret.png",
+  image: "Lieux/Foret/046. Foret.jpg",
   choix: [
     { texte: "Revenir au début du tumulus", goto: "Ecran0023" },
   ]
@@ -1957,7 +2047,7 @@ const screens = {
 	zone: "donjon",
   titre: "Tumulus – Couloir principal",
   texte: "Le tunnel s’enfonce en lignes brisées. Les murs semblent vibrer légèrement.",
-  image: "Lieux/Foret/041. Foret.png",
+  image: "Lieux/Foret/041. Foret.jpg",
   choix: [
     { texte: "Aller tout droit", goto: "Ecran0081" },
     { texte: "Tourner à gauche", goto: "Ecran0084" },
@@ -1979,7 +2069,7 @@ const screens = {
 	zone: "donjon",
   titre: "Impasse suintante",
   texte: "Le tunnel se termine sur un mur noirci par la moisissure.",
-  image: "Lieux/Foret/041. Foret.png",
+  image: "Lieux/Foret/041. Foret.jpg",
   choix: [
     { texte: "Revenir sur vos pas", goto: "Ecran0081" },
   ]
@@ -1988,7 +2078,7 @@ const screens = {
 	zone: "donjon",
   titre: "Passage tournant",
   texte: "Je suis revenu au début, comment est-ce possible ? Plus vous avancez plus vous avez l’étrange sensation de revenir sur vos pas.",
-  image: "Lieux/Foret/041. Foret.png",
+  image: "Lieux/Foret/041. Foret.jpg",
   choix: [
     { texte: "Continuer obstinément", goto: "Ecran0088" },
     { texte: "Revenir", goto: "Ecran0080" },
@@ -1998,7 +2088,7 @@ const screens = {
 	zone: "donjon",
   titre: "Couloir en ruine",
   texte: "Des pierres tombent parfois du plafond comme si le tumulus respirait.",
-  image: "Lieux/Foret/043. Foret.png",
+  image: "Lieux/Foret/043. Foret.jpg",
   choix: [
     { texte: "Continuer vers la gauche", goto: "Ecran0081" },
     { texte: "Revenir au début", goto: "Ecran0080" },
@@ -2018,7 +2108,7 @@ const screens = {
 	zone: "donjon",
   titre: "Salle du coffre",
   texte: "Un coffre trône au milieu de la pièce. Sa serrure rouillée semble fragile.",
-  image: "Lieux/Foret/046. Foret.png",
+  image: "Lieux/Foret/046. Foret.jpg",
   choix: [
     { texte: "Essayer d'ouvrir la serrure", goto: "Ecran0086A" },
   ]
@@ -2026,7 +2116,7 @@ const screens = {
 "Ecran0086A": {
 	zone: "donjon",
   titre: "Ouverture du coffre",
-  image: "Lieux/Foret/046. Foret.png",
+  image: "Lieux/Foret/046. Foret.jpg",
 
   requireAny: [
     { type: "item", value: "Clé Rouillée" }
@@ -2039,7 +2129,7 @@ const screens = {
 	zone: "donjon",
   titre: "Impasse des ossements",
   texte: "Un tas d’ossements brisés jonche le sol. Mieux vaut ne pas rester ici.",
-  image: "Lieux/Foret/047. Foret.png",
+  image: "Lieux/Foret/047. Foret.jpg",
   choix: [
     { texte: "Revenir", goto: "Ecran0080" },
   ]
@@ -2048,7 +2138,7 @@ const screens = {
 	zone: "donjon",
   titre: "Impasse mouvante",
   texte: " Le tumulus change… même les couleurs sont étranges !",
-  image: "Lieux/Foret/048. Foret.png",
+  image: "Lieux/Foret/048. Foret.jpg",
   choix: [
     { texte: "Revenir", goto: "Ecran0083" },
   ]
@@ -2057,7 +2147,8 @@ const screens = {
 	zone: "donjon",
   titre: "Salle du trésor",
   texte: "Le coffre s’ouvre dans un craquement. Une énergie magique s'en échappe..",
-  image: "Lieux/Foret/049. Foret.png",
+  image: "Lieux/Foret/049. Foret.jpg",
+  sound: "coffre",
   choix: [
     { texte: "Fouillez le coffre", goto: "Ecran0089A" },
   ]
@@ -2066,7 +2157,7 @@ const screens = {
 	zone: "donjon",
   titre: "Salle du trésor",
   texte: "Vous trouvez une moitié de pierre vibrante, elle ne semble pas complète",
-  image: "Lieux/Foret/040. Foret.png",
+  image: "Lieux/Foret/040. Foret.jpg",
   giveItem: "Pierre du Passage Droite",
     onceFlag: "pierre_passage_droite_recuperee",
   alternateGotoIfOwned: "Ecran0089B",
@@ -2078,7 +2169,7 @@ const screens = {
 	zone: "donjon",
   titre: "Salle du trésor",
   texte: "Le coffre est vide, je pense qu'il n'y a plus rien à trouver dans ces tunnels,",
-  image: "Lieux/Foret/049. Foret.png",
+  image: "Lieux/Foret/049. Foret.jpg",
   choix: [
     { texte: "Retourner à l'entrée du tumulus", goto: "Ecran0023" },
   ]
@@ -2087,7 +2178,7 @@ const screens = {
 	zone: "foret",
   titre: "Maison de la sorcière",
   texte: "Une maison biscornue pulse d’une lumière verte.",
-  image: "Lieux/Foret/035. Foret.png",
+  image: "Lieux/Foret/035. Foret.jpg",
   choix: [
     { texte: "Entrer sans frapper", goto: "Ecran0091" },
     { texte: "Frapper à la porte", goto: "Ecran0092" },
@@ -2098,7 +2189,7 @@ const screens = {
 	zone: "foret",
   titre: "Antre de la sorcière",
   texte: "Une femme en manteau noir manipule une potion fumante. « QUI OSE ? »",
-  image: "Lieux/Foret/026. Foret.png",
+  image: "Lieux/Foret/026. Foret.jpg",
   choix: [
     { texte: "Je ne suis personne mais j'aurais besoin de votre aide pour allumer ma torche", goto: "Ecran0093" },
     { texte: "Rester silencieux", goto: "Ecran0094" },
@@ -2109,7 +2200,7 @@ const screens = {
 	zone: "foret",
   titre: "Surprise",
   texte: "La sorcière ouvre brusquement : « QUI OSE ? »",
-  image: "Lieux/Foret/036. Foret.png",
+  image: "Lieux/Foret/036. Foret.jpg",
   choix: [
     { texte: "Auriez-vous du feu pour allumer ma torche ?", goto: "Ecran0093" },
     { texte: "S’excuser", goto: "Ecran0094" },
@@ -2120,7 +2211,7 @@ const screens = {
 	zone: "foret",
   titre: "Le pacte",
   texte: "« J’allumerai ta torche… mais j’ai besoin d'un parchemin elfique et d'un bout de bois bien sûr ! »",
-  image: "Lieux/Foret/036. Foret.png",
+  image: "Lieux/Foret/036. Foret.jpg",
 
   choix: [
     { texte: "Un parchemin elfique !", goto: "Ecran0093A" },
@@ -2130,7 +2221,7 @@ const screens = {
 "Ecran0093A": {
 	zone: "foret",
   titre: "Allumer la torche à l'aide du parchemin",
-  image: "Lieux/Foret/036. Foret.png",
+  image: "Lieux/Foret/036. Foret.jpg",
 
   requireAll: [
     { type: "item", value: "Parchemin Elfique" },
@@ -2145,7 +2236,7 @@ const screens = {
 	zone: "foret",
   titre: "Rejet",
   texte: "« Reviens avec les objets que j'ai cité »",
-  image: "Lieux/Foret/036. Foret.png",
+  image: "Lieux/Foret/036. Foret.jpg",
   choix: [
     { texte: "S'en aller", goto: "Ecran0090" },
   ]
@@ -2154,7 +2245,7 @@ const screens = {
 	zone: "foret",
   titre: "Indifférence",
   texte: "La sorcière ne vous accorde plus un regard. « Je suis occupée. »",
-  image: "Lieux/Foret/026. Foret.png",
+  image: "Lieux/Foret/026. Foret.jpg",
   choix: [
     { texte: "Partir", goto: "Ecran0014" },
   ]
@@ -2163,7 +2254,8 @@ const screens = {
 	zone: "foret",
   titre: "Flamme elfique",
   texte: "La sorcière brûle le parchemin et enflamme ta torche.",
-  image: "Lieux/Foret/036. Foret.png",
+  image: "Lieux/Foret/036. Foret.jpg",
+  sound: "trash",
 
 action: () => {
     if (!hasItem("Parchemin Elfique")) {
@@ -2190,6 +2282,7 @@ action: () => {
   titre: "Dehors",
   texte: "La torche enchantée crépite doucement.",
   image: "Lieux/Foret/037. Foret.png",
+  sound: "torch",
   choix: [
     { texte: "Retourner dans la forêt", goto: "Ecran0001" },
   ]
@@ -2198,7 +2291,7 @@ action: () => {
 	zone: "foret",
   titre: "Il manque un élément",
   texte: "« T'es bête ou quoi !? Sans un des éléments je ne peux rien faire. »",
-  image: "Lieux/Foret/036. Foret.png",
+  image: "Lieux/Foret/036. Foret.jpg",
   choix: [
     { texte: "Revenir", goto: "Ecran0093" },
     { texte: "Partir", goto: "Ecran0090" }
@@ -2208,7 +2301,7 @@ action: () => {
 	zone: "foret",
   titre: "Maison de la sorcière",
   texte: "Je n'ai plus rien à faire dans la maison de l'autre folle de sorcière !",
-  image: "Lieux/Foret/035. Foret.png",
+  image: "Lieux/Foret/035. Foret.jpg",
   choix: [
     { texte: "Retourner au panneau", goto: "Ecran0002" },
   ]
@@ -2297,6 +2390,7 @@ action: () => {
   titre: "La porte du temple",
   texte: "Une douleur vous prend au cerveau ! La porte se métamorphose et les runes se mettent à tournoyer d'une lumière jaune en son centre",
   image: "Lieux/Montagne/016. Montagne.png",
+  sound: "folieUp",
   choix: [
     { texte: "Essayer de communiquez avec les murmures", goto: "Ecran0120" },
   ]
@@ -2361,6 +2455,7 @@ action: () => {
   titre: "La statue qui vous regarde",
   texte: "Vous sentez une douleur au cerveau ! « Faux, mais audacieux. Vous serez recyclé. Une autre : Qu’abandonne-t-on pour gagner, et gagne-t-on en l’abandonnant ? »",
   image: "Lieux/Montagne/014. Montagne.png",
+  sound: "folieUp",
   choix: [
     { texte: "Le libre arbitre", goto: "Ecran0115" },
     { texte: "La raison", goto: "Ecran0116" },
@@ -2394,6 +2489,7 @@ action: () => {
   titre: "La statue qui vous regarde",
   texte: "Vous sentez une douleur au cerveau ! « Insolent… mais Morbélios aime l’ironie. Conversion partielle acceptée. Félicitations. Vous êtes désormais un peu moins libre. »",
   image: "Lieux/Montagne/014. Montagne.png",
+  sound: "folieUp",
   choix: [
     { texte: "Allez devant la porte d'entrée", goto: "Ecran0103" },
     { texte: "Faire le tour du temple", goto: "Ecran0104" },
@@ -2415,6 +2511,7 @@ action: () => {
   titre: "La porte du temple",
   texte: "Votre cerveau vous fait souffrir ! La porte change de forme subitement « Nul ne franchira ces portes sans l'objet de désire de Morbélios »",
   image: "Lieux/Montagne/016. Montagne.png",
+  sound: "folieUp",
   choix: [
     { texte: "De quel objet parlez-vous ?", goto: "Ecran0121" },
     { texte: "A quoi ressemble cet objet ?", goto: "Ecran0122" },
@@ -2494,9 +2591,9 @@ action: () => {
   texte: "Vous approchez de la maison, devant celle-ci se trouve un homme bourru qui vous regarde d'un air étrange",
   image: "Lieux/Montagne/007. Montagne.jpg",
   choix: [
-    { texte: "S'approchez de lui", goto: "Ecran0000" },
-    { texte: "Repartir vers le puit", goto: "Ecran0000" },
-    { texte: "Continuer son chemin", goto: "Ecran0000" },
+    { texte: "S'approchez de lui", goto: "Ecran0000A" },
+    { texte: "Repartir vers le puit", goto: "Ecran0000A" },
+    { texte: "Continuer son chemin", goto: "Ecran0000A" },
   ]
 },
 "Ecran0128": {
@@ -2669,15 +2766,18 @@ action: () => {
   folieVariants: {
     5: {
       texte: "Vous sentez la folie vous envahir, le rouge du champignon semble légèrement plus sombre.",
-	  image: "Lieux/Champignon/001. champignon_A.png"
+	  image: "Lieux/Champignon/001. champignon_A.png",
+	  sound: "madness"
     },
     10: {
       texte: "Vous sentez la folie vous envahir, le champignon incline légèrement son chapeau. — Tu reviens.",
-      image: "Lieux/Champignon/001. distordue.png"
+      image: "Lieux/Champignon/001. distordue.png",
+	  sound: "madness"
     },
     15: {
       texte: "Vous sentez la folie vous envahir, le champignon change de forme et vous dit : Tu es enfin prêt !! Le champignon respire au même rythme que toi.",
-      image: "Lieux/Champignon/001. distordue.png"
+      image: "Lieux/Champignon/001. distordue.png",
+	  sound: "madness"
     }
   },
 
@@ -2695,15 +2795,18 @@ action: () => {
     folieVariants: {
     5: {
       texte: "La folie prend le dessus, le rouge du champignon semble légèrement plus sombre ou n'est-ce qu'une impression.",
-	  image: "Lieux/Champignon/002. champignon_A.png"
+	  image: "Lieux/Champignon/002. champignon_A.png",
+	  sound: "madness"
     },
     10: {
       texte: "La folie prend le dessus, tu fais semblant de ne pas me reconnaître ? La lumière semble s'intensifier.",
-      image: "Lieux/Champignon/002. distordue.png"
+      image: "Lieux/Champignon/002. distordue.png",
+	  sound: "madness"
     },
     15: {
       texte: "La folie prend le dessus, tu fais semblant de ne pas me reconnaître ? Le champignon ouvre la bouche et ricane.",
-      image: "Lieux/Champignon/002. distordue.png"
+      image: "Lieux/Champignon/002. distordue.png",
+	  sound: "madness"
     }
   },
   
@@ -2747,6 +2850,7 @@ action: () => {
   titre: "Rectangle lumineux",
   texte: "Ils fixent des rectangles lumineux pendant des heures. Quand la divinité disparaît… ils paniquent. Une image fugace clignote dans votre esprit.",
   image: "Lieux/Champignon/009. champignon.png",
+  sound: "folieUp",
   choix: [
     { texte: "Secouer la tête", goto: "Ecran0149" },
     { texte: "Fermer les yeux et écouter", goto: "Ecran0149" },
@@ -2787,6 +2891,7 @@ action: () => {
   titre: "Contact interdit",
   texte: "Votre main touche la surface de l'objet. Une vision brutale vous traverse. Tours de verre. Lumières sans flamme. Ciel gris. Est-ce donc ça 2026..?",
   image: "Lieux/Champignon/011. champignon.png",
+  sound: "folieUp",
   choix: [
     { texte: "Retirer votre main", goto: "Ecran0153" },
   ]
@@ -2874,6 +2979,7 @@ action: () => {
   titre: "Spore Connectée",
   texte: "La spore pulse dans votre main, ça semble vivant. Un murmure numérique traverse votre esprit et une douleur vous foudroie..",
   image: "Lieux/Champignon/019. champignon.png",
+  sound: "folieUp",
   giveItem: "Spore Connectée",
   onceFlag: "spore_connectee_obtenue",
   choix: [
@@ -2935,11 +3041,13 @@ action: () => {
   folieVariants: {
     10: {
       texte: "Le soleil chute brutalement vers l’horizon. Le champignon respire au rythme du monde.",
-	  image: "Lieux/Champignon/024. distordue.png"
+	  image: "Lieux/Champignon/024. distordue.png",
+	  sound: "madness"
     },
     15: {
       texte: "Le ciel se fissure légèrement. Le champignon vous observe comme s’il connaissait déjà votre fin.",
-	  image: "Lieux/Champignon/024. distordue.png"
+	  image: "Lieux/Champignon/024. distordue.png",
+	  sound: "madness"
     }
   },
 
@@ -2985,7 +3093,65 @@ action: () => {
   image: "Lieux/Champignon/027. champignon.png",
   choix: [
     { texte: "Hurler", goto: "Ecran0172" },
+    { texte: "Reculer", goto: "Ecran0172" },
+  ]
+},
+"Ecran0172": {
+	zone: "champignon",
+  titre: "Rupture",
+  texte: "La vision éclate comme du verre. Le ciel devient presque noir. Le rire du champignon résonne dans votre tête.",
+  image: "Lieux/Champignon/028. champignon.png",
+  sound: "broken_mirror",
+  choix: [
     { texte: "Toucher la vision", goto: "Ecran0173" },
+  ]
+},
+"Ecran0173": {
+	zone: "champignon",
+  titre: "Contact",
+  texte: "Votre main traverse la vision, attirée par une lumière violacé.",
+  image: "Lieux/Champignon/029. champignon.png",
+  choix: [
+    { texte: "Retirer la main, pourquoi ?", goto: "Ecran0175" },
+  ]
+},
+"Ecran0174": {
+	zone: "champignon",
+  titre: "Refus",
+  texte: "Tout s'apaise, la violence visuelle et sonore disparaît. Le champignon reste silencieux. Le soleil se couche de nouveau.",
+  image: "Lieux/Champignon/010. champignon.png",
+  choix: [
+    { texte: "Pourquoi tout cela ?", goto: "Ecran0175" },
+  ]
+},
+"Ecran0175": {
+		zone: "champignon",
+  titre: "Réponse lente",
+  texte: "Parce que ceux qui voient changent. Et ceux qui changent fissurent le monde.",
+  image: "Lieux/Champignon/031. champignon.png",
+  choix: [
+    { texte: "Je ne veux rien fissurer", goto: "Ecran0177" },
+    { texte: "Alors je le fissurerai", goto: "Ecran0176" },
+  ]
+},
+"Ecran0176": {
+		zone: "champignon",
+  titre: "Acceptation tardive",
+  texte: "Le champignon incline lentement son chapeau. Il est trop tard pour reculer.",
+  image: "Lieux/Champignon/026. champignon.png",
+  meetCharacter: "champi",
+  redirectIfMet: "Ecran0177",
+  choix: [
+    { texte: "Voir le futur finalement", goto: "Ecran0170" },
+  ]
+},
+"Ecran0177": {
+		zone: "champignon",
+  titre: "Nuit installée",
+  texte: "La nuit tombe définitivement. Le champignon luit faiblement d'une teinte rouge dans l’obscurité. Quelque chose a changé en vous, vous le sentez.",
+  image: "Lieux/Champignon/030. champignon.png",
+  choix: [
+    { texte: "Rester face à lui", goto: "Ecran0000A" },
   ]
 },
 

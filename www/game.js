@@ -94,12 +94,15 @@ function addItem(item) {
         addLogEntry(
             `<p><span class="log-tag log-add">[Nouvel objet]</span> ${item} : ${desc}</p>`
         );
+        // Ajout dans le deuxième journal
+        addLogEntry(
+            `<p><span class="log-tag log-add">[Nouvel objet]</span> ${item} : ${desc}</p>`,
+            'log-list2'
+        );
 
         updateInventoryDisplay();
     }
 }
-
-
 
 /* =====================================================
       DIALOGUES FANTASY (ROTATION AUTOMATIQUE)
@@ -199,31 +202,26 @@ function startCharacterCreation() {
 function saveExists() {
     return hasFullSave();
 }
-// --------------------------------------------------
+
+// =====================================================
 // CHARGEMENT AU DÉMARRAGE
-// --------------------------------------------------
+// =====================================================
+
 document.addEventListener("DOMContentLoaded", () => {
+    const hasResetFlag = localStorage.getItem("justReset") === "1";
+    const hasFullSave = localStorage.getItem("fullGameSave") !== null;
+    const hasPlayerData = localStorage.getItem("playerData") !== null;
 
-    overlay = document.getElementById("char-creation-overlay");
-
-    const hasResetFlag   = localStorage.getItem("justReset") === "1";
-    const hasFullSave    = localStorage.getItem("fullGameSave") !== null;
-    const hasPlayerData  = localStorage.getItem("playerData") !== null;
-
-    // ✅ 1️⃣ RESET → menu forcé
     if (hasResetFlag) {
         localStorage.removeItem("justReset");
         startCharacterCreation();
         return;
     }
 
-    // ✅ 2️⃣ Sauvegarde complète existante MAIS aucun player actif
     if (hasFullSave && !hasPlayerData) {
-
         askConfirm(
             "Une sauvegarde complète a été trouvée. Voulez-vous la charger ?",
             () => {
-
                 document.querySelectorAll(".overlay.visible")
                     .forEach(o => o.classList.remove("visible"));
 
@@ -241,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                // ✅ Nettoyage SANS supprimer fullGameSave
+                // Nettoyage
                 for (let i = localStorage.length - 1; i >= 0; i--) {
                     const key = localStorage.key(i);
                     if (key !== "fullGameSave") {
@@ -249,57 +247,60 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
 
-                // ✅ Restauration
+                // Restauration
                 for (const key in loadedData) {
                     localStorage.setItem(key, loadedData[key]);
                 }
 
-                // ✅ Reconstruction player
+                // Reconstruction player
                 const restoredPlayer = localStorage.getItem("playerData");
                 if (restoredPlayer) {
                     player = JSON.parse(restoredPlayer);
                 }
 
-                // ✅ Journal
-                const logList = document.getElementById("log-list");
-                if (logList) logList.innerHTML = "";
+                // Restauration des journaux AVANT de les vider
                 restoreJournal();
 
-                // ✅ Écran
-                const lastScreenId =
-                    localStorage.getItem("lastScreen") || "Ecran0001";
+                // Journal - Ne pas vider les journaux avant restauration
+                const logList = document.getElementById("log-list");
+                const logList2 = document.getElementById("log-list2");
 
+                // Ajout de messages de chargement
+                if (logList) {
+                    addLogEntry("<p class='log-system'>📂 Sauvegarde complète chargée.</p>", 'log-list');
+                }
+                if (logList2) {
+                    addLogEntry("<p class='log-system'>📂 Sauvegarde complète chargée.</p>", 'log-list2');
+                }
+
+                // Écran
+                const lastScreenId = localStorage.getItem("lastScreen") || "Ecran0001";
                 loadScreen(lastScreenId);
 
-                // ✅ Rafraîchissement UI
+                // Rafraîchissement UI
                 setTimeout(() => {
-                    if (typeof updatePlayerDisplay === "function")
+                    if (typeof updatePlayerDisplay === "function") {
                         updatePlayerDisplay();
+                    }
 
-                    if (typeof updateInventoryDisplay === "function")
+                    if (typeof updateInventoryDisplay === "function") {
                         updateInventoryDisplay();
+                    }
 
                     isLoadingGame = false;
                     keyboardEnabled = true;
-
                 }, 50);
-
-                addLogEntry("<p class='log-system'>📂 Sauvegarde complète chargée.</p>");
             }
         );
-
         return;
     }
 
-    // ✅ 3️⃣ Aucune sauvegarde ET aucun joueur → création
     if (!hasFullSave && !hasPlayerData) {
         startCharacterCreation();
         return;
     }
-
-    // ✅ 4️⃣ Player déjà actif → NE RIEN FAIRE
-    // (partie déjà chargée automatiquement via playerData)
 });
+
 
     // --------------------------------------------------
     // BOUTONS MENU
@@ -386,42 +387,61 @@ document.getElementById("btn-start-game").addEventListener("click", () => {
     const intVal = document.getElementById("sum-int").textContent;
     const agiVal = document.getElementById("sum-agi").textContent;
     const conVal = document.getElementById("sum-con").textContent;
-	const folieVal = document.getElementById("sum-folie").textContent;
+    const folieVal = document.getElementById("sum-folie").textContent;
 
     // Mise à jour portrait
     document.getElementById("portrait-mobile").src = img;
+    document.getElementById("portrait-mob").src = img;
     document.getElementById("portrait-pc").src = img;
 
-    // Mise à jour infos (mobile)
+    // Mise à jour infos (side-menu ancien)
     document.getElementById("char-name-mobile").textContent = name;
     document.getElementById("char-race-mobile").textContent = capitalize(race);
-	document.getElementById("char-sexe-mobile").textContent = capitalize(sex);
+    document.getElementById("char-sexe-mobile").textContent = capitalize(sex);
     document.getElementById("char-for-mobile").textContent = forVal;
     document.getElementById("char-int-mobile").textContent = intVal;
     document.getElementById("char-agi-mobile").textContent = agiVal;
     document.getElementById("char-con-mobile").textContent = conVal;
-	
-	const folieMax = 15;
-const folieCurrent = parseInt(folieVal);
 
-const bar = document.getElementById("folie-bar-mobile");
-const text = document.getElementById("folie-value-mobile");
+    // Mise à jour infos (side-menu-mobile)
+    document.getElementById("char-name-mob").textContent = name;
+    document.getElementById("char-race-mob").textContent = capitalize(race);
+    document.getElementById("char-sexe-mob").textContent = capitalize(sex);
+    document.getElementById("char-for-mob").textContent = forVal;
+    document.getElementById("char-int-mob").textContent = intVal;
+    document.getElementById("char-agi-mob").textContent = agiVal;
+    document.getElementById("char-con-mob").textContent = conVal;
 
-if (bar && text) {
-    const percent = (folieCurrent / folieMax) * 100;
-    bar.style.width = percent + "%";
-    text.textContent = `${folieCurrent}/${folieMax}`;
-}
+    // Mise à jour barre folie (side-menu ancien)
+    const folieMax = 15;
+    const folieCurrent = parseInt(folieVal);
+
+    const bar = document.getElementById("folie-bar-mobile");
+    const text = document.getElementById("folie-value-mobile");
+    if (bar && text) {
+        const percent = (folieCurrent / folieMax) * 100;
+        bar.style.width = percent + "%";
+        text.textContent = `${folieCurrent}/${folieMax}`;
+    }
+
+    // Mise à jour barre folie (side-menu-mobile)
+    const barMob = document.getElementById("folie-bar-mob");
+    const textMob = document.getElementById("folie-value-mob");
+    if (barMob && textMob) {
+        const percent = (folieCurrent / folieMax) * 100;
+        barMob.style.width = percent + "%";
+        textMob.textContent = `${folieCurrent}/${folieMax}`;
+    }
 
     // Mise à jour infos (pc)
     document.getElementById("char-name-pc").textContent = name;
     document.getElementById("char-race-pc").textContent = capitalize(race);
-	document.getElementById("char-sexe-pc").textContent = capitalize(sex);
+    document.getElementById("char-sexe-pc").textContent = capitalize(sex);
     document.getElementById("char-for-pc").textContent = forVal;
     document.getElementById("char-int-pc").textContent = intVal;
     document.getElementById("char-agi-pc").textContent = agiVal;
     document.getElementById("char-con-pc").textContent = conVal;
-	document.getElementById("char-folie-pc").textContent = folieVal;
+    document.getElementById("char-folie-pc").textContent = folieVal;
 
     // Fermeture de la fenêtre de création
     document.getElementById("char-creation-overlay").classList.remove("visible");
@@ -429,7 +449,6 @@ if (bar && text) {
 });
 
 document.getElementById("btn-new-game").onclick = () => {
-
     if (saveExists()) {
         showStep(stepOverwrite);
     } else {
@@ -445,6 +464,7 @@ document.getElementById("overwrite-yes").onclick = () => {
 document.getElementById("overwrite-no").onclick = () => {
     showStep(stepMenu);
 };
+
 
 /* =====================================================
       ÉTAPE : NOM DU PERSONNAGE
@@ -564,17 +584,16 @@ function rollStat() {
     return 5;
 }
 
-const diceSound = new Audio("sons/de.mp3");
-
 function doRoll() {
-    diceSound.currentTime = 0;
-    diceSound.play().catch(()=>{});
+
+    playSFX("dice");   // ✅ SEULE LIGNE AUDIO
 
     rollFor.textContent = rollStat();
     rollInt.textContent = rollStat();
     rollAgi.textContent = rollStat();
     rollCon.textContent = rollStat();
 }
+
 
 document.getElementById("roll-dialog").textContent =
     getFantasyLine("roll_result");
@@ -735,9 +754,6 @@ function triggerFolieEffect(type) {
         document.getElementById("portrait-pc")
     ];
 
-    const soundUp = document.getElementById("sound-folie-up");
-    const soundDown = document.getElementById("sound-folie-down");
-
     /* ===============================
        ✅ EFFET PORTRAIT
     =============================== */
@@ -756,24 +772,22 @@ function triggerFolieEffect(type) {
     });
 
     /* ===============================
-       ✅ EFFET ÉCRAN
+       ✅ OVERLAY ÉCRAN
     =============================== */
 
     const overlay = document.createElement("div");
     overlay.classList.add("folie-overlay", type);
 
-if (type === "up") {
+    if (type === "up") {
+        const maxRadius = Math.max(window.innerWidth, window.innerHeight);
+        const intensity = (player.folie / 15);
 
-    const maxRadius = Math.max(window.innerWidth, window.innerHeight);
+        overlay.style.boxShadow =
+            `inset 0 0 ${maxRadius * intensity * 0.6}px rgba(255,0,0,0.9)`;
+    }
 
-    const intensity = (player.folie / 15); // 0 → 1 à 10 de folie
-
-    overlay.style.boxShadow =
-        `inset 0 0 ${maxRadius * intensity * 0.6}px rgba(255,0,0,0.9)`;
-}
-
-overlay.style.background = `rgba(120,0,0,${0.05 * player.folie})`;
-
+    overlay.style.background =
+        `rgba(120,0,0,${0.05 * player.folie})`;
 
     document.body.appendChild(overlay);
 
@@ -781,26 +795,12 @@ overlay.style.background = `rgba(120,0,0,${0.05 * player.folie})`;
         overlay.remove();
     }, 3000);
 
-    /* ===============================
-       ✅ SON
-    =============================== */
-
-    if (type === "up" && soundUp) {
-        soundUp.currentTime = 0;
-        soundUp.play().catch(() => {});
-    }
-
-    if (type === "down" && soundDown) {
-        soundDown.currentTime = 0;
-        soundDown.play().catch(() => {});
-    }
 }
 
-const madnessSound = new Audio("sons/madness.mp3");
-madnessSound.volume = 0.4; // ajuste si besoin
-
-
-function applyFolieVariant(originalData) {
+/* -----------------------------------------------------
+       FOLIE VARIANT POUR ECRAN
+------------------------------------------------------ */
+function applyFolieVariant(originalData, screenId) {
 
     if (!originalData.folieVariants) {
         return originalData;
@@ -813,10 +813,12 @@ function applyFolieVariant(originalData) {
         .sort((a, b) => a - b);
 
     let activeVariant = null;
+    let activeThreshold = null;
 
     for (const threshold of thresholds) {
         if (player.folie >= threshold) {
             activeVariant = originalData.folieVariants[threshold];
+            activeThreshold = threshold;
         }
     }
 
@@ -825,25 +827,38 @@ function applyFolieVariant(originalData) {
         if (activeVariant.texte !== undefined) {
             data.texte = activeVariant.texte;
         }
+
         if (activeVariant.image !== undefined) {
             data.image = activeVariant.image;
         }
+
         if (activeVariant.titre !== undefined) {
             data.titre = activeVariant.titre;
         }
 
-        // 🔊 Joue le son UNE FOIS
-        if (madnessSound) {
-            madnessSound.currentTime = 0;
-            madnessSound.play().catch(() => {});
+        // ✅ Gestion son par écran
+        if (!player._lastFolieThresholdByScreen) {
+            player._lastFolieThresholdByScreen = {};
+        }
+
+        if (
+            activeVariant.sound &&
+            player._lastFolieThresholdByScreen[screenId] !== activeThreshold
+        ) {
+            setTimeout(() => {
+				playSFX(activeVariant.sound);
+			}, 2000); // 1000 ms = 1 seconde
+			
+            player._lastFolieThresholdByScreen[screenId] = activeThreshold;
         }
     }
 
     return data;
 }
 
-
-
+/* -----------------------------------------------------
+       MISE A JOUR IMAGE
+------------------------------------------------------ */
 
 function updateImage(baseSrc, overlaySrc) {
 
@@ -875,8 +890,6 @@ function updateImage(baseSrc, overlaySrc) {
         overlay.style.opacity = 1;
     }, 50);
 }
-
-
 
 /* =====================================================
       ÉTAPE : RÉSUMÉ FINAL
@@ -935,12 +948,20 @@ document.getElementById("btn-validate-roll").onclick = () => {
 
     savePlayer();
 	
-	/* ✅ AJOUT LOG CREATION */
+/* ✅ AJOUT LOG CREATION */
 addLogEntry(
     `<p>
-        <span class="log-tag">[Création de Personnage]</span> 
+        <span class="log-tag">[Création de Personnage]</span>
         « Vous voilà lancé dans l’aventure. Bonne chance… vous en aurez besoin. »
      </p>`
+);
+// Ajout dans le deuxième journal
+addLogEntry(
+    `<p>
+        <span class="log-tag">[Création de Personnage]</span>
+        « Vous voilà lancé dans l’aventure. Bonne chance… vous en aurez besoin. »
+     </p>`,
+    'log-list2'
 );
 
 /* === AJOUT HUD — initialisation === */
@@ -954,42 +975,49 @@ if (document.getElementById("hud-name"))
 if (document.getElementById("hud-race"))
     document.getElementById("hud-race").textContent = capitalize(race);
 
-    /* === FIN AJOUT === */
+/* === FIN AJOUT === */
 
-    document.getElementById("summary-image").src = img;
-    document.getElementById("sum-name").textContent = name;
-    document.getElementById("sum-race").textContent = capitalize(race);
-    document.getElementById("sum-sex").textContent = capitalize(sex);
+document.getElementById("summary-image").src = img;
+document.getElementById("sum-name").textContent = name;
+document.getElementById("sum-race").textContent = capitalize(race);
+document.getElementById("sum-sex").textContent = capitalize(sex);
 
-    document.getElementById("sum-for").textContent = `${total.for} (${formatBonus(bonus.for)})`;
-    document.getElementById("sum-int").textContent = `${total.int} (${formatBonus(bonus.int)})`;
-    document.getElementById("sum-agi").textContent = `${total.agi} (${formatBonus(bonus.agi)})`;
-    document.getElementById("sum-con").textContent = `${total.con} (${formatBonus(bonus.con)})`;
+document.getElementById("sum-for").textContent = `${total.for} (${formatBonus(bonus.for)})`;
+document.getElementById("sum-int").textContent = `${total.int} (${formatBonus(bonus.int)})`;
+document.getElementById("sum-agi").textContent = `${total.agi} (${formatBonus(bonus.agi)})`;
+document.getElementById("sum-con").textContent = `${total.con} (${formatBonus(bonus.con)})`;
 
-    showStep(stepSummary);
+showStep(stepSummary);
 };
 
 function updatePlayerDisplay() {
     if (!player) return;
 
     // --- Portrait ---
-    const portrait = player.portrait || player.image || player.img || ""; 
+    const portrait = player.portrait || player.image || player.img || "";
     if (document.getElementById("portrait-mobile"))
         document.getElementById("portrait-mobile").src = portrait;
+    if (document.getElementById("portrait-mob"))
+        document.getElementById("portrait-mob").src = portrait;
     if (document.getElementById("portrait-pc"))
         document.getElementById("portrait-pc").src = portrait;
 
-    // --- Nom & race ---
+    // --- Nom ---
     const name = player.nom || player.name || "";
     if (document.getElementById("char-name-mobile"))
         document.getElementById("char-name-mobile").textContent = name;
+    if (document.getElementById("char-name-mob"))
+        document.getElementById("char-name-mob").textContent = name;
     if (document.getElementById("char-name-pc"))
         document.getElementById("char-name-pc").textContent = name;
     if (document.getElementById("hud-name"))
         document.getElementById("hud-name").textContent = name;
 
+    // --- Race ---
     if (document.getElementById("char-race-mobile"))
         document.getElementById("char-race-mobile").textContent = player.race || "";
+    if (document.getElementById("char-race-mob"))
+        document.getElementById("char-race-mob").textContent = player.race || "";
     if (document.getElementById("char-race-pc"))
         document.getElementById("char-race-pc").textContent = player.race || "";
     if (document.getElementById("hud-race"))
@@ -999,10 +1027,12 @@ function updatePlayerDisplay() {
     const sexe = player.sex || player.sexe || "";
     if (document.getElementById("char-sexe-mobile"))
         document.getElementById("char-sexe-mobile").textContent = sexe;
+    if (document.getElementById("char-sexe-mob"))
+        document.getElementById("char-sexe-mob").textContent = sexe;
     if (document.getElementById("char-sexe-pc"))
         document.getElementById("char-sexe-pc").textContent = sexe;
 
-    // --- Stats principales ---
+    // --- Stats ---
     const forVal = player.force ?? player.stats?.for ?? 0;
     const intVal = player.intelligence ?? player.stats?.int ?? 0;
     const agiVal = player.agilite ?? player.stats?.agi ?? 0;
@@ -1018,37 +1048,48 @@ function updatePlayerDisplay() {
     const aTxt = `${agiVal} (${formatBonus(bAgi)})`;
     const cTxt = `${conVal} (${formatBonus(bCon)})`;
 
-    // Stats affichage
+    // FOR
     if (document.getElementById("char-for-mobile"))
         document.getElementById("char-for-mobile").textContent = fTxt;
+    if (document.getElementById("char-for-mob"))
+        document.getElementById("char-for-mob").textContent = fTxt;
     if (document.getElementById("char-for-pc"))
         document.getElementById("char-for-pc").textContent = fTxt;
 
+    // INT
     if (document.getElementById("char-int-mobile"))
         document.getElementById("char-int-mobile").textContent = iTxt;
+    if (document.getElementById("char-int-mob"))
+        document.getElementById("char-int-mob").textContent = iTxt;
     if (document.getElementById("char-int-pc"))
         document.getElementById("char-int-pc").textContent = iTxt;
 
+    // AGI
     if (document.getElementById("char-agi-mobile"))
         document.getElementById("char-agi-mobile").textContent = aTxt;
+    if (document.getElementById("char-agi-mob"))
+        document.getElementById("char-agi-mob").textContent = aTxt;
     if (document.getElementById("char-agi-pc"))
         document.getElementById("char-agi-pc").textContent = aTxt;
 
+    // CON
     if (document.getElementById("char-con-mobile"))
         document.getElementById("char-con-mobile").textContent = cTxt;
+    if (document.getElementById("char-con-mob"))
+        document.getElementById("char-con-mob").textContent = cTxt;
     if (document.getElementById("char-con-pc"))
         document.getElementById("char-con-pc").textContent = cTxt;
 
-    // --- Folie (valeur unique correcte) ---
+    // --- Folie ---
     const folieVal = player.folie ?? "";
 
-    // Folie dans la fiche
     if (document.getElementById("char-folie-mobile"))
         document.getElementById("char-folie-mobile").textContent = folieVal;
+    if (document.getElementById("char-folie-mob"))
+        document.getElementById("char-folie-mob").textContent = folieVal;
     if (document.getElementById("char-folie-pc"))
         document.getElementById("char-folie-pc").textContent = folieVal;
 
-    // HUD Folie
     if (document.getElementById("hud-folie-val"))
         document.getElementById("hud-folie-val").textContent = `${folieVal} / 15`;
 
@@ -1060,12 +1101,14 @@ function updatePlayerDisplay() {
 
     if (document.getElementById("hud-gold"))
         document.getElementById("hud-gold").textContent = gold;
-
     if (document.getElementById("hud-gold-mobile"))
         document.getElementById("hud-gold-mobile").textContent = gold;
+    if (document.getElementById("hud-gold-mob"))
+        document.getElementById("hud-gold-mob").textContent = gold;
 
     updateGoldUI(gold);
 }
+
 
 /* =====================================================
       LANCEMENT DU JEU APRÈS CREATION

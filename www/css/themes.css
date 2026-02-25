@@ -1,0 +1,139 @@
+/* =========================================================
+   VARIABLES DE BASE
+========================================================= */
+
+:root {
+
+    /* couleurs principales */
+    --color-bg: #0e0e11;
+    --color-panel: rgba(30,30,35,0.85);
+    --color-panel-soft: rgba(255,255,255,0.05);
+
+    --color-text: #e6e6e6;
+    --color-text-muted: #a8a8a8;
+
+    --color-border: rgba(255,255,255,0.08);
+
+    --color-accent: #6e8bff;
+    --color-danger: #ff5a5a;
+    --color-success: #6edc8b;
+
+    --color-choice-bg: rgba(255,255,255,0.06);
+}
+
+
+/* =========================================================
+   APPLICATION GLOBALE
+========================================================= */
+
+body {
+    background: var(--color-bg);
+    color: var(--color-text);
+}
+
+.panel {
+    background: var(--color-panel);
+    border: 1px solid var(--color-border);
+}
+
+button {
+    background: var(--color-panel-soft);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+}
+
+button:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+.choix-item {
+    background: var(--color-choice-bg);
+}
+
+
+/* =========================================================
+   THEME : DARK (défaut)
+========================================================= */
+
+.theme-dark {
+
+    --color-bg: #0e0e11;
+
+    --color-panel: rgba(25,25,30,0.9);
+
+    --color-text: #e6e6e6;
+
+    --color-accent: #6e8bff;
+}
+
+
+/* =========================================================
+   THEME : SEPIA (lecture)
+========================================================= */
+
+.theme-sepia {
+
+    --color-bg: #1e1a16;
+
+    --color-panel: rgba(45,38,30,0.9);
+
+    --color-text: #e7dcc5;
+
+    --color-border: rgba(255,240,200,0.15);
+
+    --color-choice-bg: rgba(255,240,200,0.08);
+}
+
+
+/* =========================================================
+   THEME : HORROR
+========================================================= */
+
+.theme-horror {
+
+    --color-bg: #050507;
+
+    --color-panel: rgba(20,10,10,0.92);
+
+    --color-text: #f2dede;
+
+    --color-accent: #ff3b3b;
+
+    --color-border: rgba(255,0,0,0.15);
+}
+
+
+/* =========================================================
+   THEME : DREAM
+========================================================= */
+
+.theme-dream {
+
+    --color-bg: #10131c;
+
+    --color-panel: rgba(30,35,60,0.85);
+
+    --color-text: #dfe6ff;
+
+    --color-accent: #9aa7ff;
+
+    --color-choice-bg: rgba(150,160,255,0.12);
+}
+
+
+/* =========================================================
+   ACCESSIBILITÉ : CONTRASTE ÉLEVÉ
+========================================================= */
+
+.theme-contrast {
+
+    --color-bg: #000000;
+
+    --color-panel: #000000;
+
+    --color-text: #ffffff;
+
+    --color-border: #ffffff;
+
+    --color-choice-bg: #111111;
+}

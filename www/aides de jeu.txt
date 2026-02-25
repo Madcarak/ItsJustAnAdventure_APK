@@ -11,8 +11,8 @@ Supprimer les dossiers suivants :
 
 
 
-Ensuite sur powershel en version administrator :
-------------------------------------------------
+Ensuite sur powershel en version administrator création APK :
+-------------------------------------------------------------
 cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
 npx cap sync android
 cd android
@@ -28,7 +28,7 @@ cd android
 
 cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
 git add .
-git commit -m "008 - Ajout d'effets visuels lorsque la folie s'empare du personnage (3 niveaux - Fol : 5, Fol : 10 et Fol : 15). Ajout de Jump Scream"
+git commit -m "009 - Gestion des musiques selon les zones - Zone Champignon : 27 écrans créés"
 git push origin main
 
 
@@ -37,12 +37,6 @@ Lorsqu'il y a une modification faite directement sur Github (comme un changement
 ---------------------------------------------------------------------------------------------------
 cd "G:\Mon Drive\Documents Personnels\Creations\JDR textuel 2"
 git pull origin main
-
-
-
-Envoyer du local vers GITHUB :
-------------------------------
-git push origin main
 
 
 

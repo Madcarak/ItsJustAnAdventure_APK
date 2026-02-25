@@ -6,7 +6,19 @@
   <meta name="viewport"
         content="width=device-width, height=device-height,
         initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link rel="stylesheet" href="style.css">
+
+<link rel="stylesheet" href="style.css">
+
+<!-- ================================
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/ui.css">
+<link rel="stylesheet" href="css/inventory.css">
+<link rel="stylesheet" href="css/effects.css">
+<link rel="stylesheet" href="css/responsive.css">
+================================ -->
+
 </head>
 
 <body>
@@ -25,6 +37,21 @@
 </div>
 
 <!-- ================================
+     DEBUG ITEM
+================================ -->
+
+<div id="item-debug-menu" class="debug-panel hidden">
+    <h2>🧪 Item Debug Menu</h2>
+
+    <div id="item-debug-list"></div>
+
+    <hr>
+
+    <button id="debug-clear-inventory">Vider l'inventaire</button>
+</div>
+
+
+<!-- ================================
      MENU INVENTAIRE
 ================================ -->
 <div id="context-menu" class="context-menu hidden">
@@ -40,14 +67,6 @@
         <img id="inspect-image">
     </div>
 </div>
-
-<!-- ================================
-     SONS 
-================================ -->
-<audio id="loot-sound" src="sons/loot.mp3" preload="auto"></audio>
-<audio id="sound-folie-up" src="sons/folie_up.mp3" preload="auto"></audio>
-<audio id="sound-folie-down" src="sons/folie_down.mp3" preload="auto"></audio>
-
 
 <!-- ================================
      FX EXPLOSION OBJETS
@@ -195,7 +214,6 @@
      HEADER HUD GLOBAL (PC)
 ================================= -->
 <header id="game-hud" class="pc-only">
-
     <div class="hud-section">
         <span class="hud-label">Nom :</span>
         <span id="hud-name">—</span>
@@ -218,118 +236,154 @@
         <span class="hud-label">Or :</span>
         <span id="hud-gold">0</span> 🪙
     </div>
-	
-	<div class="visit-history-section">
-        
+
+    <div class="visit-history-section"></div>
+
+    <div class="choices">
+        <button class="fullscreen-menu-button">☰ Personnage</button>
+        <button id="btn-save">Sauvegarder</button>
+        <button id="btn-load">Charger</button>
+        <button id="btn-reset">Reset</button>
+        <button id="visit-history-btn" class="visit-history-btn">Navigation</button>
+        <button id="btn-settings">Thèmes</button>
+        <button id="fullscreen-toggle">Plein écran</button>
     </div>
-	
-	<div class="choices">
-                <button id="btn-save">Sauvegarder</button>
-                <button id="btn-load">Charger</button>
-                <button id="btn-reset">Reset</button>
-                <button id="btn-help">Aide</button>
-				<button id="visit-history-btn" class="visit-history-btn">Navigation</button>
-            </div>
-
-    <!-- Bouton Paramètres (déplacé ici) -->
-    <button class="settings-btn pc-only" id="btn-settings">⚙️</button>
-
 </header>
 
 <!-- ================================
-     TON INTERFACE ACTUELLE
+     MOBILE HEADER
 ================================= -->
-
 <div class="mobile-header">
     <div class="mobile-menu-button">☰ Personnage et Menu</div>
     <img class="mobile-logo" src="Logo/It_s_Just_an_Adventure-removebg-preview.png" alt="logo">
 </div>
 
-<!-- PANNEAU LATERAL MOBILE -->
+<!-- ================================
+     PANNEAU LATERAL MOBILE
+================================= -->
 <div id="menu-overlay"></div>
 <div class="side-menu">
-
     <div class="side-close">✕</div>
 
-<!-- NOM -->
-<div class="mobile-name">
-    <h2 id="char-name-mobile"></h2>
-    <div id="char-name-mobile2"></div>
-</div>
-
-<!-- BARRE FOLIE -->
-<div class="mobile-folie">
-    <span class="folie-label">Folie</span>
-    <div class="folie-bar-container small">
-        <div id="folie-bar-mobile"></div>
-    </div>
-    <span id="folie-value-mobile">0/15</span>
-</div>
-
-<!-- PORTRAIT + STATS -->
-<div class="mobile-character-row">
-
-    <div class="mobile-portrait">
-        <img id="portrait-mobile" alt="Portrait personnage">
+    <!-- NOM -->
+    <div class="mobile-name">
+        <h2 id="char-name-mobile"></h2>
+        <div id="char-name-mobile2"></div>
     </div>
 
-    <div class="mobile-stats">
-        <p><strong>Race :</strong> <span id="char-race-mobile"></span></p>
-        <p><strong>Sexe :</strong> <span id="char-sexe-mobile"></span></p>
-        <p>FOR : <span id="char-for-mobile"></span></p>
-        <p>INT : <span id="char-int-mobile"></span></p>
-        <p>AGI : <span id="char-agi-mobile"></span></p>
-        <p>CON : <span id="char-con-mobile"></span></p>
-		<p hidden>FOLIE : <span id="char-folie-mobile">0</span></p>
-        <p class="mobile-gold">20 🪙 <span id="hud-gold-mobile">0</span></p>
+    <!-- BARRE FOLIE -->
+    <div class="mobile-folie">
+        <span class="folie-label">Folie</span>
+        <div class="folie-bar-container small">
+            <div id="folie-bar-mobile"></div>
+        </div>
+        <span id="folie-value-mobile">0/15</span>
     </div>
 
+    <!-- PORTRAIT + STATS -->
+    <div class="mobile-character-row">
+        <div class="mobile-portrait">
+            <img id="portrait-mobile" alt="Portrait personnage">
+        </div>
+
+        <div class="mobile-stats">
+            <p><strong>Race :</strong> <span id="char-race-mobile"></span></p>
+            <p><strong>Sexe :</strong> <span id="char-sexe-mobile"></span></p>
+            <p>FOR : <span id="char-for-mobile"></span></p>
+            <p>INT : <span id="char-int-mobile"></span></p>
+            <p>AGI : <span id="char-agi-mobile"></span></p>
+            <p>CON : <span id="char-con-mobile"></span></p>
+            <p hidden>FOLIE : <span id="char-folie-mobile">0</span></p>
+            <p class="mobile-gold">20 🪙 <span id="hud-gold-mobile">0</span></p>
+        </div>
+    </div>
+
+    <!-- INVENTAIRE -->
+    <div class="panel inventory mobile-inventory">
+        <h2>Inventaire</h2>
+        <div class="inventory-grid" id="inventory-list"></div>
+    </div>
+
+    <!-- JOURNAL -->
+    <div class="panel log log2">
+        <h2>Journal</h2>
+        <div class="log-list log-list2" id="log-list2"></div>
+    </div>
 </div>
 
-<!-- INVENTAIRE -->
-<div class="panel inventory mobile-inventory">
-    <h2>Inventaire</h2>
-    <div class="inventory-grid" id="inventory-list"></div>
-</div>
+<!-- ================================
+     SIDE MENU MOBILE
+================================= -->
+<div id="menu-overlay-mobile"></div>
+<div class="side-menu-mobile" id="side-menu-mobile">
+    <div class="side-close-mobile">✕</div>
 
-<!-- NAVIGATION -->
-<div class="panel mobile-navigation">
-    <h2>Navigation</h2>
-    <button class="visit-history-btn-mobile">
-        Historique
-    </button>
-</div>
+    <!-- NOM -->
+    <div class="mobile-name">
+        <h2 id="char-name-mob"></h2>
+        <div id="char-name-mob2"></div>
+    </div>
 
-<!-- MENU SYSTEME -->
-<div class="panel mobile-system-buttons">
-    <h2>Menu</h2>
-    <button id="btn-save-mobile">Sauvegarder</button>
-    <button id="btn-load-mobile">Charger</button>
-    <button id="btn-reset-mobile">Reset</button>
-    <button id="btn-help-mobile">Aide</button>
-    <button id="btn-settings-mobile">Paramètres</button>
-</div>
+    <!-- BARRE FOLIE -->
+    <div class="mobile-folie">
+        <span class="folie-label">Folie</span>
+        <div class="folie-bar-container small">
+            <div id="folie-bar-mob"></div>
+        </div>
+        <span id="folie-value-mob">0/15</span>
+    </div>
 
-</div>
+    <!-- PORTRAIT + STATS -->
+    <div class="mobile-character-row">
+        <div class="mobile-portrait">
+            <img id="portrait-mob" alt="Portrait personnage">
+        </div>
 
-<!-- =========================================================
-     FENETRE DESCRIPTION OBJET MOBILE
-========================================================= -->
-<div id="item-popover" class="hidden"></div>
+        <div class="mobile-stats">
+            <p><strong>Race :</strong> <span id="char-race-mob"></span></p>
+            <p><strong>Sexe :</strong> <span id="char-sexe-mob"></span></p>
+            <p>FOR : <span id="char-for-mob"></span></p>
+            <p>INT : <span id="char-int-mob"></span></p>
+            <p>AGI : <span id="char-agi-mob"></span></p>
+            <p>CON : <span id="char-con-mob"></span></p>
+            <p hidden>FOLIE : <span id="char-folie-mob">0</span></p>
+            <p class="mobile-gold">🪙 <span id="hud-gold-mob">0</span></p>
+        </div>
+    </div>
+
+    <!-- INVENTAIRE -->
+    <div class="panel inventory mobile-inventory">
+        <h2>Inventaire</h2>
+        <div class="inventory-grid" id="inventory-list-mob"></div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="panel mobile-navigation">
+        <h2>Navigation</h2>
+        <button class="visit-history-btn-mobile">Historique</button>
+    </div>
+
+    <!-- MENU SYSTEME -->
+    <div class="panel mobile-system-buttons">
+        <h2>Menu</h2>
+        <button id="btn-save-mob">Sauvegarder</button>
+        <button id="btn-load-mob">Charger</button>
+        <button id="btn-reset-mob">Reset</button>
+        <button id="btn-settings-mob">Thèmes</button>
+    </div>
+</div>
 
 <!-- =========================================================
      ZONE DE JEU — LARGEUR MAÎTRISÉE
 ========================================================= -->
-
 <div class="game-width">
-
     <!-- =====================================================
          HEADER DU LIEU (TITRE + DESCRIPTION)
     ====================================================== -->
     <header class="header-lieu">
         <div id="screen-title2">
             <h3 id="screen-title">Forêt de Sangbois</h3>
-            <p id="screen-text">Une brume rougeâtre s’accroche aux racines…</p>
+            <p id="screen-text">Une brume rougeâtre s'accroche aux racines...</p>
         </div>
     </header>
 
@@ -337,27 +391,20 @@
          LAYOUT PRINCIPAL
     ====================================================== -->
     <div class="layout">
-
         <!-- ================= COLONNE GAUCHE ================= -->
         <section class="left-panel">
-
             <!-- Image du lieu -->
             <div class="screen-image-wrapper">
-    <img id="screen-image">
-    <img id="screen-image-overlay">
-</div>
+                <img id="screen-image">
+                <img id="screen-image-overlay">
+            </div>
 
             <!-- Choix dynamiques -->
             <div class="panel-choix" id="choices-container"></div>
-
-            <!-- Boutons système -->
-            
-
         </section>
 
         <!-- ============ PANNEAU PERSONNAGE (PC) ============= -->
         <section class="middle-panel pc-only">
-
             <!-- Nom -->
             <div class="panel nom">
                 <p style="font-size: 1.3rem; font-weight: 700;">
@@ -374,20 +421,18 @@
             <!-- Statistiques -->
             <div class="panel character">
                 <h2>Personnage</h2>
-                <p>Race 		: <span id="char-race-pc"></span></p>
-                <p>Sexe 		: <span id="char-sexe-pc"></span></p>
-                <p>Force 		: <span id="char-for-pc"></span></p>
+                <p>Race : <span id="char-race-pc"></span></p>
+                <p>Sexe : <span id="char-sexe-pc"></span></p>
+                <p>Force : <span id="char-for-pc"></span></p>
                 <p>Intelligence : <span id="char-int-pc"></span></p>
-                <p>Agilité 		: <span id="char-agi-pc"></span></p>
+                <p>Agilité : <span id="char-agi-pc"></span></p>
                 <p>Constitution : <span id="char-con-pc"></span></p>
-                <p>Folie 		: <span id="char-folie-pc">0</span></p>
+                <p>Folie : <span id="char-folie-pc">0</span></p>
             </div>
-
         </section>
 
         <!-- ================= COLONNE DROITE ================= -->
         <section class="right-panel">
-
             <!-- Inventaire (PC) -->
             <div class="panel inventory inventory-main pc-only">
                 <h2>Inventaire</h2>
@@ -399,32 +444,15 @@
                 <h2>Journal</h2>
                 <div class="log-list" id="log-list"></div>
             </div>
-
         </section>
-
-    </div>
-
-</div>
-
-<!-- AIDE -->
-<div id="help-box" class="help-box overlay hidden">
-    <div class="help-window">
-        <h3>Contrôles Clavier</h3>
-        <p>1 à 4 : Sélection des choix</p>
-        <p>5 : Mute / Unmute</p>
-        <p>S : Sauvegarder</p>
-        <p>C : Charger</p>
-        <p>R : Reset</p>
-        <p>O : Validation Menu - Oui</p>
-        <p>N : Validation Menu - Non</p>
-        <p>Espace : Accélération de l'affichage du texte</p>
-        <p>Clic droit sur un objet de l'inventaire - Menu de l'objet</p>
-
-        <div class="help-buttons">
-            <button id="help-close">Fermer</button>
-        </div>
     </div>
 </div>
+
+<!-- =========================================================
+     FENETRE DESCRIPTION OBJET MOBILE
+========================================================= -->
+<div id="item-popover" class="hidden"></div>
+
 
 <!-- POPUP NOM -->
 <div id="name-alert" class="popup hidden">
@@ -454,6 +482,7 @@
             <option value="theme-antique">Antique & Clair</option>
         </select>
 
+		
         <button id="settings-close">Fermer</button>
     </div>
 </div>

@@ -154,33 +154,33 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
 }
 
 /* =========================================================
-   MENU LATÉRAL MOBILE
+   MENU LATÉRAL FULLSCREEN
 ========================================================= */
 
 .side-menu {
     position: fixed;
     top: 0;
     left: -420px;
-    width: 380px;
+    width: 420px;
     height: 100%;
-    padding: 20px;
-    background: rgba(0,0,0,0.95);
-    box-shadow: 4px 0 20px rgba(0,0,0,0.6);
-    overflow-y: auto;
+    background-color: #f8f8f8;
     transition: left 0.3s ease;
-    z-index: 999;
+    z-index: 1001;
 }
 
+/* Style pour l'overlay */
 #menu-overlay {
+    display: none;
     position: fixed;
     inset: 0;
-    z-index: 998;
-    display: none;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 999;
 }
 
 .side-menu.open { left: 0; }
 
 .side-close {
+	padding-right: 10px;
     font-size: 22px;
     text-align: right;
     cursor: pointer;
@@ -200,9 +200,13 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
 
 .mobile-folie {
     display: flex;
-    align-items: center;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: stretch;
+    justify-content: space-evenly;
+    align-items: anchor-center;
 }
 
 .folie-label {
@@ -223,7 +227,8 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
 }
 
 .mobile-portrait {
-    width: 150px;
+    margin-left: 20px;
+	width: 150px;
     height: 150px;
     border: 2px solid white;
     border-radius: 8px;
@@ -239,6 +244,7 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
 .mobile-stats {
     flex: 1;
     font-size: 0.9rem;
+	margin-left: 20px;
 }
 
 .mobile-menu {
@@ -265,13 +271,17 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
 }
 
 .mobile-inventory {
-    margin-bottom: 10px;
+    margin-left: 20px;
+	margin-bottom: 10px;
 	text-align: center;
+	width: 360px;
 }
 
 .mobile-navigation {
-    margin-bottom: 10px;
+    margin-left: 20px;
+	margin-bottom: 10px;
 	text-align: center;
+	width: 360px;
 }
 
 
@@ -400,8 +410,6 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
 	
 }
 
-
-
 /* =========================================================
    JOURNAL — VERSION FINALE RESPONSIVE
 ========================================================= */
@@ -414,53 +422,115 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
     max-height: calc(90vh - 120px);/* 👉 Sécurité responsive */
     padding: 10px;
     background: rgba(0,0,0,0.25);
-    border: 2px solid white;
     border-radius: 8px;
     box-sizing: border-box;
 }
 
+/* PANEL DU DEUXIÈME JOURNAL (fixe, limité en hauteur) */
+.right-panel .panel.log.log2 {
+    display: flex;
+    flex-direction: column;
+    height: 400px;                 /* 👉 Hauteur fixe, modifiable */
+    max-height: calc(90vh - 120px);/* 👉 Sécurité responsive */
+    padding: 15px;                  /* 👉 Espacement augmenté */
+    background: rgba(0, 0, 0, 0.05); /* 👉 Fond noir avec opacité plus légère */
+    border: none;                   /* 👉 Pas de bordure */
+    border-radius: 5px;             /* 👉 Coins légèrement arrondis */
+    box-sizing: border-box;
+    color: white;                   /* 👉 Texte en blanc */
+    font-size: 16px;                /* 👉 Texte plus gros */
+    line-height: 1.4;
+}
+
 /* CONTENU QUI SCROLLE */
 .log-list {
-    flex: 1;                       /* prend tout l’espace restant */
+    flex: 1;                       /* prend tout l'espace restant */
     overflow-y: auto;              /* 👉 scroll vertical interne */
     padding-right: 6px;            /* petit espace pour la scrollbar */
 }
 
+/* CONTENU QUI SCROLLE POUR LE DEUXIÈME JOURNAL */
+.log-list2 {
+    flex: 1;                       /* prend tout l'espace restant */
+    overflow-y: auto;              /* 👉 scroll vertical interne */
+    padding-right: 6px;            /* petit espace pour la scrollbar */
+    color: white;                   /* 👉 Texte en blanc */
+    font-size: 16px;               /* 👉 Texte plus gros */
+}
 
 /* Entrées du journal */
 .panel.log p:not(:first-child) {
     border-top: 0.5px solid rgba(255,255,255,0.25);
     padding-top: 10px;
     margin-top: 10px;
+    color: white;                  /* 👉 Texte en blanc */
 }
 
-/* Style des lignes */
-.log-entry {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 6px 8px;
-    font-size: 0.95rem;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+/* Style des lignes pour le deuxième journal */
+.panel.log.log2 .log-entry {
+    color: white;                  /* 👉 Texte en blanc */
+    font-size: 16px;               /* 👉 Texte plus gros */
 }
 
-.log-arrow { 
-    color: #d35400;
-    font-weight: bold;
-}
-
-.log-time { 
-    margin-left: auto;
-    font-size: 0.85rem;
-    color: #bbb;
-}
-
-.log-tag {
-    color: #d35400;
+/* Style des tags pour le deuxième journal */
+.panel.log.log2 .log-tag {
+    color: #ffcc00;                /* 👉 Couleur dorée pour les tags */
     font-style: italic;
     font-weight: bold;
 }
 
+/* Positionnement du deuxième journal en mode plein écran */
+body.fullscreen .log2 {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background: rgba(0, 0, 0, 0.05); /* 👉 Fond noir avec opacité plus légère */
+    color: #fff;
+    padding: 15px;
+    z-index: 10;
+    overflow-y: auto;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    font-size: 16px;              /* 👉 Texte plus gros */
+    line-height: 1.4;
+}
+
+/* Styles pour le journal 2 en mode plein écran */
+body.fullscreen .panel.log2 {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.4); /* 👉 Fond noir avec opacité plus légère */
+    padding: 15px;
+    border-radius: 5px;
+    border: none;
+    z-index: 100;
+    max-width: 360px;
+	max-height: 200px;
+    width: auto;
+    text-align: left;
+    color: white;
+    font-size: 20px;              /* 👉 Texte plus gros */
+    line-height: 1.4;
+}
+
+body.fullscreen .panel.log2 h2 {
+    margin-top: 0;
+    color: white;
+    text-align: left;
+    font-size: 20px;
+}
+
+body.fullscreen .panel.log2 .log-list2 {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px;
+    color: white;                 /* 👉 Texte en blanc */
+    font-size: 18px;              /* 👉 Texte plus gros */
+}
 
 
 /* =========================================================
@@ -603,11 +673,7 @@ img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
     width: 100%;
     display: block;
     position: relative;
-    transition: opacity 0.4s ease;
 }
-
-#screen-image.fade-out { opacity: 0; }
-#screen-image.fade-in  { opacity: 1; }
 
 /* =========================================================
    CREATION DE PERSONNAGE
@@ -820,7 +886,7 @@ input[type="text"], select {
     color: white;
     cursor: pointer;
     border-radius: 6px;
-    z-index: 2000;
+    z-index: 1000000;
 }
 
 
@@ -935,12 +1001,11 @@ body {
     color: var(--text-color);
 }
 
-.panel,
+
 .panel-choix,
 .overlay-window,
 input,
 select,
-button,
 #summary-image {
     border: 2px solid var(--border-color) !important;
 }
@@ -974,6 +1039,7 @@ body {
 .help-window,
 .overlay-window,
 .screen-image-wrapper,
+.side-menu-mobile,
 .screen-image,
 .visit-history-menu,
 .visit-history-card,
@@ -1015,6 +1081,7 @@ body {
 .screen-image-wrapper img,
 .screen-image img,
 .folie-bar-container.small,
+.side-menu-mobile,
 .confirm-window,
 .help-window,
 .screen-image,
@@ -1033,6 +1100,7 @@ button,
 .overlay-window button,
 .confirm-buttons button,
 .help-buttons button,
+.side-menu-mobile button,
 .mobile-system-buttons button,
 .mobile-navigation button,
 .popup-box button {
@@ -1074,7 +1142,7 @@ button,
     background: var(--btn-bg);
     color: var(--btn-text);
 
-    padding: 10px 16px;
+    padding: 5px 16px;
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
@@ -1188,7 +1256,7 @@ textarea {
 }
 
 .folie-bar-container.small {
-    width: 100px;
+    width: 220px;
 	border-radius: 5px;
 }
 
@@ -1228,13 +1296,13 @@ textarea {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .folie-bar-container {
         height: 10px;
     }
 
     .folie-bar-container.small {
-        width: 100%;
+        width: 60%;
     }
 }
 
@@ -1343,21 +1411,19 @@ textarea {
     background: #444;
 }
 
-/* Désactive totalement le side-menu au-dessus de 900px */
+* Desktop : par défaut on cache le side-menu hors fullscreen sans forcer via -9999px /
 @media (min-width: 901px) {
-    .side-menu {
-        left: -9999px !important;   /* l'empêche d’apparaître */
-        pointer-events: none;       /* impossible de cliquer dedans */
-        visibility: hidden;         /* invisible */
-    }
-
-    .side-menu.open {
-        left: -9999px !important;   /* ignore l'ouverture */
-    }
-
-    .mobile-menu-button {
-        display: none !important;   /* cache le bouton aussi */
-    }
+  / Par défaut sur grand écran, on garde le menu masqué hors fullscreen.
+     On utilise left: -420px (même valeur que .side-menu globale) et pointer-events: none.
+     On évite les !important et le -9999 qui empêche toute ouverture. /
+  body:not(.fullscreen) .side-menu {
+    left: -420px;               / masqué hors écran mais réversible /
+    pointer-events: none;
+    visibility: hidden;
+    z-index: 999;               / reste sous l'overlay par défaut */
+  }
+  /* Le bouton mobile peut rester caché sur desktop si c'est voulu */
+  .mobile-menu-button { display: none; }
 }
 
 html, body {
@@ -1504,7 +1570,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 /* ✅ ÉTAT OUVERT */
 .visit-history-menu.show {
-    display: block;
+    display: contents;
     opacity: 1;
     transform: translateY(0);
 }
@@ -1592,20 +1658,12 @@ body::-webkit-scrollbar-thumb:hover {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-
     margin-top: 10px;
     margin-bottom: 10px;
-
     padding-right: 0; /* ❌ inutile ici */
     padding: 0;
-
     border-radius: 10px;
-
     background: rgba(0, 0, 0, 0.45);
-
-    box-shadow:
-        inset 2px 0 4px rgba(0, 0, 0, 0.6);
-
     display: flex;
     justify-content: flex-end;
 }
@@ -1719,20 +1777,17 @@ body::-webkit-scrollbar-thumb:hover {
 
 
 .mobile-system-buttons {
-    margin-top: 20px;
+    margin-left: 20px;
+	margin-top: 20px;
     display: grid;
     grid-template-columns: 1fr 1fr; /* ✅ 2 colonnes */
     gap: 10px;
     text-align: center;
+	width: 360px;
 }
 
 /* Le titre prend toute la largeur */
 .mobile-system-buttons h2 {
-    grid-column: 1 / -1;
-}
-
-/* Le bouton Paramètres prend toute la largeur */
-#btn-settings-mobile {
     grid-column: 1 / -1;
 }
 
@@ -1935,10 +1990,12 @@ body {
    MORPHING FOLIE
 ================================ */
 
+/* Image du lieu */
 .screen-image-wrapper {
     position: relative;
     width: 100%;
-    overflow: hidden; /* empêche tout débordement */
+    height: 100%;
+    z-index: 1; /* Assurez-vous que l'image est en dessous du menu et du bouton */
 }
 
 
@@ -1947,7 +2004,7 @@ body {
     height: auto;
     display: block;
     border-radius: 8px;
-    animation: madnessColor2 10s ease-in-out infinite;
+    animation: madnessColor2 6s ease-in-out infinite;
 }
 
 #screen-image-overlay {
@@ -1957,10 +2014,10 @@ body {
     width: 100%;
     height: 100%;
 	opacity: 0;
-    transition: opacity 2.5s ease-in-out;
+    transition: opacity 1s ease-in-out;
     pointer-events: none; /* important */
     border-radius: 8px;   /* suit la base */
-	animation: madnessColor 10s ease-in-out infinite;
+	animation: madnessColor 1s ease-in-out infinite;
 }
 
 @keyframes madnessShake {
@@ -2056,4 +2113,409 @@ body {
 
 .glitch-effect {
     animation: glitchOpacity 0.6s linear forwards;
+}
+
+/* ================================
+   DEBUG ITEM
+================================ */
+
+.debug-panel {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    width: 320px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: #111;
+    border: 1px solid #444;
+    padding: 15px;
+    z-index: 9999;
+    color: white;
+}
+
+.debug-panel h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.debug-item-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 6px;
+    padding: 6px;
+    background: #222;
+    border: 1px solid #333;
+    color: white;
+    cursor: pointer;
+    text-align: left;
+}
+
+.debug-item-btn:hover {
+    background: #333;
+}
+
+.hidden {
+    display: none;
+}
+
+/* ================================
+   FULLSCREEN - CLEANED & CONSOLIDATED
+================================= */
+/* --- Overlay pour menu --- /
+#menu-overlay {
+  display: none;
+  position: fixed;
+  inset: 0; / top:0; right:0; bottom:0; left:0; */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+}
+#menu-overlay.visible {
+  display: block;
+}
+/* --- Base fullscreen --- */
+body.fullscreen {
+  overflow: hidden;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background: #000;
+}
+/* Game width / wrapper en fullscreen */
+body.fullscreen .game-width {
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+}
+body.fullscreen .layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+/* Left panel / image sizing */
+body.fullscreen .left-panel {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+/* Wrapper de l'image principale (full-bleed) */
+body.fullscreen .screen-image-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+body.fullscreen #screen-image,
+body.fullscreen .screen-image-wrapper img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+body.fullscreen .header-lieu {
+  position: absolute;
+  top: 0px;      
+  left: 20px;
+  background: rgba(0, 0, 0, 0.24);
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: none;
+  z-index: 10;
+  max-width: 88%;
+  color: #fff;
+  font-size: larger;
+}
+
+body.fullscreen .panel-choix {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  transform: none;
+  background: rgba(0, 0, 0, 0.24);
+  padding: 12px 15px;
+  border-radius: 6px;
+  border: none !important;
+  z-index: 10;
+  max-width: 97%;
+  width: auto;
+  text-align: left;
+  box-shadow: none;
+  outline: none;
+  font-size: larger;
+}
+/* Style des items de choix */
+body.fullscreen .choix-item {
+  background: rgba(0, 0, 0, 0.32);
+  color: #fff;
+  margin-bottom: 0px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+body.fullscreen .choix-item:hover {
+  background: rgba(0, 0, 0, 0.52);
+}
+/* --- Boutons d'actions / choices group (position alternative top-right si besoin) --- */
+body.fullscreen .choices {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.18);
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+    box-shadow: none;
+    outline: none;
+    align-content: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: column;
+}
+
+body.fullscreen .choices button {
+  background: rgba(0, 0, 0, 0.44);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin: 0;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+body.fullscreen .choices button:hover {
+  transform: translateY(-2px);
+}
+/* --- Bouton param / settings (optionnel) --- */
+body.fullscreen .settings-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  font-size: 20px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: none;
+  z-index: 10;
+  cursor: pointer;
+}
+/* --- Fullscreen menu button (desktop) --- /
+/ par défaut caché : on l'affichera en fullscreen sur grand écran /
+.fullscreen-menu-button {
+  display: none; / caché par défaut ; le JS / media queries le rendra visible */
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10001;
+  font-size: 1.4rem;
+  padding: 10px 12px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+body.fullscreen .fullscreen-menu-button:hover {
+  background: rgba(0, 0, 0, 0.88);
+  transform: scale(1.03);
+}
+/* visible uniquement en fullscreen et sur grands écrans (>= 901px) /
+@media (min-width: 901px) {
+  body.fullscreen .fullscreen-menu-button {
+    display: block;
+  }
+  / En mode normal hors fullscreen, cacher le bouton explicitement */
+  body:not(.fullscreen) .fullscreen-menu-button {
+    display: none !important;
+  }
+}
+/* --- Side menu (shared logic) --- /
+/ Par défaut le menu est hors écran à gauche ; s'ouvre via .open /
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -420px;        / masqué hors écran */
+  width: 380px;
+  max-width: 86vw;
+  height: 100%;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.95);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.6);
+  overflow-y: auto;
+  transition: left 0.30s ease, transform 0.25s ease;
+  z-index: 10000;
+}
+/* Ouverture standard (mobile ou fullscreen) */
+.side-menu.open {
+  left: 0;
+}
+/* Variation de style quand on est en fullscreen (fond plus sombre, z-index plus élevé) /
+body.fullscreen .side-menu {
+  position: absolute; / en fullscreen on veut qu'il soit au dessus de tout */
+  background: rgba(0, 0, 0, 0.96);
+  z-index: 10000;
+}
+/* Panels internes */
+.side-menu .panel {
+  margin-bottom: 14px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #fff;
+}
+/* Inventaire en grille (fullscreen friendly) */
+.side-menu .inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+/* Journal / log scrollable */
+.side-menu .log-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+/* --- Journal / log visible en fullscreen (position alternative) --- */
+body.fullscreen .log {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  height: 400px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 10px;
+  z-index: 10;
+  overflow-y: auto;
+  border-radius: 8px;
+}
+/* --- Masquer les panneaux non utiles en fullscreen --- */
+body.fullscreen .middle-panel,
+body.fullscreen .panel-portrait,
+body.fullscreen .right-panel {
+  display: none;
+}
+/* --- Animations / effets spécifiques --- */
+body.fullscreen .screen-image-wrapper.madness-shake {
+  animation: madnessShake 0.12s infinite;
+}
+body.fullscreen .screen-image-wrapper.madness-breath {
+  animation: madnessContract 3s infinite ease-in-out;
+}
+body.fullscreen .screen-image-wrapper.madness-distort #screen-image-overlay {
+  animation: madnessColor 10s ease-in-out forwards;
+  opacity: 1;
+}
+/* Keyframes */
+@keyframes madnessShake {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-5px, 0); }
+  50%  { transform: translate(0, 0); }
+  75%  { transform: translate(5px, 0); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes madnessContract {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+@keyframes madnessColor {
+  0%   { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+@media (max-width: 900px) {
+  .side-menu {
+    left: -420px;
+    z-index: 999;
+  }
+  .side-menu.open {
+    left: 0;
+  }
+  /* Mobile menu button visible (géré aussi en JS) */
+  .mobile-menu-button {
+    display: block;
+  }
+}
+/* --- Small polish --- */
+body.fullscreen .header-lieu,
+body.fullscreen .panel-choix,
+body.fullscreen .choices,
+body.fullscreen .log {
+  box-shadow: none;
+}
+
+/* ============================
+   MOBILE MENU
+============================ */
+
+.side-menu-mobile {
+    position: fixed;
+    top: 0;
+    left: -450px;
+    width: 420px;
+    max-width: 90%;
+    height: 100%;
+	border-radius: 10px;
+    background: #000;
+    transition: left 0.3s ease;
+    z-index: 2000;
+    overflow-y: auto;
+}
+
+.side-menu-mobile.open {
+    left: 0;
+}
+
+#menu-overlay-mobile {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 1900;
+}
+
+#menu-overlay-mobile.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* ============================
+   RESPONSIVE
+============================ */
+
+@media (max-width: 900px) {
+
+    .fullscreen-menu-button {
+        display: none;
+    }
+
+    .mobile-menu-button-mob {
+        display: inline-block;
+    }
+
+}
+
+@media (min-width: 901px) {
+
+    .mobile-menu-button-mob {
+        display: none;
+    }
+
 }

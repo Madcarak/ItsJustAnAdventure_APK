@@ -1,19 +1,33 @@
 /* =====================================================
-      THEME DU JEU
+   THEME DU JEU
 ===================================================== */
+
 // Ouvrir / fermer les options
-document.getElementById("btn-settings").onclick = () => {
-    document.getElementById("settings-overlay").classList.add("visible");
-};
+function setupThemeUI() {
+    // Vérifier que tous les éléments existent
+    const btnSettings = document.getElementById("btn-settings");
+    const btnSettingsMob = document.getElementById("btn-settings-mob");
+    const settingsClose = document.getElementById("settings-close");
+    const settingsOverlay = document.getElementById("settings-overlay");
 
-// Ouvrir les paramètres depuis MOBILE
-document.getElementById("btn-settings-mobile").onclick = () => {
-    document.getElementById("settings-overlay").classList.add("visible");
-};
+    if (btnSettings) {
+        btnSettings.onclick = () => {
+            if (settingsOverlay) settingsOverlay.classList.add("visible");
+        };
+    }
 
-document.getElementById("settings-close").onclick = () => {
-    document.getElementById("settings-overlay").classList.remove("visible");
-};
+    if (btnSettingsMob) {
+        btnSettingsMob.onclick = () => {
+            if (settingsOverlay) settingsOverlay.classList.add("visible");
+        };
+    }
+
+    if (settingsClose) {
+        settingsClose.onclick = () => {
+            if (settingsOverlay) settingsOverlay.classList.remove("visible");
+        };
+    }
+}
 
 // Liste complète des thèmes installés
 const allThemes = [
@@ -29,10 +43,8 @@ const allThemes = [
     "theme-antique"
 ];
 
-// Changement de thème
-document.getElementById("theme-selector").onchange = function () {
-    const theme = this.value;
-
+// Fonction pour appliquer un thème
+function applyTheme(theme) {
     // Supprime tous les thèmes existants
     document.body.classList.remove(...allThemes);
 
@@ -41,10 +53,22 @@ document.getElementById("theme-selector").onchange = function () {
 
     // Sauvegarde dans le localStorage
     localStorage.setItem("game-theme", theme);
-};
+}
+
+// Changement de thème via le sélecteur
+function setupThemeSelector() {
+    const themeSelector = document.getElementById("theme-selector");
+
+    if (themeSelector) {
+        themeSelector.onchange = function() {
+            const theme = this.value;
+            applyTheme(theme);
+        };
+    }
+}
 
 // Charger le thème sauvegardé OU mettre Sépia par défaut
-window.addEventListener("load", () => {
+function loadSavedTheme() {
     const savedTheme = localStorage.getItem("game-theme") || "theme-sepia";
 
     // Supprime les anciens thèmes juste au cas où
@@ -53,29 +77,16 @@ window.addEventListener("load", () => {
     // Active le bon thème
     document.body.classList.add(savedTheme);
 
-    // Met la valeur dans le select
-    document.getElementById("theme-selector").value = savedTheme;
-});
-
-    // --------------------------------------------------
-    // THÈMES
-    // --------------------------------------------------
+    // Met la valeur dans le select si le sélecteur existe
     const themeSelector = document.getElementById("theme-selector");
-    const themes = [
-        "theme-sepia", "theme-dark", "theme-glacial", "theme-maudit",
-        "theme-foret", "theme-nuit", "theme-celeste", "theme-infernal",
-        "theme-neon", "theme-antique"
-    ];
-
-    function applyTheme(theme) {
-        document.body.classList.remove(...themes);
-        document.body.classList.add(theme);
-        localStorage.setItem("game-theme", theme);
+    if (themeSelector) {
+        themeSelector.value = savedTheme;
     }
+}
 
-    const savedTheme = localStorage.getItem("game-theme") || "theme-sepia";
-    applyTheme(savedTheme);
-
-    themeSelector?.addEventListener("change", () => {
-        applyTheme(themeSelector.value);
-    });
+// Initialisation du thème
+document.addEventListener("DOMContentLoaded", function() {
+    setupThemeUI();
+    setupThemeSelector();
+    loadSavedTheme();
+});

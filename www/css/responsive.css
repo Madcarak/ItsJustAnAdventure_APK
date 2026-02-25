@@ -1,0 +1,202 @@
+/* =========================================================
+   VARIABLES RESPONSIVE
+========================================================= */
+
+:root {
+    --mobile-breakpoint: 900px;
+    --small-mobile: 600px;
+}
+
+
+/* =========================================================
+   TABLETTE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+    .layout {
+        gap: 12px;
+    }
+
+    .left-panel {
+        max-width: 100%;
+    }
+
+    .panel {
+        padding: 6px;
+    }
+
+}
+
+
+/* =========================================================
+   MODE MOBILE GLOBAL
+========================================================= */
+
+@media (max-width: 900px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .layout {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .left-panel,
+    .middle-panel,
+    .right-panel {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .panel {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   IMAGE PRINCIPALE MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    #screen-image {
+        border-radius: 6px;
+    }
+
+    .header-lieu {
+        font-size: 14px;
+    }
+
+}
+
+
+/* =========================================================
+   JOURNAL MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .right-panel .panel.log {
+        height: auto;
+        max-height: none;
+    }
+
+    .log-list {
+        max-height: 220px;
+    }
+
+}
+
+
+/* =========================================================
+   INVENTAIRE MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .inventory-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+    }
+
+}
+
+
+/* =========================================================
+   PETITS MOBILES
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .inventory-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .overlay-window {
+        width: 92%;
+    }
+
+    .item-inspect-window {
+        width: 92%;
+    }
+
+}
+
+
+/* =========================================================
+   BOUTONS MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    button {
+        font-size: 16px;
+    }
+
+    .choices {
+        flex-direction: column;
+        margin-left: 0;
+    }
+
+}
+
+
+/* =========================================================
+   MENU MOBILE
+========================================================= */
+
+.mobile-menu {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,0.92);
+
+    display: none;
+    flex-direction: column;
+
+    z-index: 8000;
+
+    padding: 20px;
+}
+
+.mobile-menu.open {
+    display: flex;
+}
+
+
+/* =========================================================
+   SETTINGS MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .settings-btn.pc-only {
+        display: none;
+    }
+
+}
+
+
+/* =========================================================
+   PLEIN ÉCRAN
+========================================================= */
+
+.fullscreen-game {
+
+    width: 100vw;
+    height: 100vh;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.fullscreen-game .layout {
+    flex: 1;
+}

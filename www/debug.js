@@ -254,3 +254,54 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+/* =====================================================
+   🧪 DEBUG ITEM MENU
+===================================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const debugMenu = document.getElementById("item-debug-menu");
+    const debugList = document.getElementById("item-debug-list");
+    const clearBtn  = document.getElementById("debug-clear-inventory");
+
+    // ✅ Génère automatiquement la liste des objets
+    function buildItemDebugList() {
+
+        debugList.innerHTML = "";
+
+        Object.keys(itemDescriptions).forEach(itemName => {
+
+            const btn = document.createElement("button");
+            btn.className = "debug-item-btn";
+            btn.textContent = itemName;
+
+            btn.onclick = () => {
+                addItemToInventory(itemName);
+            };
+
+            debugList.appendChild(btn);
+        });
+    }
+
+    buildItemDebugList();
+
+    // ✅ Vider inventaire
+    clearBtn.onclick = () => {
+        player.inventory = [];
+        updateInventoryDisplay();
+        addLogEntry(`<p><span class="log-tag">[DEBUG]</span> Inventaire vidé.</p>`);
+    };
+
+    // ✅ Raccourci clavier : Ctrl + I
+    document.addEventListener("keydown", e => {
+
+        if (e.ctrlKey && e.key.toLowerCase() === "i") {
+
+            e.preventDefault();
+            debugMenu.classList.toggle("hidden");
+        }
+
+    });
+
+});

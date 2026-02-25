@@ -6,17 +6,22 @@ let musicStarted = false;
 let musicVolume = 0.4;
 let sfxVolume = 0.7;
 let globalMute = false;
+
 let currentScreenId = null;;
 let currentZone = null;
+let currentMusic = null;        
+let currentMusicPath = null;
+    
+let lastSfxTime = 0;
+const SFX_COOLDOWN = 80; // 
 
-
-let currentMusic = null;        // musique en cours
-let currentMusicPath = null;    // chemin actuel
 
 // === SFX ===
-const letterSound = new Audio("data:audio/wav;base64,UklGRjQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YWwAAACqAADCAADmAAD8AAD9AAD4AADtAADfAADM AAB3AABYAABAAABAAABWAAB5AADPAADfAADtAAD4AAD9AAD8AADmAADCAACqAAA=");
 document.addEventListener("click", startMusicOnce, { once: true });
 document.addEventListener("keydown", startMusicOnce, { once: true });
+document.addEventListener("click", startAudioSystem, { once: true });
+document.addEventListener("keydown", startAudioSystem, { once: true });
+
 
 /* -----------------------------------------------------
        MUSIQUES / AMBIANCES
@@ -30,6 +35,31 @@ const zoneMusic = {
 	lac: "musique/lac.mp3",
     champignon: "musique/champignon.mp3"
 };
+
+/* -----------------------------------------------------
+       REGISTRE GLOBAL DES SONS
+------------------------------------------------------ */
+
+const SFX = {   
+    loot: "sons/loot.mp3",
+    folieUp: "sons/folie_up.mp3",
+    folieDown: "sons/folie_down.mp3",
+    dice: "sons/de.mp3",
+    rire: "sons/rire.mp3",
+    rire2: "sons/rire2.mp3",
+    madness: "sons/madness.mp3",
+	torch: "sons/torch.mp3",
+	trash: "sons/trash.mp3",
+	coffre: "sons/coffre.mp3",
+	magic_spell_4: "sons/magic_spell_4.mp3",
+	mort_vivant: "sons/mort_vivant.mp3",
+	broken_mirror: "sons/broken_mirror.mp3",
+	cri: "sons/cri.mp3"
+
+};
+
+const sfxCache = {};
+
 
 /* -----------------------------------------------------
        FONCTION MUSIQUE
@@ -90,6 +120,62 @@ function handleZoneMusic(screen) {
     currentZone = newZone;
 }
 
+/* -----------------------------------------------------
+       CHARGEMENT SFX
+------------------------------------------------------ */
+
+function preloadSFX() {
+    for (let key in SFX) {
+        const audio = new Audio(SFX[key]);
+        audio.preload = "auto";
+        sfxCache[key] = audio;
+    }
+}
+
+document.addEventListener("click", () => {
+    preloadSFX();
+}, { once: true });
+
+
+
+/* -----------------------------------------------------
+       LECTURE SFX
+------------------------------------------------------ */
+
+function playSFX(name, ignoreCooldown = false) {
+
+    if (globalMute) return null;
+
+    const now = Date.now();
+    if (!ignoreCooldown && (now - lastSfxTime < SFX_COOLDOWN)) return null;
+    lastSfxTime = now;
+
+    const original = sfxCache[name];
+    if (!original) {
+        console.warn("SFX introuvable :", name);
+        return null;
+    }
+
+    try {
+
+        const soundClone = original.cloneNode(true);
+        soundClone.volume = sfxVolume;
+        soundClone.muted = false;
+
+        const playPromise = soundClone.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(err => {
+                console.warn("Erreur play SFX :", name, err);
+            });
+        }
+
+        return soundClone; // ✅ IMPORTANT
+
+    } catch (e) {
+        console.warn("Erreur SFX :", name, e);
+        return null;
+    }
+}
 
 /* -----------------------------------------------------
        DEMARRAGE MUSIQUE
@@ -106,43 +192,9 @@ function startMusicOnce() {
     }
 }
 
+function startAudioSystem() {
+    if (musicStarted) return;
 
-
-/* -----------------------------------------------------
-       MACHINE A ECRIRE
------------------------------------------------------- */
-function typeWriter(element, text, speed = 30) {
-    if (textIsAnimating) {
-        cancelAnimationFrame(currentTextAnimation);
-        element.innerHTML = text;
-        textIsAnimating = false;
-        return;
-    }
-
-    textIsAnimating = true;
-    element.innerHTML = "";
-    let i = 0;
-    let lastTime = 0;
-
-    function write(timestamp) {
-        if (timestamp - lastTime >= speed) {
-            if (i < text.length) {
-                element.innerHTML += text[i];
-
-                if (i % 2 === 0 && text[i].trim() !== "") {
-                    letterSound.currentTime = 0;
-                    letterSound.play().catch(() => {});
-                }
-
-                i++;
-                lastTime = timestamp;
-            } else {
-                textIsAnimating = false;
-                return;
-            }
-        }
-        currentTextAnimation = requestAnimationFrame(write);
-    }
-
-    requestAnimationFrame(write);
+    musicStarted = true;
+    preloadSFX();
 }

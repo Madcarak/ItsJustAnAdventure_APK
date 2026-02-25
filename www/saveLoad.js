@@ -84,38 +84,71 @@ function askAlert(message, onClose = null) {
    JOURNAL
 ===================================================== */
 
+// Fonction pour sauvegarder le contenu des deux journaux
 function saveJournal() {
     const logList = document.getElementById("log-list");
+    const logList2 = document.getElementById("log-list2");
+
     if (logList) {
         localStorage.setItem("journalContent", logList.innerHTML);
     }
+
+    if (logList2) {
+        localStorage.setItem("journalContent2", logList2.innerHTML);
+    }
 }
 
+// Fonction pour restaurer le contenu des deux journaux
 function restoreJournal() {
     const journal = localStorage.getItem("journalContent");
+    const journal2 = localStorage.getItem("journalContent2");
     const logList = document.getElementById("log-list");
+    const logList2 = document.getElementById("log-list2");
 
     if (logList) {
         logList.innerHTML = journal || "";
     }
+
+    if (logList2) {
+        logList2.innerHTML = journal2 || "";
+    }
 }
 
-function addLogEntry(html) {
-    const logList = document.getElementById("log-list");
-    if (!logList) return;
+// Fonction pour ajouter une entrée à un journal spécifique
+function addLogEntry(html, logId = 'log-list') {
+    const logList = document.getElementById(logId);
+    if (!logList) {
+        console.error(`Journal avec l'ID ${logId} introuvable`);
+        return;
+    }
 
     logList.insertAdjacentHTML("afterbegin", html);
     saveJournal();
 }
+
+// Fonction pour initialiser les journaux
+function initJournals() {
+    const logList = document.getElementById("log-list");
+    const logList2 = document.getElementById("log-list2");
+
+    if (logList) {
+        logList.innerHTML = localStorage.getItem("journalContent") || "";
+        addLogEntry("<p class='log-system'>📖 Journal réinitialisé.</p>", 'log-list');
+    }
+
+    if (logList2) {
+        logList2.innerHTML = localStorage.getItem("journalContent2") || "";
+        addLogEntry("<p class='log-system'>📖 Deuxième journal réinitialisé.</p>", 'log-list2');
+    }
+}
+
 
 /* =====================================================
    SAUVEGARDE COMPLÈTE
 ===================================================== */
 
 function saveGame() {
-
     askConfirm("Voulez-vous sauvegarder votre partie ?", () => {
-
         const saveData = {};
 
         // ✅ On sauvegarde le player actuel en mémoire
@@ -123,10 +156,9 @@ function saveGame() {
 
         // ✅ On copie tout sauf fullGameSave
         for (let i = 0; i < localStorage.length; i++) {
-
             const key = localStorage.key(i);
             if (key === "fullGameSave" || key === "justReset") continue;
-			if (key === "player") continue;
+            if (key === "player") continue;
 
             saveData[key] = localStorage.getItem(key);
         }
@@ -134,26 +166,28 @@ function saveGame() {
         localStorage.setItem("fullGameSave", JSON.stringify(saveData));
 
         addLogEntry("<p class='log-system'>💾 Sauvegarde effectuée.</p>");
+        addLogEntry("<p class='log-system'>💾 Sauvegarde effectuée.</p>", 'log-list2');
     });
 }
 
 document.getElementById("btn-save")?.addEventListener("click", saveGame);
 
 /* =====================================================
-   CHARGEMENT COMPLET
+   CHARGEMENT DE SAUVEGARDE
 ===================================================== */
 
 function loadGame() {
-
+    // Récupération de la sauvegarde
     const rawSave = localStorage.getItem("fullGameSave");
 
+    // Vérification de l'existence de la sauvegarde
     if (!rawSave) {
         askAlert("🦉 Aucun grimoire trouvé.\n\nAucune sauvegarde détectée.");
         return;
     }
 
+    // Parsing de la sauvegarde
     let saveData;
-
     try {
         saveData = JSON.parse(rawSave);
     } catch (e) {
@@ -161,94 +195,94 @@ function loadGame() {
         return;
     }
 
+    // Confirmation avant chargement
     askConfirm("Voulez-vous charger la sauvegarde ?", () => {
-
+        // Désactivation des contrôles pendant le chargement
         isLoadingGame = true;
         keyboardEnabled = false;
 
-        // ✅ Ferme tous les overlays sauf confirm
+        // Fermeture des overlays ouverts
         document.querySelectorAll(".overlay.visible:not(#overlay-confirm)")
             .forEach(o => o.classList.remove("visible"));
 
-        /* -------------------------
-           1️⃣ Nettoyage complet
-        -------------------------- */
+        // =============================================
+        // Étape 1 : Nettoyage du localStorage
+        // =============================================
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+            const key = localStorage.key(i);
+            if (key !== "fullGameSave") {
+                localStorage.removeItem(key);
+            }
+        }
 
-        // ✅ Nettoyage SANS supprimer fullGameSave
-		for (let i = localStorage.length - 1; i >= 0; i--) {
-		const key = localStorage.key(i);
-		if (key !== "fullGameSave") {
-			localStorage.removeItem(key);
-			}
-		}
-
-        /* -------------------------
-           2️⃣ Restauration
-        -------------------------- */
-
+        // =============================================
+        // Étape 2 : Restauration des données
+        // =============================================
         for (const key in saveData) {
             localStorage.setItem(key, saveData[key]);
         }
 
-        /* -------------------------
-           3️⃣ Reconstruction player
-        -------------------------- */
-
+        // =============================================
+        // Étape 3 : Reconstruction du joueur
+        // =============================================
         const savedPlayer = saveData.playerData;
 
-		if (savedPlayer) {
-			player = JSON.parse(savedPlayer);
-		} else {
-			console.warn("Aucun player trouvé dans la sauvegarde.");
-		}
+        if (savedPlayer) {
+            player = JSON.parse(savedPlayer);
+        } else {
+            console.warn("Aucun player trouvé dans la sauvegarde.");
+        }
 
-
-        /* -------------------------
-           4️⃣ Journal
-        -------------------------- */
-
+        // =============================================
+        // Étape 4 : Restauration des journaux
+        // =============================================
         restoreJournal();
 
-        /* -------------------------
-           5️⃣ Chargement écran
-        -------------------------- */
-
+        // =============================================
+        // Étape 5 : Chargement de l'écran
+        // =============================================
         const lastScreen = saveData.lastScreen || "Ecran0001";
-        loadScreen(lastScreen, { fromLoad: true });
+        if (typeof loadScreen === "function") {
+            loadScreen(lastScreen, { fromLoad: true });
+        } else {
+            console.error("La fonction loadScreen n'est pas définie.");
+        }
 
-        /* -------------------------
-           6️⃣ Rafraîchissement UI
-        -------------------------- */
-
+        // =============================================
+        // Étape 6 : Rafraîchissement de l'interface
+        // =============================================
         setTimeout(() => {
-
-            if (typeof updatePlayerDisplay === "function")
+            if (typeof updatePlayerDisplay === "function") {
                 updatePlayerDisplay();
+            }
 
-            if (typeof updateInventoryDisplay === "function")
+            if (typeof updateInventoryDisplay === "function") {
                 updateInventoryDisplay();
+            }
 
+            // Réactivation des contrôles après chargement
             isLoadingGame = false;
             keyboardEnabled = true;
-
         }, 50);
 
+        // Ajout des messages de journal
         addLogEntry("<p class='log-system'>📂 Sauvegarde chargée.</p>");
+        addLogEntry("<p class='log-system'>📂 Sauvegarde chargée.</p>", 'log-list2');
     });
 }
 
+// Ajout du gestionnaire d'événement pour le bouton de chargement
 document.getElementById("btn-load")?.addEventListener("click", loadGame);
+
 
 /* =====================================================
    RESET COMPLET
 ===================================================== */
 
 function resetGame() {
-
     askConfirm(
         "⚠️ Cette action supprimera définitivement la partie.\n\nConfirmer ?",
         () => {
-
             localStorage.clear();
             localStorage.setItem("justReset", "1");
 
@@ -266,12 +300,45 @@ function resetGame() {
                 flags: {}
             };
 
+            // Réinitialise les deux journaux
             const logList = document.getElementById("log-list");
+            const logList2 = document.getElementById("log-list2");
+
             if (logList) logList.innerHTML = "";
+            if (logList2) logList2.innerHTML = "";
+
+            // Ajout de messages de démarrage
+            addLogEntry("<p class='log-system'>📖 Journal principal réinitialisé.</p>");
+            addLogEntry("<p class='log-system'>📖 Deuxième journal réinitialisé.</p>", 'log-list2');
 
             startCharacterCreation();
         }
     );
 }
 
-document.getElementById("btn-reset")?.addEventListener("click", resetGame);
+// Initialisation des journaux au chargement de la page
+document.addEventListener("DOMContentLoaded", initJournals);
+
+
+/* =====================================================
+   BOUTONS MOBILE (menu latéral mobile)
+===================================================== */
+
+document.getElementById("btn-save-mob")?.addEventListener("click", saveGame);
+document.getElementById("btn-load-mob")?.addEventListener("click", loadGame);
+document.getElementById("btn-reset-mob")?.addEventListener("click", resetGame);
+
+/* =====================================================
+   BOUTON AIDE
+===================================================== */
+
+document.getElementById("btn-help")?.addEventListener("click", () => {
+    const panel = document.getElementById("help-panel");
+    if (panel) panel.classList.toggle("visible");
+});
+
+document.getElementById("btn-help-mob")?.addEventListener("click", () => {
+    const panel = document.getElementById("help-panel");
+    if (panel) panel.classList.toggle("visible");
+});
+
