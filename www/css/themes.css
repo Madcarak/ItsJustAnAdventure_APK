@@ -1,139 +1,333 @@
-/* =========================================================
-   VARIABLES DE BASE
-========================================================= */
+/* Curseur gant médiéval pour tout ce qui est cliquable */
+button,
+a,
+[onclick],
+.clickable,
+input[type="button"],
+input[type="submit"],
+.inventory-item,
+.settings-btn,
+.settings-btn-mobile,
+.fullscreen-menu-button,
+.mobile-menu-button,
+.side-close,
+select {
+    cursor: url("curseurs/curseur_epee.png") 10 5, pointer;
+}
 
-:root {
-
-    /* couleurs principales */
-    --color-bg: #0e0e11;
-    --color-panel: rgba(30,30,35,0.85);
-    --color-panel-soft: rgba(255,255,255,0.05);
-
-    --color-text: #e6e6e6;
-    --color-text-muted: #a8a8a8;
-
-    --color-border: rgba(255,255,255,0.08);
-
-    --color-accent: #6e8bff;
-    --color-danger: #ff5a5a;
-    --color-success: #6edc8b;
-
-    --color-choice-bg: rgba(255,255,255,0.06);
+/* Curseur plume de scribe quand le joueur écrit */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+textarea {
+    cursor: url("curseurs/curseur_plume.png") 6 20, text;
 }
 
 
+img, .panel, .panel-choix, .choices, .log { margin-bottom: 10px; }
+.inventory p { margin: 3px 0; }
+
 /* =========================================================
-   APPLICATION GLOBALE
+   THEMES — Gestion par classes sur <body>
+========================================================= */
+
+/* Thème sombre (défaut → orange RPG) */
+body.theme-dark {
+    --border-color: #d35400;
+    --text-color: #ffffff;
+
+    --btn-bg: #ffce99;      /* orange clair */
+    --btn-text: #4a1f00;    /* brun foncé */
+}
+
+
+/* Thème sépia parchemin */
+body.theme-sepia {
+    --border-color: #e7aa17;
+    --text-color: #fafed3;
+
+    --btn-bg: #f3d182;     /* beige clair */
+    --btn-text: #4e3618;    /* marron foncé */
+}
+
+
+/* Thème glacial */
+body.theme-glacial {
+    --border-color: #6ab8ff;
+    --text-color: #dff4ff;
+
+    --btn-bg: #d9efff;      /* bleu très clair */
+    --btn-text: #0b2940;    /* bleu nuit */
+}
+
+
+/* Thème maudit (rouge / noir) */
+body.theme-maudit {
+    --border-color: #b80000;
+    --text-color: #ffdddd;
+
+    --btn-bg: #ffb5b5;      /* rose clair */
+    --btn-text: #400000;    /* rouge très sombre */
+}
+
+
+/* Thème foret (vert / noir) */
+body.theme-foret {
+    --border-color: #12960f;
+    --text-color: #b5f8bb;
+
+    --btn-bg: #c8ffce;      /* vert pastel */
+    --btn-text: #073208;    /* vert très sombre */
+}
+
+body.theme-nuit {
+    --border-color: #6288b9;
+    --text-color: #e3ecff;
+
+    --btn-bg: #d4e2ff;
+    --btn-text: #0b1d33;
+}
+
+body.theme-celeste {
+    --border-color: #eeebb9;
+    --text-color: #faf9eb;
+
+    --btn-bg: #eee680;
+    --btn-text: #5c5b00;
+}
+
+body.theme-infernal {
+    --border-color: #d3706b;
+    --text-color: #f3b9b8;
+
+    --btn-bg: #fc75b4;
+    --btn-text: #ab0351;
+}
+
+body.theme-neon {
+    --border-color: #00ffaa;
+    --text-color: #dffff5;
+
+    --btn-bg: #c7ffe9;
+    --btn-text: #004d35;
+}
+
+body.theme-antique {
+    --border-color: #fefbc8;
+    --text-color: #ffeec3;
+
+    --btn-bg: #ffe3a1;
+    --btn-text: #4b3200;
+}
+
+
+/* Application des variables */
+body {
+    color: var(--text-color);
+}
+
+
+.panel-choix,
+.overlay-window,
+input,
+select,
+#summary-image {
+    border: 2px solid var(--border-color) !important;
+}
+
+/* Icône roue crantée */
+.settings-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 26px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+}
+
+/* =========================================================
+   APPLICATION DES THÈMES – TEXTE & STRUCTURE
 ========================================================= */
 
 body {
-    background: var(--color-bg);
-    color: var(--color-text);
+    color: var(--text-color);
 }
 
-.panel {
-    background: var(--color-panel);
-    border: 1px solid var(--color-border);
+/* Texte principal */
+.panel,
+.panel-choix,
+.panel.log,
+.popup-box,
+.confirm-window,
+.help-window,
+.overlay-window,
+.screen-image-wrapper,
+.side-menu-mobile,
+.screen-image,
+.mobile-portrait img,
+.inventory-slot,
+.visit-history-menu,
+.visit-history-card,
+.mobile-name,
+.mobile-navigation,
+.mobile-system-buttons {
+    color: var(--text-color);
 }
 
-button {
-    background: var(--color-panel-soft);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
+/* Texte secondaire */
+.panel p,
+.panel li,
+.log-entry,
+.visit-history-card p,
+.mobile-stats p {
+    color: var(--text-muted);
 }
 
-button:hover {
-    background: rgba(255,255,255,0.12);
-}
-
-.choix-item {
-    background: var(--color-choice-bg);
-}
-
-
-/* =========================================================
-   THEME : DARK (défaut)
-========================================================= */
-
-.theme-dark {
-
-    --color-bg: #0e0e11;
-
-    --color-panel: rgba(25,25,30,0.9);
-
-    --color-text: #e6e6e6;
-
-    --color-accent: #6e8bff;
-}
-
-
-/* =========================================================
-   THEME : SEPIA (lecture)
-========================================================= */
-
-.theme-sepia {
-
-    --color-bg: #1e1a16;
-
-    --color-panel: rgba(45,38,30,0.9);
-
-    --color-text: #e7dcc5;
-
-    --color-border: rgba(255,240,200,0.15);
-
-    --color-choice-bg: rgba(255,240,200,0.08);
+/* Titres */
+body.fullscreen .panel h2,
+.visit-history-card h3,
+.mobile-name h2 {
+    color: var(--btn-text);
 }
 
 
 /* =========================================================
-   THEME : HORROR
+   BORDURES – LIÉES AU THÈME
 ========================================================= */
 
-.theme-horror {
+.panel,
+.panel-choix,
+.panel.log,
+.left-panel img,
+.panel-portrait,
+.mobile-portrait,
+.folie-bar-container,
+.screen-image-wrapper img,
+.screen-image img,
+.folie-bar-container.small,
+.side-menu-mobile,
+.inventory-slot,
+.mobile-portrait img,
+.fullscreen-menu-button,
+.confirm-window,
+.help-window,
+.screen-image,
+.overlay-window,
+.header-lieu,
+input[type="text"],
+select,
+#summary-image,
+.popup-box {
+    border: 2px solid var(--border-color);
+}
 
-    --color-bg: #050507;
+/* Boutons */
+button,
+.choices button,
+.overlay-window button,
+.confirm-buttons button,
+.help-buttons button,
+.side-menu-mobile button,
+.fullscreen-menu-button bitton,
+.mobile-system-buttons button,
+.mobile-navigation button,
+.popup-box button {
+    border: 2px solid var(--border-color);
+}
 
-    --color-panel: rgba(20,10,10,0.92);
+/* Bordures internes */
+.panel h2,
+.panel.log p:not(:first-child),
+.log-entry {
+    border-bottom: 1px solid var(--border-color);
+}
 
-    --color-text: #f2dede;
+/* Header mobile */
+.mobile-header {
+    border-bottom: 1px solid var(--border-color);
+}
 
-    --color-accent: #ff3b3b;
-
-    --color-border: rgba(255,0,0,0.15);
+/* Icônes */
+.log-arrow,
+.log-tag {
+    color: var(--border-color);
 }
 
 
 /* =========================================================
-   THEME : DREAM
+   BOUTONS — Thèmes + Animations
 ========================================================= */
 
-.theme-dream {
+button,
+.choices button,
+.overlay-window button,
+.confirm-buttons button,
+.help-buttons button,
+.fullscreen-menu-button button,
+.mobile-system-buttons button,
+.mobile-navigation button,
+.popup-box button {
 
-    --color-bg: #10131c;
+    background: var(--btn-bg);
+    color: var(--btn-text);
 
-    --color-panel: rgba(30,35,60,0.85);
+    padding: 5px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
 
-    --color-text: #dfe6ff;
+    /* Effet 3D subtil */
+    box-shadow: 0 2px 0 var(--border-color);
+    transition: 0.15s ease;
+}
 
-    --color-accent: #9aa7ff;
+/* Hover */
+button:hover,
+.choices button:hover,
+.overlay-window button:hover,
+.confirm-buttons button:hover,
+.help-buttons button:hover,
+.fullscreen-menu-button button:hover,
+.mobile-system-buttons button:hover,
+.mobile-navigation button:hover,
+.popup-box button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 var(--border-color);
+    filter: brightness(0.95);
+}
 
-    --color-choice-bg: rgba(150,160,255,0.12);
+/* Active */
+button:active,
+.choices button:active,
+.overlay-window button:active,
+.confirm-buttons button:active,
+.help-buttons button:active,
+.fullscreen-menu-button button:active,
+.mobile-system-buttons button:active,
+.mobile-navigation button:active,
+.popup-box button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 var(--border-color);
+    filter: brightness(0.8);
 }
 
 
 /* =========================================================
-   ACCESSIBILITÉ : CONTRASTE ÉLEVÉ
+   CURSEURS PERSONNALISÉS
 ========================================================= */
 
-.theme-contrast {
+button,
+a,
+[onclick],
+.clickable,
+select {
+    cursor: url("curseurs/curseur_epee.png") 8 8, pointer !important;
+}
 
-    --color-bg: #000000;
-
-    --color-panel: #000000;
-
-    --color-text: #ffffff;
-
-    --color-border: #ffffff;
-
-    --color-choice-bg: #111111;
+input,
+textarea {
+    cursor: url("curseurs/curseur_plume.png") 4 20, text !important;
 }

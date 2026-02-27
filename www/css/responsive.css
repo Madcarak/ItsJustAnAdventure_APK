@@ -1,202 +1,193 @@
-/* =========================================================
-   VARIABLES RESPONSIVE
-========================================================= */
-
-:root {
-    --mobile-breakpoint: 900px;
-    --small-mobile: 600px;
-}
-
-
-/* =========================================================
-   TABLETTE
-========================================================= */
-
-@media (max-width: 1200px) {
-
-    .layout {
-        gap: 12px;
-    }
-
-    .left-panel {
-        max-width: 100%;
-    }
-
-    .panel {
-        padding: 6px;
-    }
-
-}
-
-
-/* =========================================================
-   MODE MOBILE GLOBAL
-========================================================= */
+/* ============================
+   RESPONSIVE – 900px et moins
+============================ */
 
 @media (max-width: 900px) {
+    /* =========================
+       GENERAL
+    ========================== */
 
-    body {
-        overflow-x: hidden;
+    body::before {
+        transform: scale(1);
+        animation: none;
+    }
+
+    /* =========================
+       LAYOUT
+    ========================== */
+
+    #game-hud {
+        display: none !important;
     }
 
     .layout {
         flex-direction: column;
-        gap: 12px;
-    }
-
-    .left-panel,
-    .middle-panel,
-    .right-panel {
+        gap: 10px;
         width: 100%;
         max-width: 100%;
     }
 
-    .panel {
-        width: 100%;
-    }
-
-}
-
-
-/* =========================================================
-   IMAGE PRINCIPALE MOBILE
-========================================================= */
-
-@media (max-width: 900px) {
-
-    #screen-image {
-        border-radius: 6px;
-    }
-
-    .header-lieu {
-        font-size: 14px;
-    }
-
-}
-
-
-/* =========================================================
-   JOURNAL MOBILE
-========================================================= */
-
-@media (max-width: 900px) {
-
-    .right-panel .panel.log {
-        height: auto;
-        max-height: none;
-    }
-
-    .log-list {
-        max-height: 220px;
-    }
-
-}
-
-
-/* =========================================================
-   INVENTAIRE MOBILE
-========================================================= */
-
-@media (max-width: 900px) {
-
-    .inventory-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 5px;
-    }
-
-}
-
-
-/* =========================================================
-   PETITS MOBILES
-========================================================= */
-
-@media (max-width: 600px) {
-
-    .inventory-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .overlay-window {
-        width: 92%;
-    }
-
-    .item-inspect-window {
-        width: 92%;
-    }
-
-}
-
-
-/* =========================================================
-   BOUTONS MOBILE
-========================================================= */
-
-@media (max-width: 900px) {
-
-    button {
-        font-size: 16px;
-    }
-
-    .choices {
-        flex-direction: column;
-        margin-left: 0;
-    }
-
-}
-
-
-/* =========================================================
-   MENU MOBILE
-========================================================= */
-
-.mobile-menu {
-    position: fixed;
-    inset: 0;
-
-    background: rgba(0,0,0,0.92);
-
-    display: none;
-    flex-direction: column;
-
-    z-index: 8000;
-
-    padding: 20px;
-}
-
-.mobile-menu.open {
-    display: flex;
-}
-
-
-/* =========================================================
-   SETTINGS MOBILE
-========================================================= */
-
-@media (max-width: 900px) {
-
-    .settings-btn.pc-only {
+    .pc-only {
         display: none;
     }
 
+    /* =========================
+       UI
+    ========================== */
+
+    .mobile-header {
+        display: flex;
+    }
+
+    .mobile-menu-button {
+        display: block;
+        font-size: 1.2rem;
+        font-weight: 700;
+        padding: 8px 12px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .mobile-logo {
+        display: block;
+    }
+
+    .panel,
+    .right-panel .panel.log {
+        max-height: calc(100vh - 90px);
+        padding: 8px;
+    }
+
+    .mobile-menu-button {
+        display: block;
+    }
+
+    .panel h2 {
+        color: black;
+        text-align: left;
+    }
+
+    /* =========================
+       INVENTORY
+    ========================== */
+
+    .inventory-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 64px);
+        grid-template-rows: repeat(5, 64px);
+        gap: 6px;
+        padding: 5px;
+    }
+
+    .inventory-main {
+        display: none !important;
+    }
+
+    .visit-history-menu {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100%;
+        margin-top: 10px;
+        z-index: 9999;
+    }
+
+    /* =========================
+       EFFECTS
+    ========================== */
+
+    .folie-bar-container {
+        height: 10px;
+    }
+
+    .folie-bar-container.small {
+        width: 40%;
+    }
+
+    /* =========================
+       CHOICES
+    ========================== */
+
+    .choices button {
+        flex: 1 1 45%;
+    }
+
+    .choices button:last-child {
+        margin: 0 auto;
+    }
+
+    /* =========================
+       HEADER
+    ========================== */
+
+    .header-lieu {
+        margin-top: 70px;
+        text-align: left;
+    }
 }
 
+/* ============================
+   RESPONSIVE – 768px et moins
+============================ */
 
-/* =========================================================
-   PLEIN ÉCRAN
-========================================================= */
+@media (max-width: 768px) {
+    /* =========================
+       GENERAL
+    ========================== */
 
-.fullscreen-game {
+    .mobile-only {
+        display: block;
+    }
 
-    width: 100vw;
-    height: 100vh;
+    .pc-only {
+        display: none;
+    }
 
-    overflow: hidden;
+    /* =========================
+       LAYOUT
+    ========================== */
 
-    display: flex;
-    flex-direction: column;
+    .left-panel {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    /* =========================
+       HEADER
+    ========================== */
+
+    .header-lieu {
+        margin-top: 70px;
+        margin-bottom: 10px;
+    }
 }
 
-.fullscreen-game .layout {
-    flex: 1;
+/* ============================
+   RESPONSIVE – 901px et plus
+============================ */
+
+@media (min-width: 901px) {
+    /* =========================
+       GENERAL
+    ========================== */
+
+    .mobile-menu-button-mob {
+        display: none;
+    }
+
+    body:not(.fullscreen) .fullscreen-menu-button {
+        display: none !important;
+    }
+
+    /* =========================
+       CHOICES
+    ========================== */
+
+    .choices {
+        flex-wrap: nowrap;
+    }
+
+    .choices button {
+        width: 120px;
+    }
 }

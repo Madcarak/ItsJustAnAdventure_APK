@@ -1,5 +1,4 @@
 window.animatedLootToInventory = function(itemName) {
-
     console.log("🔥 Loot LÉGENDAIRE déclenché :", itemName);
 
     let iconPath = itemIcons[itemName];
@@ -31,8 +30,8 @@ window.animatedLootToInventory = function(itemName) {
     const startRect = screenImage.getBoundingClientRect();
     const endRect   = inventoryElement.getBoundingClientRect();
 
-    const startSize = 640;
-    const endSize   = 64;
+    const startSize = 640; // Taille initiale en pixels
+    const endSize   = 64;  // Taille finale en pixels
 
     const centerStartX = startRect.left + startRect.width / 2;
     const centerStartY = startRect.top + startRect.height / 2;
@@ -43,8 +42,6 @@ window.animatedLootToInventory = function(itemName) {
     const deltaX = centerEndX - centerStartX;
     const deltaY = centerEndY - centerStartY;
 
-    const scaleStart = startSize / endSize;
-
     // =========================
     // IMAGE PRINCIPALE
     // =========================
@@ -53,15 +50,15 @@ window.animatedLootToInventory = function(itemName) {
     lootImg.src = iconPath;
 
     lootImg.style.position = "fixed";
-    lootImg.style.width = endSize + "px";
-    lootImg.style.height = endSize + "px";
-    lootImg.style.left = (centerStartX - endSize / 2) + "px";
-    lootImg.style.top = (centerStartY - endSize / 2) + "px";
+    lootImg.style.width = startSize + "px"; // Taille initiale en pixels
+    lootImg.style.height = startSize + "px";
+    lootImg.style.left = (centerStartX - startSize / 2) + "px";
+    lootImg.style.top = (centerStartY - startSize / 2) + "px";
     lootImg.style.zIndex = "9999";
     lootImg.style.pointerEvents = "none";
     lootImg.style.transformOrigin = "center";
     lootImg.style.willChange = "transform, filter";
-    lootImg.style.filter = "drop-shadow(0 0 40px gold) blur(12px)";
+    lootImg.style.filter = "drop-shadow(0 0 40px gold) blur(0px)"; // Pas de flou initial
     lootImg.style.transition = "transform 1.2s cubic-bezier(.2,.8,.2,1), filter 1.2s cubic-bezier(.2,.8,.2,1)";
 
     document.body.appendChild(lootImg);
@@ -94,7 +91,6 @@ window.animatedLootToInventory = function(itemName) {
     requestAnimationFrame(() => {
         lootImg.style.transform = `
             translate(0px, 0px)
-            scale(${scaleStart})
             rotate(15deg)
         `;
     });
@@ -107,7 +103,7 @@ window.animatedLootToInventory = function(itemName) {
 
         lootImg.style.transform = `
             translate(${deltaX}px, ${deltaY}px)
-            scale(1)
+            scale(${endSize / startSize})
             rotate(0deg)
         `;
 
@@ -153,7 +149,11 @@ window.animatedLootToInventory = function(itemName) {
         trail.remove();
 
     }, 1200);
-};
+
+    return true;
+}
+
+
 
 function removeItem(itemName) {
 

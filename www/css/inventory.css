@@ -1,226 +1,195 @@
 /* =========================================================
-   INVENTAIRE : CONTAINER
+   INVENTAIRE VISUEL – VERSION PC (Responsive)
 ========================================================= */
+#inventory-list-pc.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+    gap: 6px;
+    padding: 5px;
 
-.inventory-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    min-width: calc(64px * 4 + 6px * 3); /* empêche de descendre en dessous de 4 colonnes */
 }
-
-.inventory-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.inventory-title {
-    font-weight: bold;
-}
-
 
 /* =========================================================
-   INVENTAIRE : GRID
+   CASES D’INVENTAIRE
 ========================================================= */
-
-.inventory-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 6px;
+.inventory-slot {
+    width: 64px;
+    height: 64px;
+    background: rgba(0, 0, 0, 0.2);
+    position: relative;
+    cursor: pointer;
+    border-radius: 10px;
 }
 
-.inventory-slot {
+body.fullscreen .inventory-slot {
+    width: 64px;
+    height: 64px;
+    background: rgba(0, 0, 0, 0.1);
     position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-
-    border-radius: 6px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
     cursor: pointer;
+    border-radius: 10px;
 }
 
 .inventory-slot img {
-    width: 90%;
-    height: 90%;
+    width: 100%;
+    height: 100%;
+	border-radius: 8px;
     object-fit: contain;
     pointer-events: none;
 }
 
-.inventory-slot.empty {
-    opacity: 0.4;
-}
-
-
 /* =========================================================
-   INVENTAIRE : RARETÉ / ÉTATS
+   FENETRE DESCRIPTION OBJET
 ========================================================= */
-
-.slot-common {}
-
-.slot-uncommon {}
-
-.slot-rare {}
-
-.slot-epic {}
-
-.slot-legendary {}
-
-.slot-quest {
-    outline: 2px dashed rgba(255,255,255,0.6);
-}
-
-
-/* =========================================================
-   TOOLTIP ITEM
-========================================================= */
-
-.item-tooltip {
+#item-popover {
     position: fixed;
-    pointer-events: none;
+    max-width: 260px;
+    background: rgba(5, 5, 5, 0.96);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    z-index: 9999;
 
-    padding: 8px 10px;
-    border-radius: 6px;
-
-    font-size: 13px;
-    line-height: 1.3;
-
-    z-index: 5000;
-
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity .15s, transform .15s;
+    box-shadow:
+        inset 2px 0 4px rgba(255,255,255,0.08),
+        0 0 14px rgba(0,0,0,0.7);
 }
 
-.item-tooltip.visible {
-    opacity: 1;
-    transform: translateY(0);
+#item-popover .tag {
+    color: #d7b46a;
+    font-weight: bold;
 }
 
-.item-tooltip h4 {
-    margin: 0 0 4px;
-    font-size: 14px;
+#item-popover.hidden {
+    display: none;
 }
 
-.item-tooltip p {
-    margin: 0;
-}
-
-
-/* =========================================================
-   ITEM INSPECT
-========================================================= */
-
-.item-inspect-overlay {
+#inspect-modal {
     position: fixed;
     inset: 0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    z-index: 6000;
-
     background: rgba(0,0,0,0.7);
-}
-
-.item-inspect-window {
-    width: 420px;
-    padding: 20px;
-
-    border-radius: 10px;
-
-    text-align: center;
-}
-
-.item-inspect-image {
-    width: 120px;
-    height: 120px;
-    object-fit: contain;
-
-    margin-bottom: 10px;
-}
-
-.item-inspect-title {
-    font-size: 18px;
-    margin-bottom: 6px;
-}
-
-.item-inspect-description {
-    font-size: 14px;
-    line-height: 1.4;
-}
-
-.item-inspect-actions {
-    margin-top: 15px;
     display: flex;
-    gap: 10px;
+    align-items: center;
     justify-content: center;
+    z-index: 30000;
 }
 
-
-/* =========================================================
-   CONTEXT MENU (clic droit)
-========================================================= */
-
-.item-context-menu {
-    position: fixed;
-
-    min-width: 160px;
-
-    border-radius: 8px;
-
-    overflow: hidden;
-
-    z-index: 7000;
+.inspect-box {
+    position: relative;
 }
 
-.context-item {
-    padding: 8px 12px;
+#inspect-image {
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+#close-inspect {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    line-height: 1;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    border-radius: 50%;
     cursor: pointer;
 }
 
-.context-item:hover {
-    background: rgba(255,255,255,0.1);
-}
-
-
 /* =========================================================
-   DRAG & DROP (si utilisé)
+   EFFET ANIMATION OBJETS INVENTAIRE
 ========================================================= */
 
-.inventory-slot.dragging {
-    opacity: 0.4;
+.loot-fly {
+    position: fixed;
+    width: 64px;
+    height: 64px;
+    pointer-events: none;
+    transition: transform 0.7s ease, opacity 0.7s ease;
+    z-index: 99999;
 }
 
-.inventory-slot.drag-over {
-    outline: 2px solid rgba(255,255,255,0.6);
+.inventory-glow {
+    box-shadow: 0 0 20px gold;
 }
 
 
-/* =========================================================
-   ANIMATION LOOT
-========================================================= */
-
-@keyframes loot-pop {
-    0% {
-        transform: scale(.6);
-        opacity: 0;
-    }
-
-    60% {
-        transform: scale(1.15);
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
+.mobile-header-glow {
+    box-shadow: 0 0 20px gold;
+    transition: box-shadow 0.3s ease;
 }
 
-.loot-animation {
-    animation: loot-pop .35s ease;
+.mobile-header-bounce {
+    transform: scale(1.05);
+    transition: transform 0.15s ease;
+}
+
+#fx-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999999;
+}
+
+.inventory-grid {
+    overflow: visible !important;
+}
+
+
+body {
+    overflow: visible !important;
+}
+
+/* ================================
+   DEBUG ITEM
+================================ */
+
+.debug-panel {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    width: 320px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: #111;
+    border: 1px solid #444;
+    padding: 15px;
+    z-index: 9999;
+    color: white;
+}
+
+.debug-panel h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+.debug-item-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 6px;
+    padding: 6px;
+    background: #222;
+    border: 1px solid #333;
+    color: white;
+    cursor: pointer;
+    text-align: left;
+}
+
+.debug-item-btn:hover {
+    background: #333;
+}
+
+.hidden {
+    display: none;
 }

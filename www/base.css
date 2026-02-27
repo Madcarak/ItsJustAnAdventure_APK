@@ -1,0 +1,109 @@
+/* =========================================================
+   GLOBAL
+========================================================= */
+body {
+	background: #444;
+}
+
+body {
+    position: relative;
+    overflow-x: hidden;
+}
+
+
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+    font-family: Georgia, serif;
+    color: white;
+    cursor: url("Logo/curseur_gant.png") 8 8, auto;
+}
+
+/* Fond flou animé */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: black; /* Ajout */
+	    left: -5%;
+    right: -5%;
+    top: -5%;
+    bottom: -5%;
+}
+
+/* Puis image en seconde couche */
+body::before {
+    background-image: var(--bg-image);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.85) blur(4px);
+    opacity: 0.9;
+    transform: scale(1.05);
+    pointer-events: none;
+    animation:
+        bgZoom 30s ease-in-out infinite alternate,
+        bgMove 18s ease-in-out infinite alternate;
+    z-index: -1;
+
+    /* IMPORTANT : */
+    mix-blend-mode: normal !important;
+}
+
+@keyframes bgZoom {
+    0%   { transform: scale(1.05); }
+    100% { transform: scale(1.12); }
+}
+
+@keyframes bgMove {
+    0%   { background-position: center; }
+    100% { background-position: 52% 48%; }
+}
+
+/* Grain cinématographique */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: url("data:image/svg+xml;utf8,
+        <svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'>
+            <filter id='n' x='0' y='0'>
+                <feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/>
+            </filter>
+            <rect width='100%' height='100%' filter='url(%23n)' opacity='0.08'/>
+        </svg>"
+    ) repeat;
+    opacity: 0.07;
+    z-index: -1;
+}
+
+html, body {
+    scrollbar-width: thin;
+    scrollbar-color: #000 #000;
+    scrollbar-gutter: stable both-edges;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 10px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+    background: #000;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+    background: #222;
+    border-radius: 4px;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}

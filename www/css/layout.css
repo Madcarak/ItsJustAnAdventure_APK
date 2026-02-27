@@ -1,13 +1,218 @@
 /* =========================================================
-   LAYOUT GLOBAL
+   GLOBAL
 ========================================================= */
+body {
+    background: #444;
+    position: relative;
+    overflow-x: hidden;
+}
 
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Georgia, serif;
+    color: white;
+    cursor: url("curseurs/curseur_gant.png") 8 8, auto;
+}
+
+/* =========================================================
+   HEADER MOBILE
+========================================================= */
+.mobile-header {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 60px;
+    background: rgba(0,0,0,0.75);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    align-items: center;
+    justify-content: space-between;
+    z-index: 999;
+}
+
+.screen-title2 {
+    height: auto !important;
+}
+
+.mobile-menu-button,
+.mobile-logo {
+    display: none;
+}
+
+.mobile-logo {
+    width: 120px;
+    padding-top: 10px;
+    padding-right: 10px;
+}
+
+/* =========================================================
+   MENU LATÉRAL FULLSCREEN
+========================================================= */
+.mobile-name {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.mobile-name h2 {
+    margin: 0;
+    font-size: 1.4rem;
+	text-align: left;
+	margin-left: 30px;
+	margin-bottom: 20px;
+}
+
+body.fullscreen .mobile-name h2 {
+    color: black;
+	margin-bottom: 15px;
+	text-align: left;
+    font-size: 1.4rem;
+}
+
+.mobile-folie {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-direction: row;
+    align-content: center;
+    justify-content: left;
+    align-items: center;
+}
+
+.folie-label {
+    margin-left: 30px;
+	color: black;
+	font-weight: bold;
+    min-width: 45px;
+}
+
+body.fullscreen .folie-label {
+    color: black;
+	font-weight: bold;
+    min-width: 45px;
+}
+
+#folie-value-mobile {
+	color: black;
+    min-width: 45px;
+    text-align: right;
+}
+
+body.fullscreen #folie-value-mobile {
+    color: black;
+	min-width: 45px;
+    text-align: right;
+}
+
+.mobile-character-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+}
+
+.mobile-portrait {
+    margin-left: 30px;
+    width: 150px;
+    height: 150px;
+    border: 2px solid white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.mobile-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+	
+}
+
+.mobile-stats {
+    left: 13px;
+    position: relative;
+    color: black;
+    font-size: 0.9rem;
+    margin-left: 20px;
+}
+
+body.fullscreen .mobile-portrait {
+    margin-left: 20px;
+    width: 300px;
+    height: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+body.fullscreen .mobile-portrait img {
+    width: 100%;
+    height: 100%;
+	border-radius: 8px;
+	object-fit: cover;
+}
+
+body.fullscreen .mobile-stats {
+    flex: 1;
+	color: black;
+    font-size: 1rem;
+    margin-left: 20px;
+}
+
+.mobile-menu {
+    margin-top: -10px;
+}
+
+.mobile-stats p {
+    margin: 4px 0;
+}
+
+.mobile-gold {
+    margin-top: 8px;
+    font-weight: bold;
+}
+
+.mobile-inventory .inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 64px);
+    grid-template-rows: repeat(5, 64px);
+    gap: 10px;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.mobile-inventory {
+    display: inline-block;
+    position: absolute;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    align-content: stretch;
+    width: 360px;
+    flex-direction: row-reverse;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.mobile-navigation {
+    margin-left: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    width: 360px;
+}
+
+/* =========================================================
+   LAYOUT PC
+========================================================= */
 .layout {
     display: flex;
     align-items: flex-start;
     gap: 20px;
-    padding: 0;
-    background: transparent;
+    padding: 0px;
+    background: transparent !important;
 }
 
 .left-panel,
@@ -16,22 +221,13 @@
     align-self: flex-start;
 }
 
-
-/* =========================================================
-   LARGEUR DU JEU
-========================================================= */
-
-.game-width {
-    max-width: 98%;
-    max-height: 100%;
+.left-panel {
+    width: 100%;
+    max-width: 935px;
     margin: 0 auto;
-    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
 }
-
-
-/* =========================================================
-   PANELS
-========================================================= */
 
 .panel {
     background: rgba(0,0,0,0.25);
@@ -42,9 +238,16 @@
     z-index: 1;
 }
 
+.panel.character {
+    position: relative;
+    overflow: visible;
+    z-index: 200;
+}
+
 .panel h2 {
     margin: 0 0 4px;
     padding-bottom: 4px;
+    border-bottom: 1px solid white;
 }
 
 .panel p,
@@ -53,28 +256,12 @@
     line-height: 1.1;
 }
 
-
-/* =========================================================
-   PANEL PERSONNAGE
-========================================================= */
-
-.panel.character {
-    position: relative;
-    overflow: visible;
-    z-index: 200;
-}
-
-
-/* =========================================================
-   PANEL PORTRAIT
-========================================================= */
-
 .panel-portrait {
     width: 306px;
     height: 306px;
+    background: rgba(0,0,0,0.25);
     border-radius: 8px;
     margin-bottom: 10px;
-    background: rgba(0,0,0,0.25);
 }
 
 .panel-portrait img {
@@ -84,93 +271,601 @@
     border-radius: 8px;
 }
 
-
 /* =========================================================
-   COLONNE GAUCHE
+   CHOIX / BOUTONS
 ========================================================= */
-
-.left-panel {
-    width: 100%;
-    max-width: 935px;
-    margin: 0 auto;
-    position: relative;
-    overflow: hidden;
-}
-
-
-/* =========================================================
-   IMAGE PRINCIPALE
-========================================================= */
-
-.screen-image-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-
-#screen-image {
-    width: 100%;
-    height: auto;
-    display: block;
+.panel-choix {
+    background: rgba(0,0,0,0.25);
     border-radius: 8px;
-}
-
-
-/* =========================================================
-   HEADER LIEU
-========================================================= */
-
-.header-lieu {
-    width: 100%;
-    box-sizing: border-box;
-    margin-top: 10px;
+    padding: 10px;
+    margin: 0 auto;
     margin-bottom: 10px;
+}
 
-    padding: 0;
-
-    border-radius: 10px;
-
-    background: rgba(0, 0, 0, 0.45);
-
+.choix-item {
     display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    transition: 0.2s;
+}
+
+.choix-item:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+.choices {
+    display: flex;
+    gap: 10px;
     justify-content: flex-end;
+    margin-left: 100px;
 }
 
-.header-lieu #screen-title2 {
-    width: 100%;
-    margin: 0;
-    padding: 8px 12px;
-    background: none;
+.choices button {
+    flex: 1 1 30%;
+    padding: 8px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid white;
+    border-radius: 6px;
+    color: white;
 }
-
 
 /* =========================================================
-   JOURNAL PANEL STRUCTURE
+   JOURNAL
 ========================================================= */
-
 .right-panel .panel.log {
     display: flex;
     flex-direction: column;
     height: 400px;
     max-height: calc(90vh - 120px);
     padding: 10px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 8px;
     box-sizing: border-box;
 }
 
-.log-list {
+.right-panel .panel.log.log2 {
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.log-list,
+.log-list2 {
     flex: 1;
     overflow-y: auto;
     padding-right: 6px;
 }
 
+.log-list2 {
+    color: white;
+    font-size: 16px;
+}
+
+.panel.log p:not(:first-child) {
+    border-top: 0.5px solid rgba(255,255,255,0.25);
+    padding-top: 10px;
+    margin-top: 10px;
+    color: white;
+}
+
+.panel.log.log2 .log-entry {
+    color: white;
+    font-size: 16px;
+}
+
+.panel.log.log2 .log-tag {
+    color: #ffcc00;
+    font-style: italic;
+    font-weight: bold;
+}
+
+body.fullscreen .log2 {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background: rgba(0, 0, 0, 0.05);
+    color: #fff;
+    padding: 15px;
+    z-index: 10;
+    overflow-y: auto;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+body.fullscreen .panel.log2 {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    border-radius: 5px;
+    border: none;
+    z-index: 100;
+    max-width: 360px;
+    max-height: 200px;
+    width: auto;
+    text-align: left;
+    color: white;
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+body.fullscreen .panel.log2 h2 {
+    margin-top: 0;
+    color: white;
+    text-align: left;
+    font-size: 20px;
+}
+
+body.fullscreen .panel.log2 .log-list2 {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px;
+    color: white;
+    font-size: 18px;
+}
 
 /* =========================================================
-   MENU LOGO
+   HEADER / ALIGNEMENT
 ========================================================= */
+.header-lieu {
+    margin-bottom: 15px;
+    padding-left: 10px;
+}
 
 .menu-logo {
     width: 300px;
     margin: 0 auto 15px;
     display: block;
+}
+
+/* =========================================================
+   HEADER PRINCIPAL
+========================================================= */
+#game-hud {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #1a1a1a;
+    padding: 10px 20px;
+    color: #e3d6b9;
+    font-family: "Cinzel", serif;
+}
+
+.hud-section {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hud-label {
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.folie-bar-container {
+    width: 150px;
+    height: 20px;
+    border: 1px solid #600;
+    background: #300;
+	border-radius: 5px;
+    position: relative;
+}
+
+.folie-bar-container.small {
+    width: 220px;
+    border-radius: 5px;
+}
+
+.mobile-hud-section.mobile-only {
+    border-radius: 10px;
+}
+
+#folie-bar,
+#folie-bar-mobile {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #8b0000, #ff0000);
+    transition: width 0.3s ease-out;
+}
+
+.mobile-hud-section {
+    margin: 15px 0;
+    padding: 10px;
+    background: #1a1a1a;
+    border: 1px solid #6b0000;
+}
+
+.mobile-only {
+    display: none;
+}
+
+/* =========================================================
+   HEADER LIEU — ALIGNÉ SUR LE JOURNAL
+========================================================= */
+.header-lieu {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 0;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.header-lieu #screen-title2 {
+	width: 100%;
+    max-width: 100%;
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    border-radius: inherit;
+    padding: 8px 12px;
+}
+
+.game-width {
+    max-width: 98%;
+    max-height: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding-left: -5px;
+}
+
+/* =========================================================
+   FULLSCREEN
+========================================================= */
+body.fullscreen {
+    overflow: hidden;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: #000;
+}
+
+body.fullscreen .game-width {
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+}
+
+body.fullscreen .layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+body.fullscreen .left-panel {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
+
+body.fullscreen .screen-image-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+}
+
+body.fullscreen #screen-image,
+body.fullscreen .screen-image-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+body.fullscreen .header-lieu {
+    position: relative;
+    top: 0px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 10px;
+    border: none;
+    z-index: 10;
+    max-width: 88%;
+    color: #fff;
+    font-size: larger;
+}
+
+body.fullscreen .panel-choix {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    transform: none;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 12px 15px;
+    border-radius: 6px;
+    border: none !important;
+    z-index: 10;
+    max-width: 97%;
+    width: auto;
+    text-align: left;
+    box-shadow: none;
+    outline: none;
+    font-size: larger;
+}
+
+body.fullscreen .choix-item {
+    background: rgba(0, 0, 0, 0.32);
+    color: #fff;
+    margin-bottom: 0px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+body.fullscreen .choix-item:hover {
+    background: rgba(0, 0, 0, 0.52);
+}
+
+body.fullscreen .choices {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.18);
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+    box-shadow: none;
+    outline: none;
+    align-content: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: column;
+}
+
+body.fullscreen .choices button {
+    background: rgba(0, 0, 0, 0.44);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin: 0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.12s ease, background 0.12s ease;
+}
+
+body.fullscreen .choices button:hover {
+    transform: translateY(-2px);
+}
+
+body.fullscreen .settings-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.72);
+    color: #fff;
+    font-size: 20px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: none;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.fullscreen-menu-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10001;
+    font-size: 1.4rem;
+    padding: 10px 12px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.55);
+    color: #fff;
+	box-shadow: 0 2px 0 var(--border-color);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+
+body.fullscreen .log {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 10px;
+    z-index: 10;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+
+body.fullscreen .middle-panel,
+body.fullscreen .panel-portrait,
+body.fullscreen .right-panel {
+    display: none;
+}
+
+body.fullscreen .screen-image-wrapper.madness-shake {
+    animation: madnessShake 0.12s infinite;
+}
+
+body.fullscreen .screen-image-wrapper.madness-breath {
+    animation: madnessContract 3s infinite ease-in-out;
+}
+
+body.fullscreen .screen-image-wrapper.madness-distort #screen-image-overlay {
+    animation: madnessColor 10s ease-in-out forwards;
+    opacity: 1;
+}
+
+@keyframes madnessShake {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(-5px, 0); }
+    50%  { transform: translate(0, 0); }
+    75%  { transform: translate(5px, 0); }
+    100% { transform: translate(0, 0); }
+}
+
+@keyframes madnessContract {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(0.97); }
+    100% { transform: scale(1); }
+}
+
+@keyframes madnessColor {
+    0%   { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+body.fullscreen .header-lieu,
+body.fullscreen .panel-choix,
+body.fullscreen .choices,
+body.fullscreen .log {
+    box-shadow: none;
+}
+
+/* =========================================================
+   MENU LATÉRAL FULLSCREEN
+========================================================= */
+.side-menu-fullscreen {
+    position: fixed;
+    top: 0;
+    left: -800px;
+    width: 760px;
+    height: 100%;
+    background: url('../images/scroll.png') no-repeat left center;
+    transition: left 0.3s ease;
+    z-index: 10010;
+    overflow-y: auto;
+}
+
+.side-menu-fullscreen.open {
+    left: 0;
+}
+
+/* =========================================================
+   MENU LATÉRAL MOBILE
+========================================================= */
+.side-menu-mobile {
+    position: fixed;
+    top: 0;
+    left: -460px;
+    width: 420px;
+    height: 100%;
+    background: url('../images/scroll.png') no-repeat left center;
+    transition: left 0.3s ease;
+    z-index: 2000;
+    overflow-y: auto;
+}
+
+.side-menu-mobile.open {
+    left: 0;
+}
+
+/* =========================================================
+   ÉLÉMENTS COMMUNS AUX DEUX MENUS
+========================================================= */
+.side-menu-fullscreen .panel,
+.side-menu-mobile .panel {
+    margin-bottom: 14px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    color: #fff;
+}
+
+.side-menu-fullscreen .inventory-grid,
+.side-menu-mobile .inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.side-menu-fullscreen .log-list,
+.side-menu-mobile .log-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* =========================================================
+   BOUTON DE FERMETURE
+========================================================= */
+.side-close,
+.side-close-mobile {
+    margin-top: 50px;
+    font-size: 22px;
+    text-align: right;
+    margin-right: 50px;
+    color: black;
+	font-size: larger;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+/* =========================================================
+   OVERLAYS
+========================================================= */
+#menu-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+}
+
+#menu-overlay.visible {
+    display: block;
+}
+
+#menu-overlay-mobile {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 1900;
+}
+
+#menu-overlay-mobile.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 900px) {
+    /* Le menu fullscreen est masqué sur mobile */
+    .side-menu-fullscreen {
+        display: none;
+    }
+
+    /* Le menu mobile prend toute la largeur disponible */
+    .side-menu-mobile {
+        max-width: 90%;
+    }
 }

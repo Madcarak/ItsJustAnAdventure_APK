@@ -1,215 +1,273 @@
-/* =========================================================
-   VISIBILITÉ / UTILITAIRES VISUELS
-========================================================= */
+/* ================================
+   🔥 FLASH FOLIE +1 (ROUGE)
+================================ */
 
-.hidden {
-    display: none !important;
+@keyframes folieUpFlash {
+
+    0%   { filter: drop-shadow(0 0 0px rgba(255,0,0,0)) brightness(1); }
+
+    10%  { filter: drop-shadow(0 0 30px rgba(255,0,0,0.9)) brightness(1.5); }
+    20%  { filter: drop-shadow(0 0 0px rgba(255,0,0,0)) brightness(1); }
+
+    30%  { filter: drop-shadow(0 0 30px rgba(255,0,0,0.9)) brightness(1.5); }
+    40%  { filter: drop-shadow(0 0 0px rgba(255,0,0,0)) brightness(1); }
+
+    50%  { filter: drop-shadow(0 0 30px rgba(255,0,0,0.9)) brightness(1.5); }
+    60%  { filter: drop-shadow(0 0 0px rgba(255,0,0,0)) brightness(1); }
+
+    70%  { filter: drop-shadow(0 0 30px rgba(255,0,0,0.9)) brightness(1.5); }
+    80%  { filter: drop-shadow(0 0 0px rgba(255,0,0,0)) brightness(1); }
+
+    90%  { filter: drop-shadow(0 0 30px rgba(255,0,0,0.9)) brightness(1.5); }
+
+    100% { filter: drop-shadow(0 0 0px rgba(255,0,0,0)) brightness(1); }
 }
 
-.fade-in {
-    animation: fadeIn .4s ease forwards;
-}
-
-.fade-out {
-    animation: fadeOut .3s ease forwards;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
-    }
+.folie-up {
+    animation: folieUpFlash 3s ease-in-out;
 }
 
 
-/* =========================================================
-   FLASH / IMPACT
-========================================================= */
 
-.flash {
+/* ================================
+   🌿 FLASH FOLIE -1 (VERT)
+================================ */
+
+@keyframes folieDownFlash {
+    0%   { filter: drop-shadow(0 0 0px #00ff88) brightness(1); }
+    30%  { filter: drop-shadow(0 0 25px #00ff88) brightness(1.4); }
+    60%  { filter: drop-shadow(0 0 15px #00ff88) brightness(1.2); }
+    100% { filter: drop-shadow(0 0 0px #00ff88) brightness(1); }
+}
+
+.folie-down {
+    animation: folieDownFlash 0.6s ease-out;
+}
+
+/* =====================================================
+   OVERLAY FOLIE GLOBAL (écran entier)
+===================================================== */
+
+.folie-overlay {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 9000;
-    animation: flashAnim .4s ease;
+    z-index: 9999;
+    opacity: 0;
 }
 
-@keyframes flashAnim {
-    0% {
-        opacity: 0;
-    }
-    30% {
-        opacity: .9;
-    }
-    100% {
-        opacity: 0;
-    }
+/* +1 Folie */
+.folie-overlay.up {
+    animation: folieScreenUp 3s ease-in-out;
 }
 
-
-/* =========================================================
-   SHAKE (JUMPSCARE / IMPACT)
-========================================================= */
-
-.shake {
-    animation: screenShake .4s;
+/* -1 Folie */
+.folie-overlay.down {
+    animation: folieScreenDown 1s ease-in-out;
 }
 
-@keyframes screenShake {
-    0% { transform: translate(0); }
-    20% { transform: translate(-6px, 4px); }
-    40% { transform: translate(5px, -3px); }
-    60% { transform: translate(-4px, 2px); }
-    80% { transform: translate(3px, -2px); }
-    100% { transform: translate(0); }
-}
+@keyframes folieScreenUp {
 
+    0%   { box-shadow: inset 0 0 0px rgba(255,0,0,0); opacity: 0; }
 
-/* =========================================================
-   GLITCH EFFECT
-========================================================= */
+    10%  { box-shadow: inset 0 0 90px rgba(255,0,0,0.9); opacity: 1; }
+    20%  { box-shadow: inset 0 0 0px rgba(255,0,0,0); opacity: 0; }
 
-.glitch {
-    position: relative;
-}
+    30%  { box-shadow: inset 0 0 100px rgba(255,0,0,0.9); opacity: 0.5; }
+    40%  { box-shadow: inset 0 0 0px rgba(255,0,0,0); opacity: 0; }
 
-.glitch::before,
-.glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    inset: 0;
-    opacity: .8;
-}
+    50%  { box-shadow: inset 0 0 110px rgba(255,0,0,0.9); opacity: 1; }
+    60%  { box-shadow: inset 0 0 0px rgba(255,0,0,0); opacity: 0; }
 
-.glitch::before {
-    transform: translate(2px,0);
-}
+    70%  { box-shadow: inset 0 0 120px rgba(255,0,0,0.9); opacity: 0.2; }
+    80%  { box-shadow: inset 0 0 0px rgba(255,0,0,0); opacity: 0; }
 
-.glitch::after {
-    transform: translate(-2px,0);
+    90%  { box-shadow: inset 0 0 140px rgba(255,0,0,0.95); opacity: 0.7; }
+
+    100% { box-shadow: inset 0 0 0px rgba(255,0,0,0); opacity: 0; }
 }
 
 
-/* =========================================================
-   FOLIE / MADNESS EFFECT
-========================================================= */
-
-.madness-low {
-    filter: contrast(1.1) saturate(1.2);
+@keyframes folieScreenDown {
+    0%   { box-shadow: inset 0 0 0px rgba(0,255,136,0); opacity: 0; }
+    50%  { box-shadow: inset 0 0 70px rgba(0,255,136,0.7); opacity: 1; }
+    100% { box-shadow: inset 0 0 0px rgba(0,255,136,0); opacity: 0; }
 }
 
-.madness-medium {
-    filter: contrast(1.2) saturate(1.4) blur(.3px);
+/* ================================
+   CHOIX PORTRAIT CREATION PERSO
+================================ */
+
+.portrait-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 20px 0;
 }
 
-.madness-high {
-    filter: contrast(1.4) saturate(1.8) blur(.6px);
+.portrait-choice {
+    cursor: pointer;
+    border: 3px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: 0.2s;
 }
 
-.madness-extreme {
-    filter: contrast(1.6) saturate(2.2) blur(1px);
+.portrait-choice img {
+    width: 100%;
+    display: block;
 }
 
-
-/* =========================================================
-   BACKGROUND DISTORTION
-========================================================= */
-
-.bg-distort {
-    animation: distort 6s infinite alternate ease-in-out;
-}
-
-@keyframes distort {
-    0% {
-        transform: scale(1) rotate(0deg);
-    }
-    50% {
-        transform: scale(1.02) rotate(.4deg);
-    }
-    100% {
-        transform: scale(1.01) rotate(-.3deg);
-    }
-}
-
-
-/* =========================================================
-   IMAGE ATMOSPHERE
-========================================================= */
-
-.atmosphere-dark {
-    filter: brightness(.75) contrast(1.2);
-}
-
-.atmosphere-cold {
-    filter: hue-rotate(-15deg) brightness(.9);
-}
-
-.atmosphere-dream {
-    filter: blur(.6px) brightness(1.05) saturate(1.3);
-}
-
-
-/* =========================================================
-   LOADING / WAIT
-========================================================= */
-
-.loading-dots::after {
-    content: "...";
-    animation: dots 1.2s infinite steps(4);
-}
-
-@keyframes dots {
-    0% { content: "."; }
-    33% { content: ".."; }
-    66% { content: "..."; }
-}
-
-
-/* =========================================================
-   HOVER FEEDBACK
-========================================================= */
-
-.hover-grow {
-    transition: transform .15s ease;
-}
-
-.hover-grow:hover {
+.portrait-choice:hover {
     transform: scale(1.05);
 }
 
-.hover-bright:hover {
-    filter: brightness(1.2);
+.portrait-choice.selected {
+    border-color: #3aff4f;
+    box-shadow: 0 0 15px #3aff4f;
+}
+
+.folie-permanente {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    box-shadow: inset 0 0 120px rgba(120, 0, 0, 0.25);
+    animation: folieRespire 6s ease-in-out infinite;
+}
+
+@keyframes folieRespire {
+    0%   { box-shadow: inset 0 0 110px rgba(120, 0, 0, 0.22); }
+    50%  { box-shadow: inset 0 0 140px rgba(120, 0, 0, 0.28); }
+    100% { box-shadow: inset 0 0 110px rgba(120, 0, 0, 0.22); }
+}
+
+/* ================================
+   MORPHING FOLIE
+================================ */
+
+/* Image du lieu */
+.screen-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Assurez-vous que l'image est en dessous du menu et du bouton */
 }
 
 
-/* =========================================================
-   INVENTORY FEEDBACK
-========================================================= */
-
-.item-new {
-    animation: itemAppear .4s ease;
+#screen-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    animation: madnessColor2 6s ease-in-out infinite;
 }
 
-@keyframes itemAppear {
-    from {
-        transform: scale(.5);
-        opacity: 0;
-    }
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
+#screen-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+	opacity: 0;
+    transition: opacity 1s ease-in-out;
+    pointer-events: none; /* important */
+    border-radius: 8px;   /* suit la base */
+	animation: madnessColor 1s ease-in-out infinite;
+}
+
+@keyframes madnessShake {
+    0%   { transform: translate(0px, 0px); }
+    20%  { transform: translate(-2px, 1px); }
+    40%  { transform: translate(2px, -1px); }
+    60%  { transform: translate(-1px, 2px); }
+    80%  { transform: translate(1px, -2px); }
+    100% { transform: translate(0px, 0px); }
+}
+
+.screen-image-wrapper img {
+    box-sizing: border-box;
+}
+
+.screen-image-wrapper.madness-shake {
+    animation: madnessShake 0.12s infinite;
+}
+
+@keyframes madnessContract {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(0.97); }
+    100% { transform: scale(1); }
+}
+
+.screen-image-wrapper.madness-breath {
+    animation: madnessContract 3s infinite ease-in-out;
+}
+
+@keyframes madnessColor {
+    0% {filter: contrast(1.1) saturate(1.2) brightness(1);}
+	10% {filter: contrast(1.3) saturate(0.9) brightness(1.1) hue-rotate(-15deg);}
+    20% {filter: contrast(0.8) saturate(0.6) brightness(0.9) hue-rotate(10deg);}
+    30% {filter: contrast(1.1) saturate(1.5) brightness(1.2) hue-rotate(-10deg);}
+    40% {filter: contrast(1.2) saturate(1.3) brightness(1.1) hue-rotate(-5deg);}
+	50% {filter: contrast(0.9) saturate(0.7) brightness(0.95) hue-rotate(20deg);}
+    60% {filter: contrast(0.9) saturate(0.9) brightness(0.95) hue-rotate(10deg);}
+    80% {filter: contrast(1.2) saturate(1.4) brightness(1.2) hue-rotate(-10deg);}
+	90% {filter: contrast(1.3) saturate(1.6) brightness(1.1) hue-rotate(-5deg);}
+    100% {filter: contrast(1.2) saturate(0.9) brightness(1.1) hue-rotate(-20deg);}
+}
+
+/* keyframes avec amplitudes réduites et points rapprochés */
+@keyframes madnessColor2 {
+    0%   { filter: contrast(1.15) saturate(1.15) brightness(1.15) hue-rotate(-5deg); }
+   15%  { filter: contrast(1.08) saturate(1.08) brightness(1.08) hue-rotate(-10deg); }
+   30%  { filter: contrast(0.98) saturate(0.98) brightness(0.98) hue-rotate(-15deg); }
+   50%  { filter: contrast(0.9) saturate(0.9) brightness(0.9) hue-rotate(-20deg); }
+   70%  { filter: contrast(0.98) saturate(0.98) brightness(0.98) hue-rotate(-15deg); }
+   85%  { filter: contrast(1.08) saturate(1.08) brightness(1.08) hue-rotate(-10deg); }
+  100%  { filter: contrast(1.15) saturate(1.15) brightness(1.15) hue-rotate(-5deg); }
+}
+
+.screen-image-wrapper.madness-distort #screen-image-overlay {
+    animation: madnessColor 10s ease-in-out forwards;
+    opacity: 1;
+}
+
+/* ================================
+   JUMPSCARE
+================================ */
+
+#jumpscare-flash {
+    position: fixed;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999999998;
+}
+
+@keyframes globalShake {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-15px, 10px); }
+    40% { transform: translate(15px, -10px); }
+    60% { transform: translate(-10px, 5px); }
+    80% { transform: translate(10px, -5px); }
+    100% { transform: translate(0, 0); }
+}
+
+.jumpscare-shake {
+    animation: globalShake 0.4s ease-in-out;
+}
+
+@keyframes glitchOpacity {
+    0% { opacity: 1; }
+    20% { opacity: 0.2; }
+    40% { opacity: 1; }
+    60% { opacity: 0.1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.glitch-effect {
+    animation: glitchOpacity 0.6s linear forwards;
 }

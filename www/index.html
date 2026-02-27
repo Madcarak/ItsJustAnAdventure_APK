@@ -7,17 +7,20 @@
         content="width=device-width, height=device-height,
         initial-scale=1, maximum-scale=1, user-scalable=no">
 
-<link rel="stylesheet" href="style.css">
-
 <!-- ================================
+<link rel="stylesheet" href="style.css">
+================================ -->
+
+
 <link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="base.css">
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/ui.css">
 <link rel="stylesheet" href="css/inventory.css">
+<link rel="stylesheet" href="css/themes.css">
 <link rel="stylesheet" href="css/effects.css">
 <link rel="stylesheet" href="css/responsive.css">
-================================ -->
+
 
 </head>
 
@@ -240,7 +243,7 @@
     <div class="visit-history-section"></div>
 
     <div class="choices">
-        <button class="fullscreen-menu-button">☰ Personnage</button>
+        <button id="fullscreen-menu-button" class="fullscreen-menu-button">☰ Personnage</button>
         <button id="btn-save">Sauvegarder</button>
         <button id="btn-load">Charger</button>
         <button id="btn-reset">Reset</button>
@@ -259,11 +262,11 @@
 </div>
 
 <!-- ================================
-     PANNEAU LATERAL MOBILE
+     PANNEAU LATERAL FULLSCREEN
 ================================= -->
 <div id="menu-overlay"></div>
-<div class="side-menu">
-    <div class="side-close">✕</div>
+<div id="side-menu-fullscreen" class="side-menu-fullscreen">
+    <div class="side-close">✕ Enrouler le parchemin</div>
 
     <!-- NOM -->
     <div class="mobile-name">
@@ -285,7 +288,8 @@
         <div class="mobile-portrait">
             <img id="portrait-mobile" alt="Portrait personnage">
         </div>
-
+	</div>
+	
         <div class="mobile-stats">
             <p><strong>Race :</strong> <span id="char-race-mobile"></span></p>
             <p><strong>Sexe :</strong> <span id="char-sexe-mobile"></span></p>
@@ -296,7 +300,7 @@
             <p hidden>FOLIE : <span id="char-folie-mobile">0</span></p>
             <p class="mobile-gold">20 🪙 <span id="hud-gold-mobile">0</span></p>
         </div>
-    </div>
+    
 
     <!-- INVENTAIRE -->
     <div class="panel inventory mobile-inventory">
@@ -306,7 +310,7 @@
 
     <!-- JOURNAL -->
     <div class="panel log log2">
-        <h2>Journal</h2>
+        <h3>Journal</h3>
         <div class="log-list log-list2" id="log-list2"></div>
     </div>
 </div>
@@ -315,8 +319,8 @@
      SIDE MENU MOBILE
 ================================= -->
 <div id="menu-overlay-mobile"></div>
-<div class="side-menu-mobile" id="side-menu-mobile">
-    <div class="side-close-mobile">✕</div>
+<div id="side-menu-mobile" class="side-menu-mobile">
+    <div class="side-close-mobile">✕ Enrouler le parchemin</div>
 
     <!-- NOM -->
     <div class="mobile-name">
@@ -441,7 +445,7 @@
 
             <!-- Journal -->
             <div class="panel log">
-                <h2>Journal</h2>
+                <h3>Journal</h3>
                 <div class="log-list" id="log-list"></div>
             </div>
         </section>

@@ -86,7 +86,7 @@
 
     function toggleClassicMenu() {
 
-        const menu = document.querySelector('.side-menu');
+        const menu = document.getElementById('side-menu-fullscreen');
         const overlay = document.getElementById('menu-overlay');
         const btn = document.querySelector('.fullscreen-menu-button');
 
@@ -98,11 +98,11 @@
         overlay?.classList.toggle('visible', isOpen);
         document.body.classList.toggle('menu-open', isOpen);
 
-        if (btn) btn.innerHTML = isOpen ? '✕' : '☰ Personnage';
+        if (btn) btn.innerHTML = isOpen ? '✕ Personnage' : '☰ Personnage';
     }
 
     function closeClassicMenu() {
-        const menu = document.querySelector('.side-menu');
+        const menu = document.getElementById('side-menu-fullscreen');
         const overlay = document.getElementById('menu-overlay');
         const btn = document.querySelector('.fullscreen-menu-button');
 
@@ -121,7 +121,7 @@
 
     function setupMobileMenu() {
 
-        document.querySelector('.mobile-menu-button-mob')
+        document.querySelector('.mobile-menu-button')
             ?.addEventListener('click', toggleMobileMenu);
 
         document.querySelector('.side-close-mobile')
@@ -135,7 +135,7 @@
 
         const menu = document.getElementById('side-menu-mobile');
         const overlay = document.getElementById('menu-overlay-mobile');
-        const btn = document.querySelector('.mobile-menu-button-mob');
+        const btn = document.querySelector('.mobile-menu-button');
 
         if (!menu) return;
 
@@ -146,7 +146,7 @@
         document.body.classList.toggle('menu-mob-open', isOpen);
 
         if (btn) {
-            btn.innerHTML = isOpen ? '✕ Menu' : '☰ Personnage et Menu';
+            btn.innerHTML = isOpen ? '✕ Personnage et Menu' : '☰ Personnage et Menu';
         }
 
         if (isOpen && typeof updatePlayerDisplay === 'function') {
@@ -237,7 +237,7 @@
     function handleKeyDown(e) {
         if (e.key === 'Escape') {
 
-            if (document.querySelector('.side-menu')?.classList.contains('open')) {
+            if (document.getElementById('side-menu-fullscreen')?.classList.contains('open')) {
                 closeClassicMenu();
                 return;
             }
